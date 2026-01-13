@@ -40,11 +40,16 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
 
             const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
             if (sqlContext) {
-                // Check for common SQL issues
-                const query = sqlContext.query.toUpperCase();
+                // If it's a glue string, strip interpolations for validation
+                let query = sqlContext.query;
+                if (sqlContext.isGlueString) {
+                    query = SQLStringDetector.stripGlueInterpolations(query);
+                }
+
+                const queryUpper = query.toUpperCase();
 
                 // Check for SELECT without FROM (unless it's a valid expression)
-                if (query.includes('SELECT') && !query.includes('FROM') && !this.isValidSelectExpression(query)) {
+                if (queryUpper.includes('SELECT') && !queryUpper.includes('FROM') && !this.isValidSelectExpression(queryUpper)) {
                     const diagnostic = new vscode.Diagnostic(
                         sqlContext.range,
                         'SELECT statement is missing FROM clause',
@@ -55,8 +60,8 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
                 }
 
                 // Check for unmatched parentheses
-                const openParens = (query.match(/\(/g) || []).length;
-                const closeParens = (query.match(/\)/g) || []).length;
+                const openParens = (queryUpper.match(/\(/g) || []).length;
+                const closeParens = (queryUpper.match(/\)/g) || []).length;
 
                 if (openParens !== closeParens) {
                     const diagnostic = new vscode.Diagnostic(
@@ -75,7 +80,7 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
                 ];
 
                 for (const typo of typos) {
-                    if (typo.pattern.test(query)) {
+                    if (typo.pattern.test(queryUpper)) {
                         const diagnostic = new vscode.Diagnostic(
                             sqlContext.range,
                             typo.message,

@@ -18,6 +18,15 @@ export class SQLCompletionProvider implements vscode.CompletionItemProvider {
             return null;
         }
 
+        // If this is a glue string, check if cursor is inside an interpolation block
+        if (sqlContext.isGlueString) {
+            const cursorOffset = SQLStringDetector.getSQLCursorPosition(document, position, sqlContext);
+            if (SQLStringDetector.isInsideGlueInterpolation(sqlContext.query, cursorOffset)) {
+                // Cursor is inside {}, let R handle completions
+                return null;
+            }
+        }
+
         const completions: vscode.CompletionItem[] = [];
 
         // Get text before cursor in the SQL string

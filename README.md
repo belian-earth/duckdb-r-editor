@@ -39,6 +39,12 @@ result <- dbGetQuery(con, "
   - Column name suggestions with type information
   - Smart `table.column` completion
 
+- **Glue Package Integration**: Full support for `glue` and `glue_sql`!
+  - SQL autocomplete works in `glue()`, `glue_sql()`, `glue_data()` strings
+  - Automatically detects `{...}` R interpolation blocks
+  - SQL completions outside `{}`, R completions inside `{}`
+  - Smart validation that accounts for interpolated expressions
+
 - **SQL Syntax Validation**: Real-time diagnostics for common SQL errors
   - Unmatched parentheses
   - Missing clauses
@@ -97,6 +103,8 @@ The extension automatically detects SQL strings in these functions:
 - `DBI::dbSendQuery()`
 - `DBI::dbSendStatement()`
 - `dbplyr::sql()`
+- `glue::glue()`, `glue::glue_sql()`
+- `glue::glue_data()`, `glue::glue_data_sql()`
 - And their non-namespaced versions
 
 Just start typing and autocomplete will appear!
@@ -133,6 +141,20 @@ customers <- dbGetQuery(con, "
   FROM customers   -- Table name autocompleted!
   WHERE created_at > CURRENT_DATE - INTERVAL '1 month'
 ")
+
+# Works great with glue too!
+table_name <- "customers"
+min_date <- "2024-01-01"
+
+customers <- dbGetQuery(con, glue_sql("
+  SELECT
+    customer_id,
+    name,
+    DATE_TRUNC('month', created_at) as signup_month
+  FROM {`table_name`}        -- R variable interpolation
+  WHERE created_at > {min_date}
+  ORDER BY created_at DESC   -- Full SQL autocomplete!
+", .con = con))
 ```
 
 ### Commands
@@ -160,15 +182,26 @@ customers <- dbGetQuery(con, "
 
 This extension is fully compatible with Positron IDE. All features work identically in both VSCode and Positron.
 
-## Supported DBI Functions
+## Supported Functions
 
 The extension recognizes SQL strings in:
+
+**DBI Package:**
 - `dbExecute()`
 - `dbGetQuery()`
 - `dbSendQuery()`
 - `dbSendStatement()`
-- `dbplyr::sql()`
-- Any namespaced versions (e.g., `DBI::dbGetQuery()`)
+
+**dbplyr Package:**
+- `sql()`
+
+**glue Package:**
+- `glue()`
+- `glue_sql()`
+- `glue_data()`
+- `glue_data_sql()`
+
+All namespaced versions work too (e.g., `DBI::dbGetQuery()`, `glue::glue_sql()`)
 
 ## Tips
 
@@ -176,6 +209,8 @@ The extension recognizes SQL strings in:
 2. **Use Dot Notation**: Type `tablename.` to get column-specific completions
 3. **Multi-line Strings**: The extension works great with multi-line SQL strings
 4. **Function Help**: Hover over any SQL function to see documentation and examples
+5. **Glue Integration**: Use `glue_sql()` instead of `glue()` for safer SQL interpolation with proper quoting
+6. **Inside `{}`**: When cursor is inside `{...}` blocks, you get R autocomplete; outside you get SQL autocomplete
 
 ## Contributing
 

@@ -23,26 +23,20 @@ export class DuckDBConnectionManager implements vscode.Disposable {
         this.dispose();
 
         return new Promise((resolve, reject) => {
-            this.db = new duckdb.Database(path, (err) => {
+            this.db = new duckdb.Database(path, (err: Error | null) => {
                 if (err) {
                     reject(err);
                     return;
                 }
 
-                this.db!.connect((err, conn) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+                // Connect returns a Connection object directly
+                this.connection = this.db!.connect();
+                this.dbPath = path;
 
-                    this.connection = conn;
-                    this.dbPath = path;
-
-                    // Load schema
-                    this.refreshSchema()
-                        .then(() => resolve())
-                        .catch(reject);
-                });
+                // Load schema
+                this.refreshSchema()
+                    .then(() => resolve())
+                    .catch(reject);
             });
         });
     }
@@ -124,7 +118,7 @@ export class DuckDBConnectionManager implements vscode.Disposable {
                 return;
             }
 
-            this.connection.all(sql, (err, rows) => {
+            this.connection.all(sql, (err: Error | null, rows: any[]) => {
                 if (err) {
                     reject(err);
                 } else {

@@ -5,6 +5,7 @@ export interface SQLStringContext {
     range: vscode.Range;
     functionName: string;
     isMultiline: boolean;
+    isGlueString: boolean;
 }
 
 /**
@@ -22,6 +23,17 @@ export class SQLStringDetector {
         'DBI::dbSendStatement',
         'dbplyr::sql',
         'sql'
+    ];
+
+    private static readonly GLUE_FUNCTIONS = [
+        'glue',
+        'glue_sql',
+        'glue_data',
+        'glue_data_sql',
+        'glue::glue',
+        'glue::glue_sql',
+        'glue::glue_data',
+        'glue::glue_data_sql'
     ];
 
     /**
@@ -44,12 +56,14 @@ export class SQLStringDetector {
         }
 
         const query = document.getText(stringRange);
+        const isGlueString = this.isGlueFunction(functionContext);
 
         return {
             query: this.cleanSQLString(query),
             range: stringRange,
             functionName: functionContext,
-            isMultiline: stringRange.start.line !== stringRange.end.line
+            isMultiline: stringRange.start.line !== stringRange.end.line,
+            isGlueString: isGlueString
         };
     }
 
@@ -118,7 +132,7 @@ export class SQLStringDetector {
     }
 
     /**
-     * Find if the string is part of a DBI function call
+     * Find if the string is part of a DBI or glue function call
      */
     private static findDBIFunctionContext(document: vscode.TextDocument, position: vscode.Position): string | null {
         // Look backwards from the string position to find function call
@@ -138,7 +152,22 @@ export class SQLStringDetector {
             }
         }
 
+        // Check for glue functions
+        for (const funcName of this.GLUE_FUNCTIONS) {
+            const pattern = new RegExp(`${funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'i');
+            if (pattern.test(searchText)) {
+                return funcName;
+            }
+        }
+
         return null;
+    }
+
+    /**
+     * Check if function is a glue function
+     */
+    private static isGlueFunction(functionName: string): boolean {
+        return this.GLUE_FUNCTIONS.some(f => f.toLowerCase() === functionName.toLowerCase());
     }
 
     /**
@@ -171,5 +200,91 @@ export class SQLStringDetector {
         offset += position.character;
 
         return offset;
+    }
+
+    /**
+     * Check if cursor is inside a glue interpolation block {}
+     */
+    static isInsideGlueInterpolation(sqlString: string, cursorOffset: number): boolean {
+        let depth = 0;
+        let inString = false;
+        let stringChar = '';
+
+        for (let i = 0; i < cursorOffset; i++) {
+            const char = sqlString[i];
+            const prevChar = i > 0 ? sqlString[i - 1] : '';
+
+            // Track if we're inside a quoted string within the interpolation
+            if ((char === '"' || char === "'") && prevChar !== '\\') {
+                if (!inString) {
+                    inString = true;
+                    stringChar = char;
+                } else if (char === stringChar) {
+                    inString = false;
+                }
+            }
+
+            // Only count braces if we're not inside a string
+            if (!inString) {
+                if (char === '{') {
+                    depth++;
+                } else if (char === '}') {
+                    depth--;
+                }
+            }
+        }
+
+        return depth > 0;
+    }
+
+    /**
+     * Strip glue interpolations from SQL string for validation
+     * Replaces {expr} with placeholder values
+     */
+    static stripGlueInterpolations(sqlString: string): string {
+        let result = '';
+        let depth = 0;
+        let inString = false;
+        let stringChar = '';
+        let interpolationStart = -1;
+
+        for (let i = 0; i < sqlString.length; i++) {
+            const char = sqlString[i];
+            const prevChar = i > 0 ? sqlString[i - 1] : '';
+
+            // Track if we're inside a quoted string
+            if ((char === '"' || char === "'") && prevChar !== '\\') {
+                if (!inString) {
+                    inString = true;
+                    stringChar = char;
+                } else if (char === stringChar) {
+                    inString = false;
+                }
+            }
+
+            if (!inString) {
+                if (char === '{') {
+                    if (depth === 0) {
+                        interpolationStart = i;
+                    }
+                    depth++;
+                } else if (char === '}') {
+                    depth--;
+                    if (depth === 0 && interpolationStart !== -1) {
+                        // Replace the interpolation with a placeholder
+                        result += 'PLACEHOLDER_VALUE';
+                        interpolationStart = -1;
+                        continue;
+                    }
+                }
+            }
+
+            // Only add character if we're not inside an interpolation
+            if (depth === 0) {
+                result += char;
+            }
+        }
+
+        return result;
     }
 }
