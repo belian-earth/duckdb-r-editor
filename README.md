@@ -1,4 +1,4 @@
-# DuckDB for R
+# DuckDB R Editor
 
 **DuckDB-focused SQL editor** for R scripts with intelligent autocomplete, schema introspection, and native Positron integration.
 
@@ -110,7 +110,7 @@ The extension automatically discovers the connection and schema!
 **In VSCode:**
 
 1. Open an R file with DuckDB SQL strings
-2. Run command: **DuckDB for R: Connect to DuckDB Database** (Cmd+Shift+P / Ctrl+Shift+P)
+2. Run command: **DuckDB R Editor: Connect to DuckDB Database** (Cmd+Shift+P / Ctrl+Shift+P)
 3. Select your DuckDB database file (`.duckdb`, `.db`, or `.ddb`)
 
 Or configure in settings:
@@ -185,9 +185,9 @@ customers <- dbGetQuery(con, glue_sql("
 
 ### Commands
 
-- **DuckDB for R: Connect to DuckDB Database**: Connect to a DuckDB database file
-- **DuckDB for R: Refresh DuckDB Schema**: Refresh table/column information from DuckDB
-- **DuckDB for R: Execute DuckDB Query at Cursor**: Run the DuckDB query under cursor
+- **DuckDB R Editor: Connect to DuckDB Database**: Connect to a DuckDB database file
+- **DuckDB R Editor: Refresh DuckDB Schema**: Refresh table/column information from DuckDB
+- **DuckDB R Editor: Execute DuckDB Query at Cursor**: Run the DuckDB query under cursor
 
 ## Configuration
 

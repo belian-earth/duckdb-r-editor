@@ -1,6 +1,6 @@
 {
-  "name": "duckdb-for-r",
-  "displayName": "DuckDB for R",
+  "name": "duckdb-r-editor",
+  "displayName": "DuckDB R Editor",
   "description": "DuckDB-focused SQL editor for R with intelligent autocomplete, schema introspection, and 500+ DuckDB function signatures. Optimized for Positron IDE.",
   "version": "0.2.0",
   "publisher": "rsqledit",
@@ -32,7 +32,7 @@
       }
     ],
     "configuration": {
-      "title": "DuckDB for R",
+      "title": "DuckDB R Editor",
       "properties": {
         "rsqledit.duckdbPath": {
           "type": "string",
@@ -59,19 +59,19 @@
     "commands": [
       {
         "command": "rsqledit.connectDatabase",
-        "title": "DuckDB for R: Connect to DuckDB Database"
+        "title": "DuckDB R Editor: Connect to DuckDB Database"
       },
       {
         "command": "rsqledit.refreshSchema",
-        "title": "DuckDB for R: Refresh DuckDB Schema"
+        "title": "DuckDB R Editor: Refresh DuckDB Schema"
       },
       {
         "command": "rsqledit.loadExtension",
-        "title": "DuckDB for R: Load DuckDB Extension for Autocomplete"
+        "title": "DuckDB R Editor: Load DuckDB Extension for Autocomplete"
       },
       {
         "command": "rsqledit.executeQuery",
-        "title": "DuckDB for R: Execute DuckDB Query at Cursor"
+        "title": "DuckDB R Editor: Execute DuckDB Query at Cursor"
       }
     ]
   },
