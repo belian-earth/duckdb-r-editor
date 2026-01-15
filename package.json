@@ -1,11 +1,12 @@
 {
-  "name": "rsqledit",
-  "displayName": "R SQL Editor",
-  "description": "Enhanced SQL editing experience for SQL strings in R scripts with DuckDB integration",
-  "version": "0.1.0",
+  "name": "duckdb-for-r",
+  "displayName": "DuckDB for R",
+  "description": "DuckDB-focused SQL editor for R with intelligent autocomplete, schema introspection, and 500+ DuckDB function signatures. Optimized for Positron IDE.",
+  "version": "0.2.0",
   "publisher": "rsqledit",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.80.0",
+    "positron": ">=2024.1.0"
   },
   "categories": [
     "Programming Languages",
@@ -23,8 +24,15 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "grammars": [
+      {
+        "path": "./syntaxes/r-sql-injection.json",
+        "scopeName": "r-sql-injection",
+        "injectTo": ["source.r"]
+      }
+    ],
     "configuration": {
-      "title": "R SQL Editor",
+      "title": "DuckDB for R",
       "properties": {
         "rsqledit.duckdbPath": {
           "type": "string",
@@ -34,27 +42,36 @@
         "rsqledit.enableAutoComplete": {
           "type": "boolean",
           "default": true,
-          "description": "Enable SQL autocomplete in R strings"
+          "description": "Enable DuckDB SQL autocomplete in R strings"
         },
         "rsqledit.enableDiagnostics": {
           "type": "boolean",
           "default": true,
-          "description": "Enable SQL syntax validation"
+          "description": "Enable DuckDB SQL syntax validation"
+        },
+        "rsqledit.enableSQLHighlighting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable lightweight DuckDB SQL syntax highlighting in R strings"
         }
       }
     },
     "commands": [
       {
         "command": "rsqledit.connectDatabase",
-        "title": "R SQL: Connect to DuckDB Database"
+        "title": "DuckDB for R: Connect to DuckDB Database"
       },
       {
         "command": "rsqledit.refreshSchema",
-        "title": "R SQL: Refresh Database Schema"
+        "title": "DuckDB for R: Refresh DuckDB Schema"
+      },
+      {
+        "command": "rsqledit.loadExtension",
+        "title": "DuckDB for R: Load DuckDB Extension for Autocomplete"
       },
       {
         "command": "rsqledit.executeQuery",
-        "title": "R SQL: Execute Query at Cursor"
+        "title": "DuckDB for R: Execute DuckDB Query at Cursor"
       }
     ]
   },

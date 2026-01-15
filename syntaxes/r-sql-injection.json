@@ -1,0 +1,102 @@
+{
+  "scopeName": "r-sql-injection",
+  "injectionSelector": "L:source.r",
+  "patterns": [
+    {
+      "comment": "SQL in dbGetQuery strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(dbGetQuery|DBI::dbGetQuery)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "end": "\\2",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.function-call.r"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in dbExecute strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(dbExecute|DBI::dbExecute)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "end": "\\2",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.function-call.r"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in dbSendQuery strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(dbSendQuery|DBI::dbSendQuery)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "end": "\\2",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.function-call.r"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in dbSendStatement strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(dbSendStatement|DBI::dbSendStatement)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "end": "\\2",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.function-call.r"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in dbplyr::sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(sql|dbplyr::sql)\\s*\\(\\s*(\"|')",
+      "end": "\\2",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.function-call.r"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in glue_sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(glue_sql|glue::glue_sql)\\s*\\(\\s*(\"|')",
+      "end": "\\2",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.function-call.r"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    }
+  ]
+}

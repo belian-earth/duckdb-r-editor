@@ -377,7 +377,7 @@ export const DUCKDB_FUNCTIONS: FunctionSignature[] = [
 ];
 
 /**
- * SQL Keywords
+ * SQL Keywords (including DuckDB-specific commands)
  */
 export const SQL_KEYWORDS = [
     'SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'OUTER JOIN',
@@ -387,7 +387,9 @@ export const SQL_KEYWORDS = [
     'AS', 'AND', 'OR', 'NOT', 'IN', 'EXISTS', 'BETWEEN', 'LIKE', 'IS NULL', 'IS NOT NULL',
     'DISTINCT', 'ALL', 'ASC', 'DESC', 'UNION', 'INTERSECT', 'EXCEPT',
     'WITH', 'RECURSIVE', 'CTE', 'WINDOW', 'PARTITION BY', 'OVER',
-    'NULLS FIRST', 'NULLS LAST'
+    'NULLS FIRST', 'NULLS LAST',
+    // DuckDB-specific commands
+    'INSTALL', 'LOAD', 'ATTACH', 'DETACH', 'USE', 'PRAGMA', 'COPY', 'EXPORT'
 ];
 
 /**

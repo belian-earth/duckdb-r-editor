@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:positron.posit.co)",
+      "Bash(npm run compile:*)",
+      "Bash(ls:*)",
+      "Bash(node -c:*)",
+      "Bash(duckdb:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}

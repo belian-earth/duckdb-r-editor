@@ -3,3 +3,7 @@ out
 *.vsix
 .vscode-test/
 .DS_Store
+
+# R/duckdb scratch files
+test.R
+test.duckdb
