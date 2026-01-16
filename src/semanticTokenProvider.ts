@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { DocumentCache, CachedSQLRegion } from './documentCache';
+import { SQL_FUNCTION_NAMES, PARSING_LIMITS } from './types';
 
 /**
  * Semantic token provider for SQL syntax highlighting in R strings
@@ -91,26 +92,16 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
         const regions: CachedSQLRegion[] = [];
         const processedRanges = new Set<string>();
 
-        // Get all SQL function names we're looking for
-        const SQL_FUNCTIONS = [
-            'dbExecute', 'dbGetQuery', 'dbSendQuery', 'dbSendStatement',
-            'DBI::dbExecute', 'DBI::dbGetQuery', 'DBI::dbSendQuery', 'DBI::dbSendStatement',
-            'dbplyr::sql', 'sql',
-            'glue', 'glue_sql', 'glue_data', 'glue_data_sql',
-            'glue::glue', 'glue::glue_sql', 'glue::glue_data', 'glue::glue_data_sql'
-        ];
-
         const fullText = document.getText();
 
         // Limit text processing for very large documents
-        const MAX_DOCUMENT_SIZE = 1000000; // 1MB
-        if (fullText.length > MAX_DOCUMENT_SIZE) {
+        if (fullText.length > PARSING_LIMITS.MAX_DOCUMENT_SIZE) {
             console.warn(`Document too large (${fullText.length} chars), skipping SQL highlighting`);
             return regions;
         }
 
         // Find all SQL function calls in the document
-        for (const funcName of SQL_FUNCTIONS) {
+        for (const funcName of SQL_FUNCTION_NAMES) {
             if (token?.isCancellationRequested) {
                 return regions;
             }
@@ -121,9 +112,8 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
 
             let match;
             let matchCount = 0;
-            const MAX_MATCHES = 100; // Prevent infinite loops
 
-            while ((match = funcPattern.exec(fullText)) !== null && matchCount < MAX_MATCHES) {
+            while ((match = funcPattern.exec(fullText)) !== null && matchCount < PARSING_LIMITS.MAX_FUNCTION_MATCHES) {
                 matchCount++;
 
                 if (token?.isCancellationRequested) {
@@ -185,15 +175,14 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
 
         // Find opening paren
         let i = startOffset;
-        const MAX_SEARCH_DISTANCE = 1000; // Don't search more than 1000 chars for opening paren
         let searchCount = 0;
 
-        while (i < text.length && text[i] !== '(' && searchCount < MAX_SEARCH_DISTANCE) {
+        while (i < text.length && text[i] !== '(' && searchCount < PARSING_LIMITS.MAX_PAREN_SEARCH_DISTANCE) {
             i++;
             searchCount++;
         }
 
-        if (i >= text.length || searchCount >= MAX_SEARCH_DISTANCE) {
+        if (i >= text.length || searchCount >= PARSING_LIMITS.MAX_PAREN_SEARCH_DISTANCE) {
             return null;
         }
 
@@ -204,9 +193,8 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
 
         i++; // Move past opening paren
         const openParenOffset = i;
-        const MAX_FUNCTION_LENGTH = 50000; // Max 50KB for a function call
 
-        while (i < text.length && (i - openParenOffset) < MAX_FUNCTION_LENGTH) {
+        while (i < text.length && (i - openParenOffset) < PARSING_LIMITS.MAX_FUNCTION_CALL_LENGTH) {
             const char = text[i];
             const prevChar = i > 0 ? text[i - 1] : '';
 

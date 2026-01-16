@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { PARSING_LIMITS } from './types';
 
 /**
  * Represents a cached SQL region in a document
@@ -21,8 +22,6 @@ export class DocumentCache {
         regions: CachedSQLRegion[];
         parseTimestamp: number;
     }>;
-
-    private static readonly CACHE_EXPIRY_MS = 5000; // Re-parse after 5 seconds of inactivity
 
     constructor() {
         this.cache = new Map();
@@ -48,7 +47,7 @@ export class DocumentCache {
 
         // Check if cache is expired (optional time-based invalidation)
         const now = Date.now();
-        if (now - cached.parseTimestamp > DocumentCache.CACHE_EXPIRY_MS) {
+        if (now - cached.parseTimestamp > PARSING_LIMITS.CACHE_EXPIRY_MS) {
             this.cache.delete(key);
             return null;
         }

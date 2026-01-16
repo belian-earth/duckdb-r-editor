@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { DBI_FUNCTIONS, GLUE_FUNCTIONS, PARSING_LIMITS } from './types';
 
 export interface SQLStringContext {
     query: string;
@@ -12,29 +13,8 @@ export interface SQLStringContext {
  * Detects SQL strings in R code, particularly in DBI function calls
  */
 export class SQLStringDetector {
-    private static readonly DBI_FUNCTIONS = [
-        'dbExecute',
-        'dbGetQuery',
-        'dbSendQuery',
-        'dbSendStatement',
-        'DBI::dbExecute',
-        'DBI::dbGetQuery',
-        'DBI::dbSendQuery',
-        'DBI::dbSendStatement',
-        'dbplyr::sql',
-        'sql'
-    ];
-
-    private static readonly GLUE_FUNCTIONS = [
-        'glue',
-        'glue_sql',
-        'glue_data',
-        'glue_data_sql',
-        'glue::glue',
-        'glue::glue_sql',
-        'glue::glue_data',
-        'glue::glue_data_sql'
-    ];
+    private static readonly DBI_FUNCTIONS = DBI_FUNCTIONS;
+    private static readonly GLUE_FUNCTIONS = GLUE_FUNCTIONS;
 
     /**
      * Check if position is inside a SQL string
@@ -140,8 +120,8 @@ export class SQLStringDetector {
         let currentLine = position.line;
         let searchText = '';
 
-        // Gather context (up to 10 lines back for Air formatter)
-        for (let i = Math.max(0, currentLine - 10); i <= currentLine; i++) {
+        // Gather context (Air formatter may have function name several lines above)
+        for (let i = Math.max(0, currentLine - PARSING_LIMITS.CONTEXT_LINE_LOOKBACK); i <= currentLine; i++) {
             searchText += document.lineAt(i).text + '\n';
         }
 

@@ -21,7 +21,6 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(outputChannel);
 
   outputChannel.appendLine('R SQL Editor extension is now active');
-  console.log('R SQL Editor extension is now active');
 
   // Try to use DuckDB CLI first (preferred method - more dynamic and flexible)
   outputChannel.appendLine('Checking for DuckDB CLI...');
@@ -56,9 +55,9 @@ export async function activate(context: vscode.ExtensionContext) {
   outputChannel.appendLine('Initializing document cache');
   documentCache = new DocumentCache();
 
-  // Check if semantic highlighting is enabled (default: false)
+  // Check if semantic highlighting is enabled (default: true)
   const config = vscode.workspace.getConfiguration('rsqledit');
-  const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', false);
+  const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', true);
 
   if (useSemanticHighlighting) {
     // Register semantic token provider for Air formatter support

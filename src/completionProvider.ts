@@ -12,21 +12,15 @@ export class SQLCompletionProvider implements vscode.CompletionItemProvider {
     _token: vscode.CancellationToken,
     _context: vscode.CompletionContext
   ): Promise<vscode.CompletionItem[] | vscode.CompletionList | null> {
-    console.log('Completion requested at', position.line, position.character);
-
     // Check if we're inside a SQL string
     const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
-    console.log('SQL context detected:', sqlContext ? 'YES' : 'NO');
 
     if (!sqlContext) {
       return null;
     }
 
-    console.log('Providing completions for SQL:', sqlContext.query.substring(0, 50));
-
     // Get text before cursor in the SQL string
     const textBeforeCursor = this.getTextBeforeCursor(document, position, sqlContext.range);
-    console.log('Text before cursor:', textBeforeCursor.substring(Math.max(0, textBeforeCursor.length - 30)));
 
     // If this is a glue string, check if cursor is inside an interpolation block
     if (sqlContext.isGlueString) {
@@ -46,12 +40,10 @@ export class SQLCompletionProvider implements vscode.CompletionItemProvider {
     }
     // Context-aware: After FROM keyword, show only tables
     else if (this.isAfterFromKeyword(textBeforeCursor)) {
-      console.log('After FROM keyword - showing only tables');
       completions.push(...this.getTableCompletions());
     }
     // Context-aware: After SELECT, prioritize columns over everything else
     else if (this.isAfterSelectKeyword(textBeforeCursor)) {
-      console.log('After SELECT keyword - prioritizing columns and functions');
       completions.push(...this.getAllColumnCompletions());
       if (this.schemaProvider.getAllFunctions) {
         completions.push(...this.getDynamicFunctionCompletions());
@@ -63,12 +55,10 @@ export class SQLCompletionProvider implements vscode.CompletionItemProvider {
     }
     // Context-aware: After JOIN, show only tables
     else if (this.isAfterJoinKeyword(textBeforeCursor)) {
-      console.log('After JOIN keyword - showing only tables');
       completions.push(...this.getTableCompletions());
     }
     // Context-aware: After WHERE, prioritize columns (especially from the queried table)
     else if (this.isAfterWhereKeyword(textBeforeCursor)) {
-      console.log('After WHERE keyword - prioritizing columns');
       // Try to get the table name from the FROM clause
       const tableName = this.getTableFromQuery(textBeforeCursor);
       if (tableName && this.schemaProvider.isConnected()) {
