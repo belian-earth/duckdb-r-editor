@@ -45,11 +45,6 @@
     "configuration": {
       "title": "DuckDB R Editor",
       "properties": {
-        "duckdb-r-editor.duckdbPath": {
-          "type": "string",
-          "default": "",
-          "description": "Path to DuckDB database file for schema introspection. Leave empty to auto-detect from R workspace."
-        },
         "duckdb-r-editor.enableAutoComplete": {
           "type": "boolean",
           "default": true,
@@ -78,16 +73,16 @@
         "title": "DuckDB R Editor: Connect to DuckDB Database"
       },
       {
+        "command": "duckdb-r-editor.disconnectDatabase",
+        "title": "DuckDB R Editor: Disconnect from Database"
+      },
+      {
         "command": "duckdb-r-editor.refreshSchema",
         "title": "DuckDB R Editor: Refresh DuckDB Schema"
       },
       {
         "command": "duckdb-r-editor.loadExtension",
         "title": "DuckDB R Editor: Load DuckDB Extension for Autocomplete"
-      },
-      {
-        "command": "duckdb-r-editor.executeQuery",
-        "title": "DuckDB R Editor: Execute DuckDB Query at Cursor"
       }
     ]
   },
@@ -104,11 +99,12 @@
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/vsce": "^2.19.0",
     "eslint": "^8.0.0",
-    "typescript": "^5.0.0",
-    "@vscode/vsce": "^2.19.0"
+    "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@posit-dev/positron": "^0.2.2",
     "duckdb": "^0.10.0"
   }
 }

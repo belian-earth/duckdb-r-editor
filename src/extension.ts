@@ -6,6 +6,7 @@ import { SQLDiagnosticsProvider } from './diagnosticsProvider';
 import { SchemaProvider } from './types';
 import { DocumentCache } from './documentCache';
 import { SQLSemanticTokenProvider } from './semanticTokenProvider';
+import { tryAcquirePositronApi } from '@posit-dev/positron';
 
 let cliProvider: DuckDBCliProvider | undefined;
 let connectionManager: DuckDBConnectionManager | undefined;
@@ -22,9 +23,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
   outputChannel.appendLine('R SQL Editor extension is now active');
 
+  // Try to acquire Positron API (for R session integration)
+  const positronApi = tryAcquirePositronApi();
+  if (positronApi) {
+    outputChannel.appendLine('✓ Positron API acquired - R session integration available');
+  } else {
+    outputChannel.appendLine('ℹ️  Positron API not available (running in VS Code or older Positron)');
+  }
+
   // Try to use DuckDB CLI first (preferred method - more dynamic and flexible)
   outputChannel.appendLine('Checking for DuckDB CLI...');
-  cliProvider = new DuckDBCliProvider();
+  cliProvider = new DuckDBCliProvider(positronApi);
 
   const cliAvailable = await cliProvider.isDuckDBCliAvailable();
 
@@ -33,19 +42,15 @@ export async function activate(context: vscode.ExtensionContext) {
     outputChannel.appendLine('  This mode automatically discovers ALL DuckDB functions, including extensions!');
     schemaProvider = cliProvider as SchemaProvider;
     context.subscriptions.push(cliProvider!);
-
-    // Try to auto-connect
-    await tryAutoConnect();
   } else {
     outputChannel.appendLine('✗ DuckDB CLI not found - falling back to Node.js bindings');
     outputChannel.appendLine('  Install DuckDB CLI for better experience: https://duckdb.org/docs/installation/');
     connectionManager = new DuckDBConnectionManager();
     schemaProvider = connectionManager;
     context.subscriptions.push(connectionManager);
-
-    // Try to auto-connect
-    await tryAutoConnect();
   }
+
+  outputChannel.appendLine('ℹ️  Use "DuckDB R Editor: Connect to DuckDB Database" command to connect to a database');
 
   // Initialize diagnostics provider
   outputChannel.appendLine('Initializing diagnostics provider');
@@ -114,6 +119,30 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const disconnectCommand = vscode.commands.registerCommand(
+    'duckdb-r-editor.disconnectDatabase',
+    async () => {
+      if (!schemaProvider.isConnected()) {
+        vscode.window.showInformationMessage('No active database connection');
+        return;
+      }
+
+      // Disconnect by disposing the providers
+      if (cliProvider) {
+        cliProvider.dispose();
+        cliProvider = new DuckDBCliProvider(positronApi);
+        schemaProvider = cliProvider;
+      } else if (connectionManager) {
+        connectionManager.dispose();
+        connectionManager = new DuckDBConnectionManager();
+        schemaProvider = connectionManager;
+      }
+
+      outputChannel.appendLine('✓ Disconnected from database');
+      vscode.window.showInformationMessage('Disconnected from database');
+    }
+  );
+
   const refreshSchemaCommand = vscode.commands.registerCommand(
     'duckdb-r-editor.refreshSchema',
     refreshSchema
@@ -152,20 +181,6 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  const executeQueryCommand = vscode.commands.registerCommand(
-    'duckdb-r-editor.executeQuery',
-    async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (!editor) {
-        return;
-      }
-
-      const query = await extractQueryAtCursor(editor);
-      if (query) {
-        await executeAndShowResults(query);
-      }
-    }
-  );
 
   // Register diagnostic provider
   context.subscriptions.push(
@@ -201,13 +216,13 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     completionProvider,
     connectCommand,
+    disconnectCommand,
     refreshSchemaCommand,
-    loadExtensionCommand,
-    executeQueryCommand
+    loadExtensionCommand
   );
 
   outputChannel.appendLine('Extension activation complete!');
-  outputChannel.appendLine('Commands available: "R SQL: Connect to DuckDB Database", "R SQL: Refresh Database Schema", "R SQL: Execute Query at Cursor"');
+  outputChannel.appendLine('Commands available: "R SQL: Connect to DuckDB Database", "R SQL: Refresh Database Schema"');
 }
 
 /**
@@ -219,17 +234,53 @@ async function connectToDatabase(dbPath: string): Promise<void> {
       await cliProvider.connect(dbPath);
       const tableCount = schemaProvider.getTableNames().length;
       const funcCount = cliProvider.getAllFunctions?.()?.length || 0;
-      vscode.window.showInformationMessage(
-        `Connected to ${dbPath}\n${tableCount} tables, ${funcCount} functions discovered`
-      );
-      outputChannel.appendLine(`✓ Connected: ${tableCount} tables, ${funcCount} functions`);
+
+      if (tableCount === 0) {
+        vscode.window.showWarningMessage(
+          `Connected to ${dbPath} but found 0 tables. The database may be locked by another process (like an R session). Try disconnecting from other connections first.`
+        );
+        outputChannel.appendLine(`⚠️  Connected but found 0 tables - database may be locked`);
+      } else {
+        vscode.window.showInformationMessage(
+          `Connected to ${dbPath}\n${tableCount} tables, ${funcCount} functions discovered`
+        );
+        outputChannel.appendLine(`✓ Connected: ${tableCount} tables, ${funcCount} functions`);
+      }
+
+      // Debug: Log table and column details
+      const tables = schemaProvider.getTableNames();
+      for (const tableName of tables) {
+        const columns = schemaProvider.getColumns(tableName);
+        outputChannel.appendLine(`  Table: ${tableName} (${columns.length} columns)`);
+        columns.forEach(col => {
+          outputChannel.appendLine(`    - ${col.name}: ${col.type}`);
+        });
+      }
     } else if (connectionManager) {
       await connectionManager.connect(dbPath);
       const tableCount = schemaProvider.getTableNames().length;
-      vscode.window.showInformationMessage(
-        `Connected to ${dbPath}\n${tableCount} tables`
-      );
-      outputChannel.appendLine(`✓ Connected: ${tableCount} tables`);
+
+      if (tableCount === 0) {
+        vscode.window.showWarningMessage(
+          `Connected to ${dbPath} but found 0 tables. The database may be locked by another process (like an R session). Try disconnecting from other connections first.`
+        );
+        outputChannel.appendLine(`⚠️  Connected but found 0 tables - database may be locked`);
+      } else {
+        vscode.window.showInformationMessage(
+          `Connected to ${dbPath}\n${tableCount} tables`
+        );
+        outputChannel.appendLine(`✓ Connected: ${tableCount} tables`);
+      }
+
+      // Debug: Log table and column details
+      const tables = schemaProvider.getTableNames();
+      for (const tableName of tables) {
+        const columns = schemaProvider.getColumns(tableName);
+        outputChannel.appendLine(`  Table: ${tableName} (${columns.length} columns)`);
+        columns.forEach(col => {
+          outputChannel.appendLine(`    - ${col.name}: ${col.type}`);
+        });
+      }
     }
   } catch (err: any) {
     outputChannel.appendLine(`✗ Connection failed: ${err.message}`);
@@ -265,107 +316,6 @@ async function refreshSchema(): Promise<void> {
     vscode.window.showErrorMessage(`Failed to refresh schema: ${err.message}`);
     throw err;
   }
-}
-
-/**
- * Try to auto-connect to a database
- */
-async function tryAutoConnect() {
-  const config = vscode.workspace.getConfiguration('duckdb-r-editor');
-  let dbPath = config.get<string>('duckdbPath');
-
-  // If no path configured, look for test.duckdb in workspace root
-  if (!dbPath && vscode.workspace.workspaceFolders) {
-    const workspaceRoot = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const testDbPath = `${workspaceRoot}/test.duckdb`;
-    dbPath = testDbPath;
-  }
-
-  if (dbPath) {
-    outputChannel.appendLine(`Attempting to auto-connect to database: ${dbPath}`);
-    try {
-      await connectToDatabase(dbPath);
-    } catch (err: any) {
-      // Error already logged by connectToDatabase
-      vscode.window.showWarningMessage(`Could not auto-connect to database: ${err.message}`);
-    }
-  }
-}
-
-async function extractQueryAtCursor(editor: vscode.TextEditor): Promise<string | null> {
-  const position = editor.selection.active;
-  const document = editor.document;
-  const line = document.lineAt(position.line);
-
-  // Find the SQL string at cursor
-  const text = line.text;
-  const match = text.match(/["']([^"']+)["']/);
-
-  if (match) {
-    return match[1];
-  }
-
-  return null;
-}
-
-async function executeAndShowResults(query: string) {
-  if (!schemaProvider.isConnected()) {
-    vscode.window.showWarningMessage('No database connection. Use "R SQL: Connect to DuckDB Database" first.');
-    return;
-  }
-
-  try {
-    let results: any[];
-
-    if (cliProvider) {
-      outputChannel.appendLine(`Executing query via CLI: ${query.substring(0, 100)}...`);
-      results = await cliProvider.executeQuery(query);
-      outputChannel.appendLine(`✓ Query returned ${results.length} rows`);
-    } else if (connectionManager) {
-      results = await connectionManager.executeQuery(query);
-    } else {
-      throw new Error('No connection available');
-    }
-
-    const panel = vscode.window.createWebviewPanel(
-      'sqlResults',
-      'SQL Results',
-      vscode.ViewColumn.Beside,
-      {}
-    );
-
-    panel.webview.html = formatResultsAsHTML(results);
-  } catch (error: any) {
-    outputChannel.appendLine(`✗ Query failed: ${error.message}`);
-    vscode.window.showErrorMessage(`Query failed: ${error.message}`);
-  }
-}
-
-function formatResultsAsHTML(results: any[]): string {
-  if (!results || results.length === 0) {
-    return '<html><body><p>No results</p></body></html>';
-  }
-
-  const columns = Object.keys(results[0]);
-  let html = '<html><head><style>table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ddd; padding: 8px; text-align: left; } th { background-color: #4CAF50; color: white; }</style></head><body>';
-  html += '<table><thead><tr>';
-
-  for (const col of columns) {
-    html += `<th>${col}</th>`;
-  }
-
-  html += '</tr></thead><tbody>';
-
-  for (const row of results) {
-    html += '<tr>';
-    for (const col of columns) {
-      html += `<td>${row[col]}</td>`;
-    }
-    html += '</tr>';
-  }
-
-  html += '</tbody></table></body></html>';
-  return html;
 }
 
 export function deactivate() {

@@ -12,7 +12,9 @@
       "WebFetch(domain:posit-dev.github.io)",
       "Bash(npm run package:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "WebSearch",
+      "Bash(npm install:*)"
     ]
   }
 }

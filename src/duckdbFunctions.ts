@@ -389,7 +389,9 @@ export const SQL_KEYWORDS = [
     'WITH', 'RECURSIVE', 'CTE', 'WINDOW', 'PARTITION BY', 'OVER',
     'NULLS FIRST', 'NULLS LAST',
     // DuckDB-specific commands
-    'INSTALL', 'LOAD', 'ATTACH', 'DETACH', 'USE', 'PRAGMA', 'COPY', 'EXPORT'
+    'INSTALL', 'LOAD', 'ATTACH', 'DETACH', 'USE', 'PRAGMA', 'COPY', 'EXPORT',
+    // DuckDB metadata commands
+    'SHOW', 'TABLES', 'DESCRIBE', 'SUMMARIZE', 'EXPLAIN'
 ];
 
 /**

@@ -39,15 +39,18 @@ export class DuckDBConnectionManager implements vscode.Disposable {
 
   async refreshSchema(): Promise<void> {
     if (!this.connection) {
+      console.log('No connection available for schema refresh');
       return;
     }
 
     this.schema.clear();
 
     // Get all tables
+    console.log('Querying for tables...');
     const tables = await this.query<{ table_name: string }>(
       "SELECT table_name FROM information_schema.tables WHERE table_schema = 'main'"
     );
+    console.log(`Found ${tables.length} tables`);
 
     // Get columns for each table
     for (const table of tables) {
