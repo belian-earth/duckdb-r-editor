@@ -1,298 +1,351 @@
 # DuckDB R Editor
 
-**DuckDB-focused SQL editor** for R scripts with intelligent autocomplete, schema introspection, and native Positron integration.
+**SQL syntax highlighting and intelligent autocomplete for DuckDB in R files.** Designed for use with Positron IDE and Air formatter.
 
-This extension is specifically designed for **DuckDB** - providing rich autocomplete for 500+ DuckDB functions, DuckDB-specific syntax support, and seamless integration with DuckDB databases in your R workflow.
+Write DuckDB SQL with full IDE support - syntax highlighting, autocomplete, and schema introspection - right inside R strings.
 
-## Features
-
-### 🦆 DuckDB-Powered SQL Autocomplete in R Strings
-
-Write DuckDB SQL inside R strings with full IDE support:
-
-```r
-library(DBI)
-con <- dbConnect(duckdb::duckdb(), "my_database.duckdb")
-
-# Get autocomplete for SQL functions, tables, and columns!
-result <- dbGetQuery(con, "
-  SELECT
-    customer_id,
-    SUM(amount) as total,
-    COUNT(*) as order_count
-  FROM orders
-  WHERE date > CURRENT_DATE - INTERVAL '30 days'
-  GROUP BY customer_id
-  ORDER BY total DESC
-")
-```
-
-### ✨ Key Features
-
-- **500+ DuckDB Function Signatures**: Type a function name and get instant documentation with examples
-  - DuckDB aggregate functions: `COUNT()`, `SUM()`, `AVG()`, `STRING_AGG()`, `APPROX_COUNT_DISTINCT()`, etc.
-  - DuckDB string functions: `CONCAT()`, `UPPER()`, `LOWER()`, `REGEXP_MATCHES()`, `LIST_AGGREGATE()`, etc.
-  - DuckDB date/time functions: `NOW()`, `DATE_TRUNC()`, `EXTRACT()`, `STRFTIME()`, `MAKE_TIMESTAMP()`, etc.
-  - DuckDB window functions: `ROW_NUMBER()`, `RANK()`, `LAG()`, `LEAD()`, `PERCENT_RANK()`, etc.
-  - DuckDB-specific features: `UNNEST()`, `LIST_VALUE()`, `STRUCT_PACK()`, and more!
-
-- **DuckDB Schema-Aware Completions**: Connect to your DuckDB database for:
-  - Table name suggestions from your DuckDB database
-  - Column name suggestions with DuckDB type information
-  - Smart `table.column` completion with DuckDB schema introspection
-
-- **Glue Package Integration**: Full support for `glue` and `glue_sql` with DuckDB!
-  - DuckDB SQL autocomplete works in `glue()`, `glue_sql()`, `glue_data()` strings
-  - Automatically detects `{...}` R interpolation blocks
-  - SQL completions outside `{}`, R completions inside `{}`
-  - Smart validation that accounts for interpolated expressions
-
-- **DuckDB SQL Syntax Validation**: Real-time diagnostics for common SQL errors
-  - Unmatched parentheses
-  - Missing clauses
-  - Common typos
-
-- **Inline DuckDB Query Execution**: Execute DuckDB queries directly from your R file and view results
-
-## Why DuckDB?
-
-This extension is **exclusively focused on DuckDB** because:
-- 🚀 DuckDB is optimized for analytical queries in R workflows
-- 📊 Perfect for data analysis with R data frames via `duckplyr` and `dbplyr`
-- 🔧 500+ specialized functions for analytics, strings, dates, JSON, and more
-- ⚡ Fast and embeddable - no server setup required
-- 🎯 Native integration with the R ecosystem
-
-**Note**: While the extension may work with other DBI-compatible databases in Positron (via R session connections), all autocomplete, validation, and documentation features are designed specifically for DuckDB syntax and functions.
+---
 
 ## Installation
 
-### Prerequisites
+### 1. Install Prerequisites
 
-- Visual Studio Code or Positron
-- Node.js (v16 or higher)
+**Required:**
+- [Positron IDE](https://github.com/posit-dev/positron) or VS Code
+- R with `DBI` and `duckdb` packages
+- Node.js 16+ (for building the extension)
 
-### Build from Source
-
-```bash
-npm install
-npm run compile
-```
-
-### Package Extension
-
-```bash
-npm run package
-```
-
-Then install the `.vsix` file in VSCode:
-1. Open VSCode
-2. Go to Extensions (Cmd+Shift+X / Ctrl+Shift+X)
-3. Click the "..." menu
-4. Select "Install from VSIX..."
-5. Choose the generated `.vsix` file
-
-## Usage
-
-### Connecting to a Database
-
-**In Positron (Recommended):**
-
-Just create a DBI connection in your R console named `con`:
+**Recommended:**
+- [DuckDB CLI](https://duckdb.org/docs/installation/) - Enables dynamic function discovery (500+ functions)
+- [Air formatter](https://github.com/r-lib/air) - For clean multi-line SQL formatting
 
 ```r
-library(DBI)
-con <- dbConnect(duckdb::duckdb(), "mydb.duckdb")
+# Install R packages
+install.packages(c("DBI", "duckdb"))
 ```
 
-The extension automatically discovers the connection and schema!
+### 2. Build and Install Extension
 
-**In VSCode:**
+```bash
+# Clone and build
+git clone <repository-url>
+cd rsqledit
+npm install
+npm run package
 
-1. Open an R file with DuckDB SQL strings
-2. Run command: **DuckDB R Editor: Connect to DuckDB Database** (Cmd+Shift+P / Ctrl+Shift+P)
-3. Select your DuckDB database file (`.duckdb`, `.db`, or `.ddb`)
+# Install the .vsix file in Positron/VSCode:
+# Extensions → ... menu → Install from VSIX
+```
 
-Or configure in settings:
+---
 
+## Why Use This Extension?
+
+### Before: No SQL Support in R Strings
+```r
+result <- dbGetQuery(con, "
+  SELECT customer_id, SUM(amount)
+  FROM orders WHERE date > '2024-01-01'
+  GROUP BY customer_id
+")
+```
+❌ No syntax highlighting
+
+❌ No autocomplete
+
+❌ No error detection
+
+### After: Full SQL IDE Features
+
+**With syntax highlighting:**
+
+<pre>
+result <- dbGetQuery(con, "
+  <span style="color: #569CD6">SELECT</span> customer_id, <span style="color: #DCDCAA">SUM</span>(amount)
+  <span style="color: #569CD6">FROM</span> <span style="color: #4EC9B0">orders</span> <span style="color: #569CD6">WHERE</span> date > <span style="color: #CE9178">'2024-01-01'</span>
+  <span style="color: #569CD6">GROUP BY</span> customer_id
+")
+</pre>
+
+**Auto complete and syntax highlighting for:**
+- <span style="color: #569CD6">**SQL keywords**</span> (SELECT, FROM, WHERE)
+- <span style="color: #DCDCAA">**Functions**</span> (SUM, COUNT, DATE_TRUNC)
+- <span style="color: #4EC9B0">**Table names**</span> (orders, customers)
+- **Column names** (customer_id, amount)
+- <span style="color: #CE9178">**String literals**</span>
+
+✅ Autocomplete for tables, columns, and 500+ DuckDB functions
+
+✅ Context-aware colors for different SQL elements
+
+✅ Works with Air formatter multi-line strings
+
+---
+
+## Quick Start
+
+### 1. Connect to DuckDB Database
+
+**Option 1: Command Palette (Manual)**
+- Open Command Palette (`Cmd/Ctrl + Shift + P`)
+- Run: "DuckDB R Editor: Connect to DuckDB Database"
+- Select your `.duckdb` file
+
+**Option 2: Settings (Auto-connect on startup)**
 ```json
 {
   "rsqledit.duckdbPath": "/path/to/your/database.duckdb"
 }
 ```
 
-### Getting Autocomplete
+**Option 3: Workspace Convention (Auto-detect)**
+- Place a `test.duckdb` file in your workspace root
+- Extension auto-connects on startup
 
-The extension automatically detects SQL strings in these functions:
-- `DBI::dbExecute()`
-- `DBI::dbGetQuery()`
-- `DBI::dbSendQuery()`
-- `DBI::dbSendStatement()`
-- `dbplyr::sql()`
-- `glue::glue()`, `glue::glue_sql()`
-- `glue::glue_data()`, `glue::glue_data_sql()`
-- And their non-namespaced versions
+### 2. Start Writing SQL
 
-Just start typing and autocomplete will appear!
+SQL autocomplete works automatically in these functions:
+```r
+dbGetQuery()
+dbExecute()
+dbSendQuery()
+dbSendStatement()
+sql()              # dbplyr
+glue_sql()         # glue package
+```
 
-### Example Workflow
+### 3. Example: Full Autocomplete in Action
 
 ```r
 library(DBI)
 library(duckdb)
 
-# Connect to database
 con <- dbConnect(duckdb(), "sales.duckdb")
 
-# Create some tables
+# Create a table
 dbExecute(con, "
-  CREATE TABLE customers (
-    id INTEGER PRIMARY KEY,
-    name VARCHAR,
-    email VARCHAR,
-    created_at TIMESTAMP
+  CREATE TABLE orders (
+    order_id INTEGER,
+    customer_id INTEGER,
+    amount DECIMAL,
+    order_date DATE
   )
 ")
 
-# Now get autocomplete for tables and columns!
-customers <- dbGetQuery(con, "
-  SELECT
-    id,              -- Autocomplete suggests: id, name, email, created_at
-    name,
-    email,
-    DATE_TRUNC(      -- Function signature and examples appear!
-      'day',
-      created_at
-    ) as signup_date
-  FROM customers   -- Table name autocompleted!
-  WHERE created_at > CURRENT_DATE - INTERVAL '1 month'
-")
-
-# Works great with glue too!
-table_name <- "customers"
-min_date <- "2024-01-01"
-
-customers <- dbGetQuery(con, glue_sql("
+# Get autocomplete for everything!
+result <- dbGetQuery(con, "
   SELECT
     customer_id,
-    name,
-    DATE_TRUNC('month', created_at) as signup_month
-  FROM {`table_name`}        -- R variable interpolation
-  WHERE created_at > {min_date}
-  ORDER BY created_at DESC   -- Full SQL autocomplete!
+    DATE_TRUNC('month', order_date) as month,
+    SUM(amount) as total
+  FROM orders
+  WHERE order_date > CURRENT_DATE - INTERVAL '30 days'
+  GROUP BY customer_id, month
+  ORDER BY total DESC
+")
+```
+
+**What you see as you type:**
+
+<pre>
+result <- dbGetQuery(con, "
+  <span style="color: #569CD6">SELECT</span>
+    customer_id,                             <i>← Column (autocompleted from schema)</i>
+    <span style="color: #DCDCAA">DATE_TRUNC</span>(<span style="color: #CE9178">'month'</span>, order_date) <span style="color: #569CD6">AS</span> month,  <i>← Function (with signature in autocomplete)</i>
+    <span style="color: #DCDCAA">SUM</span>(amount) <span style="color: #569CD6">AS</span> total
+  <span style="color: #569CD6">FROM</span> <span style="color: #4EC9B0">orders</span>                                   <i>← Table (autocompleted)</i>
+  <span style="color: #569CD6">WHERE</span> order_date > <span style="color: #DCDCAA">CURRENT_DATE</span> - <span style="color: #569CD6">INTERVAL</span> <span style="color: #CE9178">'30 days'</span>
+  <span style="color: #569CD6">GROUP BY</span> customer_id, month
+  <span style="color: #569CD6">ORDER BY</span> total <span style="color: #569CD6">DESC</span>
+")
+</pre>
+
+<span style="color: #569CD6">**Keywords**</span> | <span style="color: #DCDCAA">**Functions**</span> | <span style="color: #4EC9B0">**Tables**</span> | **Columns** | <span style="color: #CE9178">**Strings**</span>
+
+---
+
+## Key Features
+
+### 🎨 Context-Aware Syntax Highlighting
+- **Keywords**: `SELECT`, `FROM`, `WHERE`, `INSTALL`, `LOAD`, `DESCRIBE`
+- **Functions**: `COUNT()`, `SUM()`, `DATE_TRUNC()` (distinct color)
+- **Tables**: After `FROM`, `JOIN` (distinct color)
+- **Columns**: Everywhere else (distinct color)
+- **Works with Air formatter** - Multi-line strings on separate lines fully supported
+
+### 🧠 Intelligent Autocomplete
+- **500+ DuckDB functions** with signatures and examples
+- **Schema-aware**: Tables and columns from your connected database
+- **Smart context**: Only suggests tables after `FROM`, columns after `SELECT`
+- **Dot notation**: Type `table.` for column suggestions
+
+### 🦆 DuckDB-Specific Support
+All DuckDB commands highlighted and autocompleted:
+```r
+dbExecute(con, "INSTALL spatial")        # Extension management
+dbExecute(con, "LOAD spatial")           # Load for autocomplete support
+dbExecute(con, "ATTACH 'other.db'")      # Database operations
+dbGetQuery(con, "DESCRIBE customers")    # Metadata commands
+dbGetQuery(con, "SHOW TABLES")
+dbGetQuery(con, "SUMMARIZE orders")      # Quick data summary
+```
+
+💡 **Tip**: Load extensions via Command Palette or SQL to get autocomplete for their functions (see "Loading DuckDB Extensions" below)
+
+### 🔧 Glue Package Integration
+```r
+library(glue)
+
+table <- "orders"
+min_amount <- 100
+
+result <- dbGetQuery(con, glue_sql("
+  SELECT *
+  FROM {`table`}              -- R interpolation
+  WHERE amount > {min_amount}
+  ORDER BY order_date DESC    -- Full SQL autocomplete!
 ", .con = con))
 ```
 
-### Commands
+### ✈️ Air Formatter Support
+Works perfectly with Air formatter's multi-line style:
+```r
+# Air formatter style - string on separate line
+result <- dbGetQuery(
+  con,
+  "
+  SELECT
+    customer_id,
+    name
+  FROM customers
+  WHERE active = TRUE
+  "
+)
+# ✅ Full syntax highlighting and autocomplete!
+```
 
-- **DuckDB R Editor: Connect to DuckDB Database**: Connect to a DuckDB database file
-- **DuckDB R Editor: Refresh DuckDB Schema**: Refresh table/column information from DuckDB
-- **DuckDB R Editor: Execute DuckDB Query at Cursor**: Run the DuckDB query under cursor
+### 🔌 Loading DuckDB Extensions
+
+DuckDB extensions add specialized functions (spatial, JSON, HTTP, etc.). Load them to get autocomplete for their functions:
+
+**Using Command Palette:**
+1. Open Command Palette (`Cmd/Ctrl + Shift + P`)
+2. Run: "DuckDB R Editor: Load DuckDB Extension"
+3. Enter extension name (e.g., `spatial`, `httpfs`, `json`)
+4. Extension functions now appear in autocomplete!
+
+**Using SQL:**
+```r
+# Install and load in your R code (recommended)
+dbExecute(con, "INSTALL spatial")
+dbExecute(con, "LOAD spatial")
+
+# Now autocomplete includes spatial functions
+result <- dbGetQuery(con, "
+  SELECT
+    ST_Distance(point1, point2) as distance
+  FROM locations
+")
+```
+
+**Popular extensions:**
+- `spatial` - GIS and geometry functions
+- `httpfs` - Read files from HTTP/S3
+- `json` - Advanced JSON functions
+- `parquet` - Parquet file support
+- `postgres_scanner` - Query PostgreSQL databases
+
+---
 
 ## Configuration
 
 ```json
 {
-  // Path to DuckDB database file (auto-connects on startup)
-  "rsqledit.duckdbPath": "",
+  // Path to DuckDB database (optional - auto-connects in Positron)
+  "rsqledit.duckdbPath": "/path/to/database.duckdb",
 
-  // Enable DuckDB SQL autocomplete in R strings
+  // Enable advanced SQL highlighting (default: true, recommended)
+  "rsqledit.useSemanticHighlighting": true,
+
+  // Enable autocomplete (default: true)
   "rsqledit.enableAutoComplete": true,
 
-  // Enable DuckDB SQL syntax validation
+  // Enable SQL validation (default: true)
   "rsqledit.enableDiagnostics": true
 }
 ```
 
-## Positron Integration ⭐
+---
 
-This extension has **native Positron integration** optimized for DuckDB workflows:
+## Commands
 
-### In Positron Mode:
-- 🦆 **Designed for DuckDB** - Primary support and testing focused on DuckDB databases
-- 🎯 **Uses your R session's DuckDB connection** - No separate database connection needed
-- 🔄 **Auto-discovers DuckDB schema** from your R environment
-- 🚀 **Executes DuckDB queries in R console** - Results appear directly in your R session
-- 🔥 **No database lock conflicts** - Works with your existing DuckDB connection
-- ⚠️ **Limited support for other databases** - While the extension can work with other DBI databases (PostgreSQL, MySQL, SQLite) in Positron, autocomplete functionality is specifically tailored for DuckDB syntax and functions
+| Command | Description |
+|---------|-------------|
+| **Connect to DuckDB Database** | Manually connect to a `.duckdb` file |
+| **Refresh DuckDB Schema** | Refresh table/column information |
+| **Load DuckDB Extension** | Load extensions for autocomplete (e.g., `spatial`, `httpfs`) |
+| **Execute Query at Cursor** | Run SQL query and view results |
 
-### In VSCode Mode:
-- Direct DuckDB connection via Node.js (DuckDB only)
-- Manual DuckDB database connection management
-- Results displayed in webview panel
+Access via Command Palette (`Cmd/Ctrl + Shift + P`)
 
-The extension automatically detects which environment you're running in and adapts accordingly!
+---
 
-## Supported Functions
+## Important Notes
 
-The extension recognizes SQL strings in:
+### In-Memory Databases Not Supported for Schema
+```r
+# ❌ No table/column autocomplete
+con <- dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 
-**DBI Package:**
-- `dbExecute()`
-- `dbGetQuery()`
-- `dbSendQuery()`
-- `dbSendStatement()`
+# ✅ Full autocomplete support
+con <- dbConnect(duckdb::duckdb(), dbdir = "mydata.duckdb")
+```
 
-**dbplyr Package:**
-- `sql()`
+**Why?** In-memory databases can't be accessed by the extension. Use file-based databases for full autocomplete.
 
-**glue Package:**
-- `glue()`
-- `glue_sql()`
-- `glue_data()`
-- `glue_data_sql()`
+**Workaround for testing:**
+```r
+# Use temporary file (deleted on exit)
+con <- dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+```
 
-All namespaced versions work too (e.g., `DBI::dbGetQuery()`, `glue::glue_sql()`)
+### Semantic Highlighting (Default, Recommended)
+The extension uses an optimized semantic token provider for:
+- Context-aware colors (tables vs columns vs functions)
+- Air formatter multi-line string support
+- Proper handling of commented code
+
+Performance: ~1-3ms overhead (negligible). To disable:
+```json
+{
+  "rsqledit.useSemanticHighlighting": false
+}
+```
+
+---
+
+## Positron Integration
+
+The extension works in Positron IDE with the same features as VS Code:
+- **Connect once** via Command Palette or settings
+- **Schema autocomplete** from your connected database
+- **Executes queries** in the extension (not in R console)
+- **Works alongside** your R DBI connections
+
+Same features available in both VS Code and Positron.
+
+---
 
 ## Tips
 
-1. **Connect Early**: Connect to your database at the start of your session for best autocomplete experience
-2. **Use Dot Notation**: Type `tablename.` to get column-specific completions
-3. **Multi-line Strings**: The extension works great with multi-line SQL strings
-4. **Function Help**: Hover over any SQL function to see documentation and examples
-5. **Glue Integration**: Use `glue_sql()` instead of `glue()` for safer SQL interpolation with proper quoting
-6. **Inside `{}`**: When cursor is inside `{...}` blocks, you get R autocomplete; outside you get SQL autocomplete
+1. **Connect to your database first** - Use Command Palette or set `rsqledit.duckdbPath` in settings
+2. **Load extensions for their functions** - Use "Load DuckDB Extension" command or `LOAD` SQL command
+3. **Use file-based databases** for table/column autocomplete (in-memory databases not supported)
+4. **Type `table.`** to get column-specific suggestions
+5. **Install DuckDB CLI** for dynamic function discovery (all extensions supported)
+6. **Use `glue_sql()`** instead of `glue()` for safer SQL interpolation
 
-## Known Limitations
-
-### In-Memory Databases
-
-The extension **cannot access in-memory DuckDB databases** created in your R session:
-
-```r
-# ❌ Schema autocomplete NOT available for in-memory databases
-con <- dbConnect(duckdb::duckdb(), dbdir = ":memory:")
-con <- dbConnect(duckdb::duckdb())  # defaults to :memory:
-```
-
-**Why?** In-memory databases exist only in the R process's memory space. The extension runs in a separate process and cannot access this memory.
-
-**What still works:**
-- ✅ SQL keyword completion (SELECT, FROM, WHERE, etc.)
-- ✅ DuckDB function completion (500+ functions)
-- ❌ Table and column autocomplete (no schema to read)
-
-**Workarounds:**
-
-1. **Use a file-based database** (Recommended):
-   ```r
-   con <- dbConnect(duckdb::duckdb(), dbdir = "my_project.duckdb")
-   ```
-   - Full autocomplete support for tables and columns
-   - Persists between sessions
-   - Can be large - DuckDB is efficient with disk storage
-
-2. **Use a temporary file** (In-memory-like performance):
-   ```r
-   con <- dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-   ```
-   - Full autocomplete support
-   - Automatically deleted when R session ends
-   - Fast like in-memory databases
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues or pull requests.
+---
 
 ## License
 
@@ -300,8 +353,8 @@ MIT
 
 ## Acknowledgments
 
-Built with love for the **DuckDB** and R communities. Special thanks to the developers of:
-- **DuckDB** - The amazing in-process analytical database that powers this extension
-- DBI package - For standardizing database interfaces in R
-- dbplyr and duckplyr - For seamless dplyr-to-SQL translation with DuckDB
-- The Positron IDE team - For creating an excellent data science IDE
+Built for the DuckDB and R communities. Thanks to:
+- **DuckDB** - The amazing analytical database
+- **Positron** - Excellent data science IDE
+- **Air formatter** - Clean R code formatting
+- R packages: `DBI`, `duckdb`, `dbplyr`, `glue`
