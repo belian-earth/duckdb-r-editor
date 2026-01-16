@@ -53,6 +53,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable lightweight DuckDB SQL syntax highlighting in R strings"
+        },
+        "rsqledit.useSemanticHighlighting": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable advanced SQL highlighting with full Air formatter support. Uses efficient O(n) algorithm optimized for performance. TextMate grammar (default) is lighter but doesn't support multi-line Air-formatted strings."
         }
       }
     },

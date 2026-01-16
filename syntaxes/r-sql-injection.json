@@ -3,9 +3,9 @@
   "injectionSelector": "L:source.r",
   "patterns": [
     {
-      "comment": "SQL in dbGetQuery strings",
+      "comment": "SQL in dbGetQuery strings - permissive pattern for Air formatter",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbGetQuery|DBI::dbGetQuery)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "begin": "(dbGetQuery|DBI::dbGetQuery)\\s*\\([\\s\\S]*?(\"|')",
       "end": "\\2",
       "beginCaptures": {
         "0": {
@@ -19,9 +19,9 @@
       ]
     },
     {
-      "comment": "SQL in dbExecute strings",
+      "comment": "SQL in dbExecute strings - permissive pattern for Air formatter",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbExecute|DBI::dbExecute)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "begin": "(dbExecute|DBI::dbExecute)\\s*\\([\\s\\S]*?(\"|')",
       "end": "\\2",
       "beginCaptures": {
         "0": {
@@ -35,9 +35,9 @@
       ]
     },
     {
-      "comment": "SQL in dbSendQuery strings",
+      "comment": "SQL in dbSendQuery strings - permissive pattern for Air formatter",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbSendQuery|DBI::dbSendQuery)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "begin": "(dbSendQuery|DBI::dbSendQuery)\\s*\\([\\s\\S]*?(\"|')",
       "end": "\\2",
       "beginCaptures": {
         "0": {
@@ -51,9 +51,9 @@
       ]
     },
     {
-      "comment": "SQL in dbSendStatement strings",
+      "comment": "SQL in dbSendStatement strings - permissive pattern for Air formatter",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbSendStatement|DBI::dbSendStatement)\\s*\\(\\s*[^,]+\\s*,\\s*(\"|')",
+      "begin": "(dbSendStatement|DBI::dbSendStatement)\\s*\\([\\s\\S]*?(\"|')",
       "end": "\\2",
       "beginCaptures": {
         "0": {
@@ -67,9 +67,9 @@
       ]
     },
     {
-      "comment": "SQL in dbplyr::sql strings",
+      "comment": "SQL in dbplyr::sql strings - permissive pattern for Air formatter",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(sql|dbplyr::sql)\\s*\\(\\s*(\"|')",
+      "begin": "(sql|dbplyr::sql)\\s*\\([\\s\\S]*?(\"|')",
       "end": "\\2",
       "beginCaptures": {
         "0": {
@@ -83,9 +83,9 @@
       ]
     },
     {
-      "comment": "SQL in glue_sql strings",
+      "comment": "SQL in glue_sql strings - permissive pattern for Air formatter",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(glue_sql|glue::glue_sql)\\s*\\(\\s*(\"|')",
+      "begin": "(glue_sql|glue::glue_sql)\\s*\\([\\s\\S]*?(\"|')",
       "end": "\\2",
       "beginCaptures": {
         "0": {

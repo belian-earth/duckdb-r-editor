@@ -4,12 +4,16 @@ import { DuckDBConnectionManager } from './duckdbConnection';
 import { DuckDBCliProvider } from './duckdbCliProvider';
 import { SQLDiagnosticsProvider } from './diagnosticsProvider';
 import { SchemaProvider } from './types';
+import { DocumentCache } from './documentCache';
+import { SQLSemanticTokenProvider } from './semanticTokenProvider';
 
 let cliProvider: DuckDBCliProvider | undefined;
 let connectionManager: DuckDBConnectionManager | undefined;
 let schemaProvider: SchemaProvider;
 let diagnosticsProvider: SQLDiagnosticsProvider;
 let outputChannel: vscode.OutputChannel;
+let documentCache: DocumentCache;
+let semanticTokenProvider: SQLSemanticTokenProvider;
 
 export async function activate(context: vscode.ExtensionContext) {
   // Create output channel for logging
@@ -48,10 +52,32 @@ export async function activate(context: vscode.ExtensionContext) {
   outputChannel.appendLine('Initializing diagnostics provider');
   diagnosticsProvider = new SQLDiagnosticsProvider();
 
-  // SQL highlighting now uses TextMate grammar injection (native VSCode highlighting)
-  // No JavaScript execution needed - it's all handled by VSCode's built-in highlighter!
-  outputChannel.appendLine('SQL syntax highlighting enabled via TextMate grammar injection');
-  outputChannel.appendLine('  This uses VSCode native highlighting - zero performance overhead!');
+  // Initialize document cache for performance and stability
+  outputChannel.appendLine('Initializing document cache');
+  documentCache = new DocumentCache();
+
+  // Check if semantic highlighting is enabled (default: false)
+  const config = vscode.workspace.getConfiguration('rsqledit');
+  const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', false);
+
+  if (useSemanticHighlighting) {
+    // Register semantic token provider for Air formatter support
+    outputChannel.appendLine('Registering semantic token provider for SQL highlighting');
+    outputChannel.appendLine('  Supports Air formatter multi-line strings');
+    outputChannel.appendLine('  Only highlights SQL content - preserves R syntax highlighting');
+    semanticTokenProvider = new SQLSemanticTokenProvider(documentCache);
+
+    const semanticTokenProviderDisposable = vscode.languages.registerDocumentSemanticTokensProvider(
+      { language: 'r', scheme: 'file' },
+      semanticTokenProvider,
+      SQLSemanticTokenProvider.getLegend()
+    );
+    context.subscriptions.push(semanticTokenProviderDisposable);
+  } else {
+    // Use TextMate grammar injection (fallback)
+    outputChannel.appendLine('SQL syntax highlighting using TextMate grammar injection');
+    outputChannel.appendLine('  Note: Limited support for Air formatter multi-line strings');
+  }
 
   // Register completion provider for R files
   outputChannel.appendLine('Registering completion provider for R files');
@@ -150,11 +176,24 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  // Watch for document changes to update diagnostics
+  // Watch for document changes to update diagnostics and invalidate cache
   context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument(event => {
       if (event.document.languageId === 'r') {
+        // Update diagnostics
         diagnosticsProvider.updateDiagnostics(event.document);
+
+        // Invalidate document cache to force re-parse on next access
+        documentCache.invalidateDocument(event.document);
+      }
+    })
+  );
+
+  // Clear cache when documents are closed to save memory
+  context.subscriptions.push(
+    vscode.workspace.onDidCloseTextDocument(document => {
+      if (document.languageId === 'r') {
+        documentCache.invalidateDocument(document);
       }
     })
   );

@@ -133,20 +133,23 @@ export class SQLStringDetector {
 
     /**
      * Find if the string is part of a DBI or glue function call
+     * Fixed to work with Air formatter multi-line patterns
      */
     private static findDBIFunctionContext(document: vscode.TextDocument, position: vscode.Position): string | null {
         // Look backwards from the string position to find function call
         let currentLine = position.line;
         let searchText = '';
 
-        // Gather context (up to 5 lines back)
-        for (let i = Math.max(0, currentLine - 5); i <= currentLine; i++) {
+        // Gather context (up to 10 lines back for Air formatter)
+        for (let i = Math.max(0, currentLine - 10); i <= currentLine; i++) {
             searchText += document.lineAt(i).text + '\n';
         }
 
         // Check for DBI functions
+        // Use [\s\S]*? to match ANY characters including newlines between function name and (
         for (const funcName of this.DBI_FUNCTIONS) {
-            const pattern = new RegExp(`${funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'i');
+            const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = new RegExp(`${escapedName}[\\s\\S]*?\\(`, 'i');
             if (pattern.test(searchText)) {
                 return funcName;
             }
@@ -154,7 +157,8 @@ export class SQLStringDetector {
 
         // Check for glue functions
         for (const funcName of this.GLUE_FUNCTIONS) {
-            const pattern = new RegExp(`${funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'i');
+            const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = new RegExp(`${escapedName}[\\s\\S]*?\\(`, 'i');
             if (pattern.test(searchText)) {
                 return funcName;
             }
