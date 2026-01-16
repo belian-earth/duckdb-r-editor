@@ -4,6 +4,8 @@ out
 .vscode-test/
 .DS_Store
 
+# Claude Code development docs (internal, not for repo)
+.claude/docs/
+
 # R/duckdb scratch files
-test.R
-test.duckdb
+R-test-files/*
