@@ -285,9 +285,8 @@ export class DuckDBCliProvider implements vscode.Disposable {
         console.log('Using Positron API to query R session...');
 
         // R code to get all DuckDB connections and their schemas
-        // Use a global variable approach to minimize console output
         const rCode = `
-.duckdb_schema_result <- tryCatch({
+tryCatch({
     # Find all DuckDB connections in global environment
     all_objs <- ls(envir = .GlobalEnv)
     connections <- list()
@@ -339,7 +338,7 @@ export class DuckDBCliProvider implements vscode.Disposable {
     }
 
     # Return as JSON
-    if (requireNamespace("jsonlite", quietly = TRUE)) {
+    json_output <- if (requireNamespace("jsonlite", quietly = TRUE)) {
         jsonlite::toJSON(result, auto_unbox = TRUE)
     } else {
         paste0("[", paste(sapply(result, function(r) {
@@ -347,18 +346,17 @@ export class DuckDBCliProvider implements vscode.Disposable {
                 r$table_name, r$column_name, r$data_type, r$is_nullable)
         }), collapse = ","), "]")
     }
+
+    cat("__JSON_START__\\n")
+    cat(json_output)
+    cat("\\n__JSON_END__\\n")
+    cat("✓ DuckDB R Editor: Schema retrieved from active R session\\n")
 }, error = function(e) {
     stop(e$message)
 })
-cat("__JSON_START__\\n")
-cat(.duckdb_schema_result)
-cat("\\n__JSON_END__\\n")
-rm(.duckdb_schema_result, envir = .GlobalEnv)
         `.trim();
 
         try {
-            console.log('Executing R code through Positron runtime...');
-
             // Execute R code through Positron using observer pattern to capture output
             let output = '';
             let errorOutput = '';
