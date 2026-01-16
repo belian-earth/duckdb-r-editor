@@ -11,3 +11,4 @@ out
 R-test-files/*
 *.duckdb
 *.wal
+test.R
