@@ -7,12 +7,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/h-a-graham/rsqledit.git"
+    "url": "https://github.com/h-a-graham/duckdb-r-editor.git"
   },
   "bugs": {
-    "url": "https://github.com/h-a-graham/rsqledit/issues"
+    "url": "https://github.com/h-a-graham/duckdb-r-editor/issues"
   },
-  "homepage": "https://github.com/h-a-graham/rsqledit#readme",
+  "homepage": "https://github.com/h-a-graham/duckdb-r-editor#readme",
   "engines": {
     "vscode": "^1.80.0",
     "positron": ">=2024.1.0"
