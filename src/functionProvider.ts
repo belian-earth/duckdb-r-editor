@@ -112,6 +112,38 @@ export class DuckDBFunctionProvider implements vscode.Disposable {
     }
 
     /**
+     * Load multiple extensions from settings
+     */
+    async loadDefaultExtensions(extensionNames: string[]): Promise<void> {
+        if (extensionNames.length === 0) {
+            return;
+        }
+
+        console.log(`Auto-loading ${extensionNames.length} default extensions...`);
+        const errors: string[] = [];
+
+        for (const extensionName of extensionNames) {
+            try {
+                await this.query(`INSTALL ${extensionName}`);
+                await this.query(`LOAD ${extensionName}`);
+                this.loadedExtensions.add(extensionName);
+                console.log(`✓ Loaded default extension: ${extensionName}`);
+            } catch (error: any) {
+                const errorMsg = `Failed to load '${extensionName}': ${error.message}`;
+                console.error(errorMsg);
+                errors.push(errorMsg);
+            }
+        }
+
+        // Refresh functions after loading all extensions
+        await this.refreshFunctions();
+
+        if (errors.length > 0) {
+            console.warn(`Some extensions failed to load:\n${errors.join('\n')}`);
+        }
+    }
+
+    /**
      * Get all function names
      */
     getFunctionNames(): string[] {

@@ -2,7 +2,7 @@
   "name": "duckdb-r-editor",
   "displayName": "DuckDB R Editor (Positron)",
   "description": "Positron-exclusive SQL editor for R. Queries your active R DuckDB connection for schema - no file locking! 900+ DuckDB functions with intelligent autocomplete.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "duckdb-r-editor",
   "license": "MIT",
   "repository": {
@@ -66,6 +66,14 @@
           "type": "boolean",
           "default": true,
           "description": "Enable advanced SQL highlighting with context-aware colors and full Air formatter support. Recommended for best experience. Uses efficient O(n) algorithm with minimal overhead (~1-3ms). Disable to use lighter TextMate grammar (doesn't support multi-line Air-formatted strings)."
+        },
+        "duckdb-r-editor.defaultExtensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "DuckDB extensions to auto-load on startup (e.g., ['spatial', 'httpfs', 'json']). Extensions are loaded into in-memory database for function autocomplete."
         }
       }
     },
@@ -84,7 +92,7 @@
       },
       {
         "command": "duckdb-r-editor.loadExtension",
-        "title": "DuckDB R Editor: Load DuckDB Extension for Autocomplete"
+        "title": "DuckDB R Editor: Load DuckDB Extension (One-Time)"
       }
     ]
   },

@@ -34,10 +34,23 @@ export async function activate(context: vscode.ExtensionContext) {
 
   outputChannel.appendLine('✓ Positron API detected');
 
+  // Get configuration settings
+  const config = vscode.workspace.getConfiguration('duckdb-r-editor');
+
   // Initialize function provider (Node.js DuckDB for function discovery)
   outputChannel.appendLine('Initializing function provider...');
   functionProvider = new DuckDBFunctionProvider();
-  await functionProvider.refreshFunctions();
+
+  // Load default extensions from settings
+  const defaultExtensions = config.get<string[]>('defaultExtensions', []);
+
+  if (defaultExtensions.length > 0) {
+    outputChannel.appendLine(`Loading default extensions: ${defaultExtensions.join(', ')}`);
+    await functionProvider.loadDefaultExtensions(defaultExtensions);
+  } else {
+    await functionProvider.refreshFunctions();
+  }
+
   const funcCount = functionProvider.getAllFunctions().length;
   outputChannel.appendLine(`✓ Discovered ${funcCount} DuckDB functions`);
   context.subscriptions.push(functionProvider);
@@ -57,7 +70,6 @@ export async function activate(context: vscode.ExtensionContext) {
   documentCache = new DocumentCache();
 
   // Check if semantic highlighting is enabled (default: true)
-  const config = vscode.workspace.getConfiguration('duckdb-r-editor');
   const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', true);
 
   if (useSemanticHighlighting) {
@@ -110,18 +122,45 @@ export async function activate(context: vscode.ExtensionContext) {
   const connectCommand = vscode.commands.registerCommand(
     'duckdb-r-editor.connectDatabase',
     async () => {
-      const uri = await vscode.window.showOpenDialog({
-        canSelectFiles: true,
-        canSelectFolders: false,
-        canSelectMany: false,
-        filters: {
-          'DuckDB Database': ['db', 'duckdb', 'ddb']
-        },
-        title: 'Select DuckDB Database File'
-      });
+      try {
+        // Discover R connections
+        outputChannel.appendLine('Discovering DuckDB connections in R session...');
+        const connections = await discoverRConnections();
 
-      if (uri && uri[0]) {
-        await connectToDatabase(uri[0].fsPath);
+        if (connections.length === 0) {
+          vscode.window.showErrorMessage('No DuckDB connections found in R session');
+          return;
+        }
+
+        // Prioritize "con" at the top
+        connections.sort((a, b) => {
+          if (a.name === 'con') return -1;
+          if (b.name === 'con') return 1;
+          return a.name.localeCompare(b.name);
+        });
+
+        // Show QuickPick
+        const items = connections.map(conn => ({
+          label: conn.name,
+          description: conn.dbPath,
+          detail: `${conn.tableCount} table${conn.tableCount !== 1 ? 's' : ''}`,
+          connectionInfo: conn
+        }));
+
+        const selected = await vscode.window.showQuickPick(items, {
+          placeHolder: 'Select R DuckDB connection',
+          title: 'DuckDB R Editor: Choose Connection'
+        });
+
+        if (selected) {
+          await connectToDatabase(
+            selected.connectionInfo.name,
+            selected.connectionInfo.dbPath
+          );
+        }
+      } catch (err: any) {
+        outputChannel.appendLine(`✗ Failed to discover connections: ${err.message}`);
+        vscode.window.showErrorMessage(`Failed to discover R connections: ${err.message}`);
       }
     }
   );
@@ -225,11 +264,99 @@ export async function activate(context: vscode.ExtensionContext) {
   outputChannel.appendLine('Commands available: "R SQL: Connect to DuckDB Database", "R SQL: Refresh Database Schema"');
 }
 
+interface RConnectionInfo {
+  name: string;
+  dbPath: string;
+  tableCount: number;
+}
+
+async function discoverRConnections(): Promise<RConnectionInfo[]> {
+  const positronApi = tryAcquirePositronApi();
+  if (!positronApi) {
+    throw new Error('Positron API not available');
+  }
+
+  const rCode = `
+tryCatch({
+    all_objs <- ls(envir = .GlobalEnv)
+    connections <- list()
+
+    for (obj_name in all_objs) {
+        obj <- get(obj_name, envir = .GlobalEnv)
+        if (inherits(obj, "duckdb_connection")) {
+            # Get database path
+            db_path <- tryCatch({
+                obj@driver@dbdir
+            }, error = function(e) {
+                ":memory:"
+            })
+
+            # Count tables
+            table_count <- tryCatch({
+                length(DBI::dbListTables(obj))
+            }, error = function(e) {
+                0
+            })
+
+            connections[[length(connections) + 1]] <- list(
+                name = obj_name,
+                dbPath = db_path,
+                tableCount = table_count
+            )
+        }
+    }
+
+    if (length(connections) == 0) {
+        stop("No DuckDB connections found in R session")
+    }
+
+    json_output <- if (requireNamespace("jsonlite", quietly = TRUE)) {
+        jsonlite::toJSON(connections, auto_unbox = TRUE)
+    } else {
+        paste0("[", paste(sapply(connections, function(c) {
+            sprintf('{"name":"%s","dbPath":"%s","tableCount":%d}',
+                c$name, c$dbPath, c$tableCount)
+        }), collapse = ","), "]")
+    }
+
+    cat("__JSON_START__\\n")
+    cat(json_output)
+    cat("\\n__JSON_END__\\n")
+}, error = function(e) {
+    stop(e$message)
+})
+  `.trim();
+
+  let output = '';
+  let errorOutput = '';
+
+  await positronApi.runtime.executeCode('r', rCode, false, false, 'transient' as any, undefined, {
+    onOutput: (text: string) => { output += text; },
+    onError: (text: string) => { errorOutput += text; }
+  });
+
+  if (!output || output.trim().length === 0) {
+    throw new Error(errorOutput || 'No DuckDB connections found in R session');
+  }
+
+  const jsonStartMarker = '__JSON_START__';
+  const jsonEndMarker = '__JSON_END__';
+  const startIndex = output.indexOf(jsonStartMarker);
+  const endIndex = output.indexOf(jsonEndMarker);
+
+  if (startIndex === -1 || endIndex === -1) {
+    throw new Error('Could not parse R connection information');
+  }
+
+  const jsonStr = output.substring(startIndex + jsonStartMarker.length, endIndex).trim();
+  return JSON.parse(jsonStr) as RConnectionInfo[];
+}
+
 /**
  * Connect to a database with consistent messaging
  * Creates a new Positron schema provider and queries R session
  */
-async function connectToDatabase(dbPath: string): Promise<void> {
+async function connectToDatabase(connectionName: string, dbPath: string): Promise<void> {
   const positronApi = tryAcquirePositronApi();
   if (!positronApi) {
     vscode.window.showErrorMessage('Positron API not available. This extension requires Positron IDE.');
@@ -239,21 +366,28 @@ async function connectToDatabase(dbPath: string): Promise<void> {
   try {
     // Create new schema provider for this connection
     schemaProvider = new PositronSchemaProvider(positronApi);
-    await schemaProvider.connect(dbPath);
+    await schemaProvider.connect(connectionName, dbPath);
 
     const tableCount = schemaProvider.getTableNames().length;
     const funcCount = functionProvider?.getAllFunctions().length || 0;
 
+    const dbInfo = dbPath === ':memory:' ? 'in-memory database' : dbPath;
+
     if (tableCount === 0) {
       vscode.window.showWarningMessage(
-        `Connected to ${dbPath} but found 0 tables. Make sure you have an active R DuckDB connection with tables.`
+        `Connected to ${connectionName} (${dbInfo})\n\n` +
+        `⚠️  Database is empty - no tables found.\n\n` +
+        `Autocomplete will work for DuckDB functions (${funcCount} available) but not for tables/columns yet.\n\n` +
+        `Create tables in R, then use "Refresh DuckDB Schema" command to update.`,
+        'OK'
       );
-      outputChannel.appendLine(`⚠️  Connected but found 0 tables - check R session`);
+      outputChannel.appendLine(`⚠️  Connected to ${connectionName} (${dbInfo}) - Empty database (0 tables)`);
+      outputChannel.appendLine(`   💡 Tip: Create tables in R, then use "Refresh DuckDB Schema" to update autocomplete`);
     } else {
       vscode.window.showInformationMessage(
-        `Connected to ${dbPath}\n${tableCount} tables from R session, ${funcCount} functions available`
+        `Connected to ${connectionName} (${dbInfo})\n${tableCount} tables, ${funcCount} functions available`
       );
-      outputChannel.appendLine(`✓ Connected: ${tableCount} tables (from R), ${funcCount} functions`);
+      outputChannel.appendLine(`✓ Connected to ${connectionName}: ${tableCount} tables, ${funcCount} functions`);
     }
 
     // Debug: Log table and column details
@@ -286,10 +420,20 @@ async function refreshSchema(): Promise<void> {
     const tableCount = schemaProvider.getTableNames().length;
     const funcCount = functionProvider?.getAllFunctions().length || 0;
 
-    vscode.window.showInformationMessage(
-      `Schema refreshed: ${tableCount} tables (from R session), ${funcCount} functions`
-    );
-    outputChannel.appendLine(`✓ Refreshed: ${tableCount} tables, ${funcCount} functions`);
+    if (tableCount === 0) {
+      vscode.window.showWarningMessage(
+        `Schema refreshed\n\n` +
+        `⚠️  Database is still empty - no tables found.\n\n` +
+        `Autocomplete will work for DuckDB functions (${funcCount} available) but not for tables/columns.`,
+        'OK'
+      );
+      outputChannel.appendLine(`⚠️  Refreshed - Still no tables found (0 tables)`);
+    } else {
+      vscode.window.showInformationMessage(
+        `Schema refreshed: ${tableCount} tables (from R session), ${funcCount} functions`
+      );
+      outputChannel.appendLine(`✓ Refreshed: ${tableCount} tables, ${funcCount} functions`);
+    }
   } catch (err: any) {
     outputChannel.appendLine(`✗ Refresh failed: ${err.message}`);
     vscode.window.showErrorMessage(`Failed to refresh schema: ${err.message}`);

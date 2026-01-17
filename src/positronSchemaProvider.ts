@@ -7,6 +7,7 @@ import { ColumnInfo } from './types';
  */
 export class PositronSchemaProvider implements vscode.Disposable {
     private schema: Map<string, ColumnInfo[]> = new Map();
+    private connectionName: string | null = null;
     private dbPath: string | null = null;
     private positronApi: any;
 
@@ -18,11 +19,12 @@ export class PositronSchemaProvider implements vscode.Disposable {
     }
 
     /**
-     * Set the database path (for display purposes only)
+     * Connect to a specific R DuckDB connection
      */
-    async connect(dbPath: string): Promise<void> {
+    async connect(connectionName: string, dbPath: string): Promise<void> {
+        this.connectionName = connectionName;
         this.dbPath = dbPath;
-        console.log('Connected to DuckDB database:', dbPath);
+        console.log(`Connected to R connection '${connectionName}' (${dbPath})`);
 
         // Immediately fetch schema from R session
         await this.refreshSchema();
@@ -32,28 +34,23 @@ export class PositronSchemaProvider implements vscode.Disposable {
      * Query schema from active R DuckDB connection
      */
     async refreshSchema(): Promise<void> {
-        console.log('Querying schema from Positron R session...');
+        console.log(`Querying schema from R connection '${this.connectionName}'...`);
 
-        // R code to get all DuckDB connections and their schemas
+        // Inject connection name into R code
+        const targetConnection = this.connectionName;
+
         const rCode = `
 tryCatch({
-    # Find all DuckDB connections in global environment
-    all_objs <- ls(envir = .GlobalEnv)
-    connections <- list()
-
-    for (obj_name in all_objs) {
-        obj <- get(obj_name, envir = .GlobalEnv)
-        if (inherits(obj, "duckdb_connection")) {
-            connections[[obj_name]] <- obj
-        }
+    # Get the specific connection object
+    if (!exists("${targetConnection}", envir = .GlobalEnv)) {
+        stop("Connection '${targetConnection}' not found in R session")
     }
 
-    if (length(connections) == 0) {
-        stop("No DuckDB connections found in R session")
-    }
+    con <- get("${targetConnection}", envir = .GlobalEnv)
 
-    # Use the first connection
-    con <- connections[[1]]
+    if (!inherits(con, "duckdb_connection")) {
+        stop("Object '${targetConnection}' is not a DuckDB connection")
+    }
 
     # Get schema information
     if (!requireNamespace("DBI", quietly = TRUE)) {
@@ -83,24 +80,28 @@ tryCatch({
         })
     }
 
-    if (length(result) == 0) {
-        stop("No columns found")
-    }
-
-    # Return as JSON
+    # Return as JSON (even if empty)
     json_output <- if (requireNamespace("jsonlite", quietly = TRUE)) {
         jsonlite::toJSON(result, auto_unbox = TRUE)
     } else {
-        paste0("[", paste(sapply(result, function(r) {
-            sprintf('{"table_name":"%s","column_name":"%s","data_type":"%s","is_nullable":"%s"}',
-                r$table_name, r$column_name, r$data_type, r$is_nullable)
-        }), collapse = ","), "]")
+        if (length(result) == 0) {
+            "[]"
+        } else {
+            paste0("[", paste(sapply(result, function(r) {
+                sprintf('{"table_name":"%s","column_name":"%s","data_type":"%s","is_nullable":"%s"}',
+                    r$table_name, r$column_name, r$data_type, r$is_nullable)
+            }), collapse = ","), "]")
+        }
     }
 
     cat("__JSON_START__\\n")
     cat(json_output)
     cat("\\n__JSON_END__\\n")
-    cat("✓ DuckDB R Editor: Schema retrieved from active R session\\n")
+    if (length(result) == 0) {
+        cat("⚠️  DuckDB R Editor: No tables found in connection '${targetConnection}'\\n")
+    } else {
+        cat("✓ DuckDB R Editor: Schema retrieved from R connection '${targetConnection}'\\n")
+    }
 }, error = function(e) {
     stop(e$message)
 })
@@ -214,7 +215,15 @@ tryCatch({
         return this.dbPath;
     }
 
+    /**
+     * Get current connection name
+     */
+    getConnectionName(): string | null {
+        return this.connectionName;
+    }
+
     dispose() {
+        this.connectionName = null;
         this.dbPath = null;
         this.schema.clear();
     }
