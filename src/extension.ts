@@ -5,6 +5,7 @@ import { DuckDBFunctionProvider } from './functionProvider';
 import { SQLDiagnosticsProvider } from './diagnosticsProvider';
 import { DocumentCache } from './documentCache';
 import { SQLSemanticTokenProvider } from './semanticTokenProvider';
+import { SchemaWatcher } from './schemaWatcher';
 import { tryAcquirePositronApi } from '@posit-dev/positron';
 
 let schemaProvider: PositronSchemaProvider | undefined;
@@ -13,6 +14,7 @@ let diagnosticsProvider: SQLDiagnosticsProvider;
 let outputChannel: vscode.OutputChannel;
 let documentCache: DocumentCache;
 let semanticTokenProvider: SQLSemanticTokenProvider;
+let schemaWatcher: SchemaWatcher | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
   // Create output channel for logging
@@ -171,6 +173,12 @@ export async function activate(context: vscode.ExtensionContext) {
       if (!schemaProvider || !schemaProvider.isConnected()) {
         vscode.window.showInformationMessage('No active database connection');
         return;
+      }
+
+      // Stop schema watcher
+      if (schemaWatcher) {
+        schemaWatcher.dispose();
+        schemaWatcher = undefined;
       }
 
       // Disconnect by disposing the schema provider
@@ -399,6 +407,13 @@ async function connectToDatabase(connectionName: string, dbPath: string): Promis
         outputChannel.appendLine(`    - ${col.name}: ${col.type}`);
       });
     }
+
+    // Start schema watcher for automatic refresh
+    if (schemaWatcher) {
+      schemaWatcher.dispose();
+    }
+    schemaWatcher = new SchemaWatcher(schemaProvider, positronApi, outputChannel);
+    schemaWatcher.start();
   } catch (err: any) {
     outputChannel.appendLine(`✗ Connection failed: ${err.message}`);
     vscode.window.showErrorMessage(`Failed to connect: ${err.message}`);
@@ -442,6 +457,9 @@ async function refreshSchema(): Promise<void> {
 }
 
 export function deactivate() {
+  if (schemaWatcher) {
+    schemaWatcher.dispose();
+  }
   if (schemaProvider) {
     schemaProvider.dispose();
   }

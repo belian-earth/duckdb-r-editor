@@ -74,6 +74,23 @@
           },
           "default": [],
           "description": "DuckDB extensions to auto-load on startup (e.g., ['spatial', 'httpfs', 'json']). Extensions are loaded into in-memory database for function autocomplete."
+        },
+        "duckdb-r-editor.autoRefreshSchema": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect and refresh schema changes in the R DuckDB connection. When enabled, the extension will periodically check for table/column changes and update autocomplete suggestions."
+        },
+        "duckdb-r-editor.autoRefreshInterval": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1000,
+          "maximum": 60000,
+          "description": "Interval in milliseconds for automatic schema refresh checks (1000-60000ms). Default: 5000ms (5 seconds). Lower values provide faster detection but may impact performance."
+        },
+        "duckdb-r-editor.autoRefreshOnActivity": {
+          "type": "boolean",
+          "default": true,
+          "description": "Trigger schema refresh when R files are saved. Provides faster detection of schema changes when you're actively working."
         }
       }
     },

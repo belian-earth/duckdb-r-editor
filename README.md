@@ -46,6 +46,7 @@ Write DuckDB SQL with full IDE support - syntax highlighting, autocomplete, and 
 | 🔌 **R Connection Selection** | QuickPick UI to select specific R DuckDB connection objects |
 | 💾 **In-Memory Support** | Full support for `:memory:` databases |
 | 🚫 **No File Locking** | Queries R session directly - no database file conflicts |
+| 🔄 **Auto-Refresh Schema** | Automatically detects table/column changes and updates autocomplete |
 | ⚙️ **Auto-Load Extensions** | Configure extensions in settings.json to load on startup |
 | ✈️ **Air Formatter Support** | Works with multi-line SQL strings |
 | 🔍 **DuckDB-Specific** | Support for `INSTALL`, `LOAD`, `DESCRIBE`, `SUMMARIZE`, etc. |
@@ -118,7 +119,10 @@ Optional: Add to `.vscode/settings.json`
 {
   "duckdb-r-editor.defaultExtensions": ["spatial", "httpfs", "json"],
   "duckdb-r-editor.useSemanticHighlighting": true,
-  "duckdb-r-editor.enableAutoComplete": true
+  "duckdb-r-editor.enableAutoComplete": true,
+  "duckdb-r-editor.autoRefreshSchema": true,
+  "duckdb-r-editor.autoRefreshInterval": 5000,
+  "duckdb-r-editor.autoRefreshOnActivity": true
 }
 ```
 
@@ -141,7 +145,7 @@ Optional: Add to `.vscode/settings.json`
 |---------|-------------|
 | **Connect to DuckDB Database** | Select R connection object to use for schema |
 | **Disconnect from Database** | Close connection |
-| **Refresh DuckDB Schema** | Re-query R session for updated schema |
+| **Refresh DuckDB Schema** | Manually re-query R session for updated schema (also happens automatically) |
 | **Load DuckDB Extension (One-Time)** | Load extension for autocomplete (until restart) |
 
 Access via Command Palette (`Cmd/Ctrl + Shift + P`)
