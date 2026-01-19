@@ -8,7 +8,7 @@
 
 **SQL syntax highlighting and intelligent autocomplete for DuckDB in R files.**
 
-Write DuckDB SQL with full IDE support right inside R strings. Queries your active R session via Positron API - no file locking issues.
+Write DuckDB SQL with full IDE support right inside R strings. Take full advantage of expressive SQL expressions within your R scripts!
 
 ---
 
@@ -82,7 +82,6 @@ Optional settings (`.vscode/settings.json`):
 
 **Available Settings:**
 - `enableAutoComplete` - Enable autocomplete (default: true)
-- `enableDiagnostics` - SQL syntax validation (default: true)
 - `enableSQLHighlighting` - Syntax highlighting (default: true)
 - `useSemanticHighlighting` - Advanced highlighting (default: true)
 - `defaultExtensions` - Extensions to auto-load (default: [])

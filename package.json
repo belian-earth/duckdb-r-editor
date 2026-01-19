@@ -52,11 +52,6 @@
           "default": true,
           "description": "Enable DuckDB SQL autocomplete in R strings"
         },
-        "duckdb-r-editor.enableDiagnostics": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable DuckDB SQL syntax validation"
-        },
         "duckdb-r-editor.enableSQLHighlighting": {
           "type": "boolean",
           "default": true,
