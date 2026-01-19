@@ -369,10 +369,6 @@ tryCatch({
         }
     }
 
-    if (length(.dbre_connections) == 0) {
-        stop("No DuckDB connections found in R session")
-    }
-
     # Write to file (no console output in silent mode)
     .dbre_temp_file <- "${tempFilePathR}"
 
@@ -392,23 +388,18 @@ tryCatch({
 
     invisible(NULL)
 }, error = function(e) {
-    stop(e$message)
+    # Silent error - write empty array to file
+    writeLines("[]", "${tempFilePathR}")
+    invisible(NULL)
 })
   `.trim();
 
-  let errorOutput = '';
-
-  await positronApi.runtime.executeCode('r', rCode, false, false, 'silent' as any, undefined, {
-    onError: (text: string) => { errorOutput += text; }
-  });
-
-  if (errorOutput) {
-    throw new Error(errorOutput);
-  }
+  await positronApi.runtime.executeCode('r', rCode, false, false, 'silent' as any, undefined, {});
 
   // Read from temp file
+  const fileUri = vscode.Uri.file(tempFilePath);
+
   try {
-    const fileUri = vscode.Uri.file(tempFilePath);
     const fileContent = await vscode.workspace.fs.readFile(fileUri);
     const jsonStr = new TextDecoder().decode(fileContent);
     const connections = JSON.parse(jsonStr) as RConnectionInfo[];
@@ -416,8 +407,23 @@ tryCatch({
     // Cleanup temp file
     await vscode.workspace.fs.delete(fileUri);
 
+    // Check if we got any connections
+    if (connections.length === 0) {
+      throw new Error('No DuckDB connections found in R session');
+    }
+
     return connections;
   } catch (error: any) {
+    // Try to cleanup temp file even on error
+    try {
+      await vscode.workspace.fs.delete(fileUri);
+    } catch {}
+
+    // Re-throw if it's our "no connections" error
+    if (error.message === 'No DuckDB connections found in R session') {
+      throw error;
+    }
+
     throw new Error(`Failed to read connections from file: ${error.message}`);
   }
 }
