@@ -15,7 +15,8 @@
       "Bash(npm install)",
       "WebSearch",
       "Bash(npm install:*)",
-      "Bash(npm run vsce:package:*)"
+      "Bash(npm run vsce:package:*)",
+      "Bash(npx @vscode/vsce:*)"
     ]
   }
 }
