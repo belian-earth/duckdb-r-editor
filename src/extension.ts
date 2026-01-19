@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as os from 'os';
+import * as path from 'path';
 import { SQLCompletionProvider } from './completionProvider';
 import { PositronSchemaProvider } from './positronSchemaProvider';
 import { DuckDBFunctionProvider } from './functionProvider';
@@ -7,18 +9,34 @@ import { DocumentCache } from './documentCache';
 import { SQLSemanticTokenProvider } from './semanticTokenProvider';
 import { tryAcquirePositronApi } from '@posit-dev/positron';
 
+// Module-level state
 let schemaProvider: PositronSchemaProvider | undefined;
 let functionProvider: DuckDBFunctionProvider | undefined;
 let diagnosticsProvider: SQLDiagnosticsProvider;
 let outputChannel: vscode.OutputChannel;
 let documentCache: DocumentCache;
 let semanticTokenProvider: SQLSemanticTokenProvider;
-let extensionContext: vscode.ExtensionContext;
+
+// Constants
+const DEBOUNCE_DELAY_MS = 1500;
+const SCHEMA_MODIFY_PATTERNS = [
+  /dbExecute\s*\(/i,                    // dbExecute(con, ...)
+  /dbWriteTable\s*\(/i,                 // dbWriteTable(con, ...)
+  /dbRemoveTable\s*\(/i,                // dbRemoveTable(con, ...)
+  /dbCreateTable\s*\(/i,                // dbCreateTable(con, ...)
+  /\bCREATE\s+(TABLE|VIEW|INDEX)/i,    // CREATE TABLE/VIEW/INDEX
+  /\bDROP\s+(TABLE|VIEW|INDEX)/i,      // DROP TABLE/VIEW/INDEX
+  /\bALTER\s+TABLE/i,                   // ALTER TABLE
+  /\bTRUNCATE\s+TABLE/i,                // TRUNCATE TABLE
+];
+
+interface RConnectionInfo {
+  name: string;
+  dbPath: string;
+  tableCount: number;
+}
 
 export async function activate(context: vscode.ExtensionContext) {
-  // Store context for use in helper functions
-  extensionContext = context;
-
   // Create output channel for logging
   outputChannel = vscode.window.createOutputChannel('DuckDB R Editor');
   context.subscriptions.push(outputChannel);
@@ -289,8 +307,6 @@ async function discoverRConnections(): Promise<RConnectionInfo[]> {
   }
 
   // Create temp file for connections data
-  const os = require('os');
-  const path = require('path');
   const tmpDir = os.tmpdir();
   const timestamp = Date.now();
   const tempFilePath = path.join(tmpDir, `duckdb-connections-${timestamp}.json`);
@@ -361,7 +377,6 @@ tryCatch({
 
   // Read from temp file
   try {
-    const vscode = require('vscode');
     const fileUri = vscode.Uri.file(tempFilePath);
     const fileContent = await vscode.workspace.fs.readFile(fileUri);
     const jsonStr = new TextDecoder().decode(fileContent);
@@ -481,7 +496,7 @@ export function deactivate() {
 function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): void {
   let refreshTimer: NodeJS.Timeout | undefined;
 
-  // Debounced refresh function (1.5 second delay)
+  // Debounced refresh function
   const debouncedRefresh = () => {
     if (refreshTimer) {
       clearTimeout(refreshTimer);
@@ -499,7 +514,7 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
         outputChannel.appendLine(`[Auto-refresh] Failed: ${error.message}`);
         // Don't show error to user - auto-refresh is background operation
       }
-    }, 1500); // 1.5 second debounce
+    }, DEBOUNCE_DELAY_MS);
   };
 
   // Listen to code execution events
@@ -516,31 +531,18 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
 
     // Check if code references the connection
     const connectionName = schemaProvider.getConnectionName();
-    if (!connectionName) {
+    if (!connectionName || !event.code) {
       return;
     }
 
-    const code = event.code || '';
+    const code: string = event.code;
 
-    // Must contain connection name
+    // Must contain connection name AND schema-modifying operations
     if (!code.includes(connectionName)) {
       return;
     }
 
-    // Must ALSO contain schema-modifying operations
-    // This prevents refresh when connection name just happens to be in the script
-    const schemaModifyingPatterns = [
-      /dbExecute\s*\(/i,                    // dbExecute(con, ...)
-      /dbWriteTable\s*\(/i,                 // dbWriteTable(con, ...)
-      /dbRemoveTable\s*\(/i,                // dbRemoveTable(con, ...)
-      /dbCreateTable\s*\(/i,                // dbCreateTable(con, ...)
-      /\bCREATE\s+(TABLE|VIEW|INDEX)/i,    // CREATE TABLE/VIEW/INDEX
-      /\bDROP\s+(TABLE|VIEW|INDEX)/i,      // DROP TABLE/VIEW/INDEX
-      /\bALTER\s+TABLE/i,                   // ALTER TABLE
-      /\bTRUNCATE\s+TABLE/i,                // TRUNCATE TABLE
-    ];
-
-    const hasSchemaModifyingOp = schemaModifyingPatterns.some(pattern => pattern.test(code));
+    const hasSchemaModifyingOp = SCHEMA_MODIFY_PATTERNS.some(pattern => pattern.test(code));
 
     if (hasSchemaModifyingOp) {
       outputChannel.appendLine(`[Auto-refresh] Detected schema-modifying operation on '${connectionName}', refreshing...`);
