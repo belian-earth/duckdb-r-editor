@@ -34,6 +34,11 @@ const SCHEMA_MODIFY_PATTERNS = [
   /\bTRUNCATE\s+TABLE/i,                // TRUNCATE TABLE
 ];
 
+const EXTENSION_LOAD_PATTERNS = [
+  /\bINSTALL\s+\w+/i,                   // INSTALL spatial
+  /\bLOAD\s+\w+/i,                      // LOAD spatial
+];
+
 interface RConnectionInfo {
   name: string;
   dbPath: string;
@@ -425,6 +430,12 @@ async function connectToDatabase(connectionName: string, dbPath: string): Promis
     schemaProvider = new PositronSchemaProvider(positronApi);
     await schemaProvider.connect(connectionName, dbPath);
 
+    // Merge R functions with Node.js base functions (R takes precedence)
+    if (functionProvider) {
+      const rFunctions = schemaProvider.getRFunctions();
+      functionProvider.mergeRFunctions(rFunctions);
+    }
+
     const tableCount = schemaProvider.getTableNames().length;
     const funcCount = functionProvider?.getAllFunctions().length || 0;
 
@@ -528,7 +539,18 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
       }
 
       try {
+        // Refresh schema
         await schemaProvider.refreshSchema();
+
+        // Refresh functions (from R connection)
+        await schemaProvider.refreshFunctions();
+
+        // Merge R functions with Node.js base functions
+        if (functionProvider) {
+          const rFunctions = schemaProvider.getRFunctions();
+          functionProvider.mergeRFunctions(rFunctions);
+        }
+
         const newTableCount = schemaProvider.getTableNames().length;
         const tableCountChanged = newTableCount !== previousTableCount;
 
@@ -591,15 +613,26 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
 
     const code: string = event.code;
 
-    // Must contain connection name AND schema-modifying operations
+    // Must contain connection name
     if (!code.includes(connectionName)) {
       return;
     }
 
+    // Check for schema-modifying operations
     const hasSchemaModifyingOp = SCHEMA_MODIFY_PATTERNS.some(pattern => pattern.test(code));
 
     if (hasSchemaModifyingOp) {
       outputChannel.appendLine(`[Auto-refresh] Detected schema-modifying operation on '${connectionName}', refreshing...`);
+      debouncedRefresh();
+      return;
+    }
+
+    // Check for extension loading (INSTALL/LOAD)
+    const hasExtensionLoad = EXTENSION_LOAD_PATTERNS.some(pattern => pattern.test(code));
+
+    if (hasExtensionLoad) {
+      outputChannel.appendLine(`[Auto-refresh] Detected extension loading on '${connectionName}', refreshing functions...`);
+      // Refresh both schema and functions (extension might add new functions)
       debouncedRefresh();
     }
   });

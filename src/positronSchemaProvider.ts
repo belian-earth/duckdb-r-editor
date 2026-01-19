@@ -13,6 +13,8 @@ export class PositronSchemaProvider implements vscode.Disposable {
     private dbPath: string | null = null;
     private positronApi: any;
     private schemaFilePath: string | null = null;
+    private functionsFilePath: string | null = null;
+    private rFunctions: any[] = [];
 
     constructor(positronApi: any) {
         if (!positronApi) {
@@ -29,13 +31,15 @@ export class PositronSchemaProvider implements vscode.Disposable {
         this.dbPath = dbPath;
         console.log(`Connected to R connection '${connectionName}' (${dbPath})`);
 
-        // Create temp file for schema
+        // Create temp files for schema and functions
         const tmpDir = os.tmpdir();
         const timestamp = Date.now();
         this.schemaFilePath = path.join(tmpDir, `duckdb-schema-${connectionName}-${timestamp}.json`);
+        this.functionsFilePath = path.join(tmpDir, `duckdb-functions-${connectionName}-${timestamp}.json`);
 
-        // Immediately fetch schema from R session
+        // Immediately fetch schema and functions from R session
         await this.refreshSchema();
+        await this.refreshFunctions();
     }
 
     /**
@@ -232,6 +236,117 @@ tryCatch({
         return this.connectionName;
     }
 
+    /**
+     * Get functions from R connection
+     */
+    getRFunctions(): any[] {
+        return this.rFunctions;
+    }
+
+    /**
+     * Refresh functions from R DuckDB connection
+     */
+    async refreshFunctions(): Promise<void> {
+        if (!this.functionsFilePath) {
+            console.log('No functions file path set, skipping function refresh');
+            return;
+        }
+
+        console.log(`Querying functions from R connection '${this.connectionName}'...`);
+
+        const targetConnection = this.connectionName;
+        const functionsFilePath = this.functionsFilePath.replace(/\\/g, '/');
+
+        const rCode = `
+tryCatch({
+    if (!exists("${targetConnection}", envir = .GlobalEnv)) {
+        stop("Connection '${targetConnection}' not found in R session")
+    }
+
+    .dbre_tmp_conn <- get("${targetConnection}", envir = .GlobalEnv)
+
+    if (!inherits(.dbre_tmp_conn, "duckdb_connection")) {
+        stop("Object '${targetConnection}' is not a DuckDB connection")
+    }
+
+    # Query all functions from DuckDB
+    .dbre_functions <- DBI::dbGetQuery(.dbre_tmp_conn, "SELECT * FROM duckdb_functions()")
+
+    # Write to file
+    .dbre_func_file <- "${functionsFilePath}"
+
+    if (requireNamespace("jsonlite", quietly = TRUE)) {
+        jsonlite::write_json(.dbre_functions, .dbre_func_file, auto_unbox = TRUE, pretty = FALSE)
+    } else {
+        # Fallback: write simplified JSON
+        .dbre_json <- paste0("[", paste(apply(.dbre_functions, 1, function(row) {
+            sprintf('{"function_name":"%s","function_type":"%s","description":"%s","return_type":"%s"}',
+                row["function_name"], row["function_type"],
+                gsub('"', '\\\\"', row["description"]), row["return_type"])
+        }), collapse = ","), "]")
+        writeLines(.dbre_json, .dbre_func_file)
+    }
+
+    rm(.dbre_tmp_conn, .dbre_functions, .dbre_func_file)
+    if (exists(".dbre_json")) rm(.dbre_json)
+
+    invisible(NULL)
+}, error = function(e) {
+    stop(e$message)
+})
+        `.trim();
+
+        try {
+            let errorOutput = '';
+
+            await this.positronApi.runtime.executeCode(
+                'r',
+                rCode,
+                false,
+                false,
+                'silent' as any,
+                undefined,
+                {
+                    onError: (text: string) => { errorOutput += text; }
+                }
+            );
+
+            if (errorOutput) {
+                throw new Error(errorOutput);
+            }
+
+            // Read functions from file
+            await this.readFunctionsFromFile();
+
+            console.log(`✓ Functions loaded from R: ${this.rFunctions.length} functions`);
+        } catch (error: any) {
+            console.error('Failed to refresh functions:', error);
+            // Don't throw - functions are optional, schema is critical
+            console.log('Continuing without R functions (Node.js functions still available)');
+        }
+    }
+
+    /**
+     * Read functions from file
+     */
+    private async readFunctionsFromFile(): Promise<void> {
+        if (!this.functionsFilePath) {
+            throw new Error('No functions file path set');
+        }
+
+        try {
+            const fileUri = vscode.Uri.file(this.functionsFilePath);
+            const fileContent = await vscode.workspace.fs.readFile(fileUri);
+            const jsonStr = new TextDecoder().decode(fileContent);
+            this.rFunctions = JSON.parse(jsonStr);
+
+            console.log(`✓ Read functions from file: ${this.rFunctions.length} functions`);
+        } catch (error: any) {
+            console.error('Failed to read functions file:', error);
+            this.rFunctions = [];
+        }
+    }
+
     dispose() {
         // Cleanup temp schema file
         if (this.schemaFilePath) {
@@ -248,8 +363,24 @@ tryCatch({
             this.schemaFilePath = null;
         }
 
+        // Cleanup temp functions file
+        if (this.functionsFilePath) {
+            try {
+                const fileUri = vscode.Uri.file(this.functionsFilePath);
+                vscode.workspace.fs.delete(fileUri).then(
+                    () => console.log(`Deleted functions file: ${this.functionsFilePath}`),
+                    (error) => console.log(`Could not delete functions file: ${error}`)
+                );
+            } catch (error) {
+                // Ignore cleanup errors
+                console.log('Error cleaning up functions file:', error);
+            }
+            this.functionsFilePath = null;
+        }
+
         this.connectionName = null;
         this.dbPath = null;
         this.schema.clear();
+        this.rFunctions = [];
     }
 }

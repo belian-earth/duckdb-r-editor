@@ -144,6 +144,46 @@ export class DuckDBFunctionProvider implements vscode.Disposable {
     }
 
     /**
+     * Merge R functions with Node.js functions
+     * R functions take precedence (source of truth when connected)
+     */
+    mergeRFunctions(rFunctions: any[]): void {
+        if (!rFunctions || rFunctions.length === 0) {
+            console.log('No R functions to merge');
+            return;
+        }
+
+        console.log(`Merging ${rFunctions.length} functions from R connection...`);
+        let newFunctions = 0;
+        let overriddenFunctions = 0;
+
+        for (const rFunc of rFunctions) {
+            const funcName = rFunc.function_name?.toLowerCase();
+            if (!funcName) continue;
+
+            const isNew = !this.functions.has(funcName);
+            if (isNew) {
+                newFunctions++;
+            } else {
+                overriddenFunctions++;
+            }
+
+            // Convert R function to DuckDBFunction format
+            this.functions.set(funcName, {
+                function_name: rFunc.function_name,
+                function_type: rFunc.function_type || 'scalar',
+                description: rFunc.description || '',
+                return_type: rFunc.return_type || '',
+                parameters: rFunc.parameters || '',
+                parameter_types: rFunc.parameter_types || ''
+            });
+        }
+
+        console.log(`✓ Merged R functions: ${newFunctions} new, ${overriddenFunctions} overridden`);
+        console.log(`✓ Total functions available: ${this.functions.size}`);
+    }
+
+    /**
      * Get all function names
      */
     getFunctionNames(): string[] {
