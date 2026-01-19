@@ -5,7 +5,8 @@ import { DuckDBFunctionProvider } from './functionProvider';
 import { SQLDiagnosticsProvider } from './diagnosticsProvider';
 import { DocumentCache } from './documentCache';
 import { SQLSemanticTokenProvider } from './semanticTokenProvider';
-import { SchemaWatcher } from './schemaWatcher';
+// PHASE 1: SchemaWatcher disabled - only manual refresh
+// import { SchemaWatcher } from './schemaWatcher';
 import { tryAcquirePositronApi } from '@posit-dev/positron';
 
 let schemaProvider: PositronSchemaProvider | undefined;
@@ -14,9 +15,14 @@ let diagnosticsProvider: SQLDiagnosticsProvider;
 let outputChannel: vscode.OutputChannel;
 let documentCache: DocumentCache;
 let semanticTokenProvider: SQLSemanticTokenProvider;
-let schemaWatcher: SchemaWatcher | undefined;
+// PHASE 1: SchemaWatcher disabled - only manual refresh
+// let schemaWatcher: SchemaWatcher | undefined;
+let extensionContext: vscode.ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
+  // Store context for use in helper functions
+  extensionContext = context;
+
   // Create output channel for logging
   outputChannel = vscode.window.createOutputChannel('DuckDB R Editor');
   context.subscriptions.push(outputChannel);
@@ -175,11 +181,12 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
+      // PHASE 1: SchemaWatcher disabled - only manual refresh
       // Stop schema watcher
-      if (schemaWatcher) {
-        schemaWatcher.dispose();
-        schemaWatcher = undefined;
-      }
+      // if (schemaWatcher) {
+      //   schemaWatcher.dispose();
+      //   schemaWatcher = undefined;
+      // }
 
       // Disconnect by disposing the schema provider
       schemaProvider.dispose();
@@ -284,6 +291,14 @@ async function discoverRConnections(): Promise<RConnectionInfo[]> {
     throw new Error('Positron API not available');
   }
 
+  // Create temp file for connections data
+  const os = require('os');
+  const path = require('path');
+  const tmpDir = os.tmpdir();
+  const timestamp = Date.now();
+  const tempFilePath = path.join(tmpDir, `duckdb-connections-${timestamp}.json`);
+  const tempFilePathR = tempFilePath.replace(/\\/g, '/');
+
   const rCode = `
 tryCatch({
     all_objs <- ls(envir = .GlobalEnv)
@@ -318,46 +333,50 @@ tryCatch({
         stop("No DuckDB connections found in R session")
     }
 
-    json_output <- if (requireNamespace("jsonlite", quietly = TRUE)) {
-        jsonlite::toJSON(connections, auto_unbox = TRUE)
+    # Write to file (no console output in silent mode)
+    temp_file <- "${tempFilePathR}"
+
+    if (requireNamespace("jsonlite", quietly = TRUE)) {
+        jsonlite::write_json(connections, temp_file, auto_unbox = TRUE)
     } else {
-        paste0("[", paste(sapply(connections, function(c) {
+        json_output <- paste0("[", paste(sapply(connections, function(c) {
             sprintf('{"name":"%s","dbPath":"%s","tableCount":%d}',
                 c$name, c$dbPath, c$tableCount)
         }), collapse = ","), "]")
+        writeLines(json_output, temp_file)
     }
 
-    cat("__JSON_START__\\n")
-    cat(json_output)
-    cat("\\n__JSON_END__\\n")
+    invisible(NULL)
 }, error = function(e) {
     stop(e$message)
 })
   `.trim();
 
-  let output = '';
   let errorOutput = '';
 
-  await positronApi.runtime.executeCode('r', rCode, false, false, 'transient' as any, undefined, {
-    onOutput: (text: string) => { output += text; },
+  await positronApi.runtime.executeCode('r', rCode, false, false, 'silent' as any, undefined, {
     onError: (text: string) => { errorOutput += text; }
   });
 
-  if (!output || output.trim().length === 0) {
-    throw new Error(errorOutput || 'No DuckDB connections found in R session');
+  if (errorOutput) {
+    throw new Error(errorOutput);
   }
 
-  const jsonStartMarker = '__JSON_START__';
-  const jsonEndMarker = '__JSON_END__';
-  const startIndex = output.indexOf(jsonStartMarker);
-  const endIndex = output.indexOf(jsonEndMarker);
+  // Read from temp file
+  try {
+    const vscode = require('vscode');
+    const fileUri = vscode.Uri.file(tempFilePath);
+    const fileContent = await vscode.workspace.fs.readFile(fileUri);
+    const jsonStr = new TextDecoder().decode(fileContent);
+    const connections = JSON.parse(jsonStr) as RConnectionInfo[];
 
-  if (startIndex === -1 || endIndex === -1) {
-    throw new Error('Could not parse R connection information');
+    // Cleanup temp file
+    await vscode.workspace.fs.delete(fileUri);
+
+    return connections;
+  } catch (error: any) {
+    throw new Error(`Failed to read connections from file: ${error.message}`);
   }
-
-  const jsonStr = output.substring(startIndex + jsonStartMarker.length, endIndex).trim();
-  return JSON.parse(jsonStr) as RConnectionInfo[];
 }
 
 /**
@@ -408,12 +427,13 @@ async function connectToDatabase(connectionName: string, dbPath: string): Promis
       });
     }
 
+    // PHASE 1: SchemaWatcher disabled - only manual refresh
     // Start schema watcher for automatic refresh
-    if (schemaWatcher) {
-      schemaWatcher.dispose();
-    }
-    schemaWatcher = new SchemaWatcher(schemaProvider, positronApi, outputChannel);
-    schemaWatcher.start();
+    // if (schemaWatcher) {
+    //   schemaWatcher.dispose();
+    // }
+    // schemaWatcher = new SchemaWatcher(schemaProvider, positronApi, outputChannel);
+    // schemaWatcher.start();
   } catch (err: any) {
     outputChannel.appendLine(`✗ Connection failed: ${err.message}`);
     vscode.window.showErrorMessage(`Failed to connect: ${err.message}`);
@@ -457,9 +477,10 @@ async function refreshSchema(): Promise<void> {
 }
 
 export function deactivate() {
-  if (schemaWatcher) {
-    schemaWatcher.dispose();
-  }
+  // PHASE 1: SchemaWatcher disabled - only manual refresh
+  // if (schemaWatcher) {
+  //   schemaWatcher.dispose();
+  // }
   if (schemaProvider) {
     schemaProvider.dispose();
   }

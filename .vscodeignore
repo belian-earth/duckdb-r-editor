@@ -29,9 +29,15 @@ vsc-extension-quickstart.md
 # Development databases and test files
 *.duckdb
 *.duckdb.wal
+*.wal
+:memory.wal
 test.R
 .claude/**
 R-test-files/**
+
+# Development documentation
+BUILD.md
+SCHEMA_REFRESH_PLAN.md
 
 # Documentation (keep docs folder, exclude development notes)
 docs/POSITRON_TESTING.md
