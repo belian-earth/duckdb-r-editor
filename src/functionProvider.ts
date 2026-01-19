@@ -79,7 +79,10 @@ export class DuckDBFunctionProvider implements vscode.Disposable {
     }
 
     /**
-     * Load an extension for function discovery
+     * Load an official DuckDB extension for function discovery
+     * Note: Only supports official extensions. For community extensions,
+     * load them in your R session and they will be picked up via hybrid provider.
+     * @param extensionName Name of the official extension to load
      */
     async loadExtension(extensionName: string): Promise<void> {
         if (!this.connection) {

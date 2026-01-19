@@ -239,7 +239,7 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       const extensionName = await vscode.window.showInputBox({
-        prompt: 'Enter DuckDB extension name (e.g., spatial, httpfs, json)',
+        prompt: 'Enter official DuckDB extension name (e.g., spatial, httpfs, json)',
         placeHolder: 'spatial',
         validateInput: (value) => {
           if (!value || value.trim().length === 0) {
@@ -249,16 +249,22 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       });
 
-      if (extensionName) {
-        try {
-          await functionProvider.loadExtension(extensionName.trim());
-          const funcCount = functionProvider.getAllFunctions().length;
-          vscode.window.showInformationMessage(
-            `✓ Extension '${extensionName}' loaded! ${funcCount} functions now available for autocomplete.`
-          );
-        } catch (err: any) {
-          vscode.window.showErrorMessage(`Failed to load extension: ${err.message}`);
-        }
+      if (!extensionName) {
+        return;
+      }
+
+      try {
+        await functionProvider.loadExtension(extensionName.trim());
+        const funcCount = functionProvider.getAllFunctions().length;
+        vscode.window.showInformationMessage(
+          `✓ Extension '${extensionName}' loaded! ${funcCount} functions now available for autocomplete.`
+        );
+      } catch (err: any) {
+        vscode.window.showErrorMessage(
+          `Failed to load extension '${extensionName}': ${err.message}\n\n` +
+          `Note: If this is a community extension, load it in your R session instead:\n` +
+          `dbExecute(con, "INSTALL ${extensionName} FROM community; LOAD ${extensionName};")`
+        );
       }
     }
   );
