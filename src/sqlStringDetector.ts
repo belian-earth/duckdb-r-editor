@@ -114,37 +114,114 @@ export class SQLStringDetector {
     /**
      * Find if the string is part of a DBI or glue function call
      * Fixed to work with Air formatter multi-line patterns
+     * Now validates that the string is actually inside the function's parentheses
      */
     private static findDBIFunctionContext(document: vscode.TextDocument, position: vscode.Position): string | null {
         // Look backwards from the string position to find function call
         let currentLine = position.line;
         let searchText = '';
+        const startLine = Math.max(0, currentLine - PARSING_LIMITS.CONTEXT_LINE_LOOKBACK);
 
         // Gather context (Air formatter may have function name several lines above)
-        for (let i = Math.max(0, currentLine - PARSING_LIMITS.CONTEXT_LINE_LOOKBACK); i <= currentLine; i++) {
+        for (let i = startLine; i <= currentLine; i++) {
             searchText += document.lineAt(i).text + '\n';
         }
 
+        // Calculate the string position within searchText
+        let stringPosInSearch = 0;
+        for (let i = startLine; i < position.line; i++) {
+            stringPosInSearch += document.lineAt(i).text.length + 1; // +1 for newline
+        }
+        stringPosInSearch += position.character;
+
         // Check for DBI functions
-        // Use [\s\S]*? to match ANY characters including newlines between function name and (
         for (const funcName of this.DBI_FUNCTIONS) {
-            const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const pattern = new RegExp(`${escapedName}[\\s\\S]*?\\(`, 'i');
-            if (pattern.test(searchText)) {
+            const match = this.findFunctionAndValidatePosition(searchText, funcName, stringPosInSearch);
+            if (match) {
                 return funcName;
             }
         }
 
         // Check for glue functions
         for (const funcName of this.GLUE_FUNCTIONS) {
-            const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const pattern = new RegExp(`${escapedName}[\\s\\S]*?\\(`, 'i');
-            if (pattern.test(searchText)) {
+            const match = this.findFunctionAndValidatePosition(searchText, funcName, stringPosInSearch);
+            if (match) {
                 return funcName;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Find function and validate that position is inside its parentheses
+     */
+    private static findFunctionAndValidatePosition(text: string, funcName: string, position: number): boolean {
+        const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(`${escapedName}[\\s\\S]*?\\(`, 'gi');
+
+        let match;
+        while ((match = pattern.exec(text)) !== null) {
+            const functionStart = match.index;
+            const openParenPos = match.index + match[0].length - 1;
+
+            // If the position is before this function, skip
+            if (position < openParenPos) {
+                continue;
+            }
+
+            // Find the matching closing parenthesis
+            const closeParenPos = this.findMatchingCloseParen(text, openParenPos);
+
+            if (closeParenPos === -1) {
+                // No matching close paren found, assume it's at end of text (incomplete code)
+                if (position >= openParenPos) {
+                    return true;
+                }
+            } else if (position >= openParenPos && position <= closeParenPos) {
+                // Position is inside this function call
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Find the matching closing parenthesis for an opening parenthesis
+     */
+    private static findMatchingCloseParen(text: string, openPos: number): number {
+        let depth = 1;
+        let inString = false;
+        let stringChar = '';
+
+        for (let i = openPos + 1; i < text.length; i++) {
+            const char = text[i];
+            const prevChar = i > 0 ? text[i - 1] : '';
+
+            // Track strings to avoid counting parens inside strings
+            if ((char === '"' || char === "'" || char === '`') && prevChar !== '\\') {
+                if (!inString) {
+                    inString = true;
+                    stringChar = char;
+                } else if (char === stringChar) {
+                    inString = false;
+                }
+            }
+
+            if (!inString) {
+                if (char === '(') {
+                    depth++;
+                } else if (char === ')') {
+                    depth--;
+                    if (depth === 0) {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return -1; // No matching close paren found
     }
 
     /**

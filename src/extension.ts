@@ -7,6 +7,7 @@ import { DuckDBFunctionProvider } from './functionProvider';
 import { SQLDiagnosticsProvider } from './diagnosticsProvider';
 import { DocumentCache } from './documentCache';
 import { SQLSemanticTokenProvider } from './semanticTokenProvider';
+import { SQLBackgroundDecorator } from './sqlBackgroundDecorator';
 import { tryAcquirePositronApi } from '@posit-dev/positron';
 
 // Module-level state
@@ -16,6 +17,7 @@ let diagnosticsProvider: SQLDiagnosticsProvider;
 let outputChannel: vscode.OutputChannel;
 let documentCache: DocumentCache;
 let semanticTokenProvider: SQLSemanticTokenProvider;
+let sqlBackgroundDecorator: SQLBackgroundDecorator;
 let previousTableCount: number = 0;
 let shownEmptyDbWarning: boolean = false;
 
@@ -114,6 +116,12 @@ export async function activate(context: vscode.ExtensionContext) {
     outputChannel.appendLine('SQL syntax highlighting using TextMate grammar injection');
     outputChannel.appendLine('  Note: Limited support for Air formatter multi-line strings');
   }
+
+  // Initialize SQL background decorator for visual distinction
+  outputChannel.appendLine('Initializing SQL background decorator');
+  sqlBackgroundDecorator = new SQLBackgroundDecorator();
+  context.subscriptions.push(sqlBackgroundDecorator);
+  outputChannel.appendLine('  Theme-aware background colors for SQL strings');
 
   // Combined provider adapter for completion (schema + functions)
   const combinedProvider = {
