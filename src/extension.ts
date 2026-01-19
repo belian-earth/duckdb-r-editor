@@ -19,6 +19,7 @@ let documentCache: DocumentCache;
 let semanticTokenProvider: SQLSemanticTokenProvider;
 let sqlBackgroundDecorator: SQLBackgroundDecorator;
 let previousTableCount: number = 0;
+let previousFunctionCount: number = 0;
 let shownEmptyDbWarning: boolean = false;
 
 // Constants
@@ -216,6 +217,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
       // Reset tracking state
       previousTableCount = 0;
+      previousFunctionCount = 0;
       shownEmptyDbWarning = false;
 
       outputChannel.appendLine('✓ Disconnected from database');
@@ -441,6 +443,7 @@ async function connectToDatabase(connectionName: string, dbPath: string): Promis
 
     // Track initial state for auto-refresh notifications
     previousTableCount = tableCount;
+    previousFunctionCount = funcCount;
     shownEmptyDbWarning = (tableCount === 0);
 
     const dbInfo = dbPath === ':memory:' ? 'in-memory database' : dbPath;
@@ -552,10 +555,12 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
         }
 
         const newTableCount = schemaProvider.getTableNames().length;
+        const newFunctionCount = functionProvider?.getAllFunctions().length || 0;
         const tableCountChanged = newTableCount !== previousTableCount;
+        const functionCountChanged = newFunctionCount !== previousFunctionCount;
 
         // Log to output channel
-        outputChannel.appendLine(`[Auto-refresh] Schema updated: ${newTableCount} tables`);
+        outputChannel.appendLine(`[Auto-refresh] Schema updated: ${newTableCount} tables, ${newFunctionCount} functions`);
 
         // Detect specific schema changes and notify user
         if (tableCountChanged) {
@@ -585,6 +590,29 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
 
           // Update tracked count
           previousTableCount = newTableCount;
+        }
+
+        // Detect function changes (typically from extension loading)
+        if (functionCountChanged) {
+          const connectionName = schemaProvider.getConnectionName();
+
+          // Functions added (most common case - extension loaded)
+          if (newFunctionCount > previousFunctionCount) {
+            const added = newFunctionCount - previousFunctionCount;
+            vscode.window.showInformationMessage(
+              `✓ ${added} new function${added !== 1 ? 's' : ''} loaded in '${connectionName}' (Total: ${newFunctionCount} function${newFunctionCount !== 1 ? 's' : ''})`
+            );
+          }
+          // Functions removed (less common - extension unloaded or connection changed)
+          else if (newFunctionCount < previousFunctionCount) {
+            const removed = previousFunctionCount - newFunctionCount;
+            vscode.window.showInformationMessage(
+              `⚠️  ${removed} function${removed !== 1 ? 's' : ''} removed from '${connectionName}' (Total: ${newFunctionCount} function${newFunctionCount !== 1 ? 's' : ''})`
+            );
+          }
+
+          // Update tracked count
+          previousFunctionCount = newFunctionCount;
         }
       } catch (error: any) {
         outputChannel.appendLine(`[Auto-refresh] Failed: ${error.message}`);
