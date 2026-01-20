@@ -5,8 +5,8 @@ dist
 .vscode-test/
 .DS_Store
 
-# Claude Code development docs (internal, not for repo)
-.claude/docs/
+# Claude Code directory (user-specific settings, not for repo)
+.claude/
 
 # Build instructions (development reference only)
 BUILD.md
