@@ -217,7 +217,7 @@ export class SQLCompletionProvider implements vscode.CompletionItemProvider {
       return false;
     }
 
-    const tableName = match[1];
+    const _tableName = match[1];
     const afterTable = match[2] || '';
 
     // If there's text after the table, check if it's a complete clause keyword

@@ -15,7 +15,7 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
         document: vscode.TextDocument,
         range: vscode.Range | vscode.Selection,
         context: vscode.CodeActionContext,
-        token: vscode.CancellationToken
+        _token: vscode.CancellationToken
     ): vscode.CodeAction[] {
         const codeActions: vscode.CodeAction[] = [];
 
@@ -36,7 +36,7 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
 
         // Basic SQL validation
         for (let i = 0; i < document.lineCount; i++) {
-            const line = document.lineAt(i);
+            const _line = document.lineAt(i);
             const position = new vscode.Position(i, 0);
 
             const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
