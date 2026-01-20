@@ -51,64 +51,75 @@ export class SQLStringDetector {
      * Get the range of the string at the given position
      */
     private static getStringRangeAtPosition(document: vscode.TextDocument, position: vscode.Position): vscode.Range | null {
-        const line = document.lineAt(position.line);
-        const lineText = line.text;
-        const charPos = position.character;
-
-        // Find opening quote
-        let openQuote = -1;
+        // Find opening quote - search backwards across multiple lines
+        let openQuoteLine = -1;
+        let openQuoteChar = -1;
         let quoteChar = '';
 
-        for (let i = charPos; i >= 0; i--) {
-            const char = lineText[i];
-            if (char === '"' || char === "'" || char === '`') {
-                // Check if it's escaped
-                if (i > 0 && lineText[i - 1] === '\\') {
-                    continue;
-                }
-                openQuote = i;
-                quoteChar = char;
-                break;
-            }
-        }
+        // Start from current position and search backwards
+        for (let lineNum = position.line; lineNum >= Math.max(0, position.line - PARSING_LIMITS.CONTEXT_LINE_LOOKBACK); lineNum--) {
+            const lineText = document.lineAt(lineNum).text;
+            const startChar = lineNum === position.line ? position.character : lineText.length - 1;
 
-        if (openQuote === -1) {
-            return null;
-        }
-
-        // Find closing quote (could be on another line)
-        let closeQuote = -1;
-        let currentLine = position.line;
-        let searchText = lineText.substring(openQuote + 1);
-
-        while (currentLine < document.lineCount) {
-            const searchLineText = currentLine === position.line ? searchText : document.lineAt(currentLine).text;
-
-            for (let i = 0; i < searchLineText.length; i++) {
-                const char = searchLineText[i];
-                if (char === quoteChar) {
+            for (let i = startChar; i >= 0; i--) {
+                const char = lineText[i];
+                if (char === '"' || char === "'" || char === '`') {
                     // Check if it's escaped
-                    if (i > 0 && searchLineText[i - 1] === '\\') {
+                    if (i > 0 && lineText[i - 1] === '\\') {
                         continue;
                     }
-                    closeQuote = i;
+                    openQuoteLine = lineNum;
+                    openQuoteChar = i;
+                    quoteChar = char;
                     break;
                 }
             }
 
-            if (closeQuote !== -1) {
-                const startPos = new vscode.Position(position.line, openQuote + 1);
-                const endPos = currentLine === position.line
-                    ? new vscode.Position(currentLine, openQuote + 1 + closeQuote)
-                    : new vscode.Position(currentLine, closeQuote);
-
-                return new vscode.Range(startPos, endPos);
+            if (openQuoteLine !== -1) {
+                break;
             }
-
-            currentLine++;
         }
 
-        return null;
+        if (openQuoteLine === -1) {
+            return null;
+        }
+
+        // Find closing quote (could be on another line) - search forward from opening quote
+        let closeQuoteLine = -1;
+        let closeQuoteChar = -1;
+
+        for (let lineNum = openQuoteLine; lineNum < document.lineCount; lineNum++) {
+            const lineText = document.lineAt(lineNum).text;
+            const startChar = lineNum === openQuoteLine ? openQuoteChar + 1 : 0;
+
+            for (let i = startChar; i < lineText.length; i++) {
+                const char = lineText[i];
+                if (char === quoteChar) {
+                    // Check if it's escaped
+                    if (i > 0 && lineText[i - 1] === '\\') {
+                        continue;
+                    }
+                    closeQuoteLine = lineNum;
+                    closeQuoteChar = i;
+                    break;
+                }
+            }
+
+            if (closeQuoteLine !== -1) {
+                break;
+            }
+        }
+
+        // If no closing quote found, return null
+        if (closeQuoteLine === -1) {
+            return null;
+        }
+
+        // Create range from opening to closing quote (excluding the quotes themselves)
+        const startPos = new vscode.Position(openQuoteLine, openQuoteChar + 1);
+        const endPos = new vscode.Position(closeQuoteLine, closeQuoteChar);
+
+        return new vscode.Range(startPos, endPos);
     }
 
     /**
@@ -162,7 +173,6 @@ export class SQLStringDetector {
 
         let match;
         while ((match = pattern.exec(text)) !== null) {
-            const functionStart = match.index;
             const openParenPos = match.index + match[0].length - 1;
 
             // If the position is before this function, skip

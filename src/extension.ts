@@ -146,9 +146,7 @@ export async function activate(context: vscode.ExtensionContext) {
     { language: 'r', scheme: 'file' },
     new SQLCompletionProvider(combinedProvider as any),
     '.', // Trigger on dot for table.column
-    '(', // Trigger on function call
     ' ', // Trigger on space
-    '\n', // Trigger on newline
     '"', // Trigger on quote
     "'", // Trigger on single quote
     'S', 'E', 'F', 'W', 'J', 'O', 'I', // Common SQL keywords
@@ -268,7 +266,6 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     }
   );
-
 
   // Register diagnostic provider
   context.subscriptions.push(

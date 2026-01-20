@@ -21,11 +21,11 @@ export const SQL_KEYWORDS = [
 /**
  * Get completion items for SQL keywords
  */
-export function getKeywordCompletions(): vscode.CompletionItem[] {
+export function getKeywordCompletions(sortPrefix: string = '2'): vscode.CompletionItem[] {
     return SQL_KEYWORDS.map(keyword => {
         const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
         item.insertText = keyword;
-        item.sortText = `2_${keyword}`;
+        item.sortText = `${sortPrefix}_${keyword}`;
         return item;
     });
 }
