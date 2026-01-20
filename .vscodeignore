@@ -3,7 +3,6 @@
 .vscode-test/**
 out/**
 src/**
-node_modules/.bin/**
 
 # Development files
 .gitignore
@@ -13,12 +12,6 @@ node_modules/.bin/**
 tsconfig.json
 esbuild.js
 vsc-extension-quickstart.md
-
-# Test files
-**/*.test.ts
-**/*.test.js
-**/test/**
-**/tests/**
 
 # Source maps
 **/*.map
@@ -34,15 +27,9 @@ vsc-extension-quickstart.md
 test.R
 .claude/**
 R-test-files/**
+docs/**
 
-# Development documentation
-BUILD.md
-SCHEMA_REFRESH_PLAN.md
-
-# Documentation (keep docs folder, exclude development notes)
-docs/POSITRON_TESTING.md
-
-# Node modules - exclude dev dependencies
+# Exclude ALL dev dependencies (keep only runtime deps)
 node_modules/@types/**
 node_modules/@typescript-eslint/**
 node_modules/eslint/**
@@ -51,9 +38,30 @@ node_modules/@vscode/vsce/**
 node_modules/esbuild/**
 node_modules/npm-run-all/**
 
-# Keep these in node_modules for production:
-# - duckdb (native binaries required)
-# - @posit-dev/positron (required for runtime)
+# Exclude unnecessary files from duckdb package
+node_modules/duckdb/src/**
+node_modules/duckdb/test/**
+node_modules/duckdb/scripts/**
+node_modules/duckdb/examples/**
+node_modules/duckdb/.github/**
+node_modules/duckdb/binding.gyp*
+node_modules/duckdb/vendor.py
+node_modules/duckdb/tsconfig.json
+node_modules/duckdb/Makefile
+node_modules/duckdb/.mocharc.json
+
+# Exclude test files from all dependencies
+node_modules/**/test/**
+node_modules/**/tests/**
+node_modules/**/*.test.js
+node_modules/**/*.spec.js
+node_modules/**/.github/**
+node_modules/**/example/**
+node_modules/**/examples/**
+node_modules/**/coverage/**
+node_modules/**/*.md
+node_modules/**/LICENSE*
+node_modules/**/CHANGELOG*
 
 # Misc dev files
 .DS_Store
