@@ -58,15 +58,13 @@ export const DBI_FUNCTIONS = [
 
 /**
  * Glue package functions that contain SQL strings
+ * Note: Only SQL-specific functions (glue_sql, glue_data_sql) are included
+ * Regular glue() is NOT included as it's for general string interpolation
  */
 export const GLUE_FUNCTIONS = [
-    'glue',
     'glue_sql',
-    'glue_data',
     'glue_data_sql',
-    'glue::glue',
     'glue::glue_sql',
-    'glue::glue_data',
     'glue::glue_data_sql'
 ] as const;
 

@@ -32,6 +32,7 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
 
     updateDiagnostics(document: vscode.TextDocument): void {
         const diagnostics: vscode.Diagnostic[] = [];
+        const processedRanges = new Set<string>();
 
         // Basic SQL validation
         for (let i = 0; i < document.lineCount; i++) {
@@ -40,6 +41,13 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
 
             const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
             if (sqlContext) {
+                // Skip if we've already processed this SQL string
+                const rangeKey = `${sqlContext.range.start.line}:${sqlContext.range.start.character}-${sqlContext.range.end.line}:${sqlContext.range.end.character}`;
+                if (processedRanges.has(rangeKey)) {
+                    continue;
+                }
+                processedRanges.add(rangeKey);
+
                 // If it's a glue string, strip interpolations for validation
                 let query = sqlContext.query;
                 if (sqlContext.isGlueString) {
