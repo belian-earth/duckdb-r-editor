@@ -101,8 +101,8 @@ export async function activate(context: vscode.ExtensionContext) {
   outputChannel.appendLine('Initializing document cache');
   documentCache = new DocumentCache();
 
-  // Check if semantic highlighting is enabled (default: true)
-  const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', true);
+  // Check if semantic highlighting is enabled (default: false to avoid interfering with R syntax)
+  const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', false);
 
   if (useSemanticHighlighting) {
     // Register semantic token provider for Air formatter support

@@ -184,7 +184,9 @@ export class SQLStringDetector {
      */
     private static findFunctionAndValidatePosition(text: string, funcName: string, position: number): boolean {
         const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const pattern = new RegExp(`${escapedName}[\\s\\S]*?\\(`, 'gi');
+        // Use negative lookbehind to ensure function name is not part of a longer word
+        // This prevents matching 'sql' in 'madeup_sql' or similar
+        const pattern = new RegExp(`(?<!\\w)${escapedName}\\s*\\(`, 'g');
 
         let match;
         while ((match = pattern.exec(text)) !== null) {

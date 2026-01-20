@@ -59,8 +59,9 @@
         },
         "duckdb-r-editor.useSemanticHighlighting": {
           "type": "boolean",
-          "default": true,
-          "description": "Enable advanced SQL highlighting with context-aware colors and full Air formatter support. Recommended for best experience. Uses efficient O(n) algorithm with minimal overhead (~1-3ms). Disable to use lighter TextMate grammar (doesn't support multi-line Air-formatted strings)."
+          "default": false,
+          "markdownDescription": "Enable advanced SQL keyword and function highlighting (SELECT, FROM, COUNT, etc.) in addition to SQL background colors. Provides richer syntax highlighting but may affect R function name colors. Requires window reload (`Ctrl+R` or `Cmd+R`) after changing.",
+          "scope": "window"
         },
         "duckdb-r-editor.defaultExtensions": {
           "type": "array",

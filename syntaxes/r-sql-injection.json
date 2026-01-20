@@ -3,15 +3,10 @@
   "injectionSelector": "L:source.r",
   "patterns": [
     {
-      "comment": "SQL in dbGetQuery strings - permissive pattern for Air formatter",
+      "comment": "SQL in dbGetQuery strings - match starts at quote to preserve R function highlighting",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbGetQuery|DBI::dbGetQuery)\\s*\\([\\s\\S]*?(\"|')",
-      "end": "\\2",
-      "beginCaptures": {
-        "0": {
-          "name": "meta.function-call.r"
-        }
-      },
+      "begin": "(?<=dbGetQuery\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
       "patterns": [
         {
           "include": "source.sql"
@@ -19,15 +14,10 @@
       ]
     },
     {
-      "comment": "SQL in dbExecute strings - permissive pattern for Air formatter",
+      "comment": "SQL in DBI::dbGetQuery strings - match starts at quote to preserve R function highlighting",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbExecute|DBI::dbExecute)\\s*\\([\\s\\S]*?(\"|')",
-      "end": "\\2",
-      "beginCaptures": {
-        "0": {
-          "name": "meta.function-call.r"
-        }
-      },
+      "begin": "(?<=DBI::dbGetQuery\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
       "patterns": [
         {
           "include": "source.sql"
@@ -35,15 +25,10 @@
       ]
     },
     {
-      "comment": "SQL in dbSendQuery strings - permissive pattern for Air formatter",
+      "comment": "SQL in dbExecute strings",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbSendQuery|DBI::dbSendQuery)\\s*\\([\\s\\S]*?(\"|')",
-      "end": "\\2",
-      "beginCaptures": {
-        "0": {
-          "name": "meta.function-call.r"
-        }
-      },
+      "begin": "(?<=dbExecute\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
       "patterns": [
         {
           "include": "source.sql"
@@ -51,15 +36,10 @@
       ]
     },
     {
-      "comment": "SQL in dbSendStatement strings - permissive pattern for Air formatter",
+      "comment": "SQL in DBI::dbExecute strings",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(dbSendStatement|DBI::dbSendStatement)\\s*\\([\\s\\S]*?(\"|')",
-      "end": "\\2",
-      "beginCaptures": {
-        "0": {
-          "name": "meta.function-call.r"
-        }
-      },
+      "begin": "(?<=DBI::dbExecute\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
       "patterns": [
         {
           "include": "source.sql"
@@ -67,15 +47,10 @@
       ]
     },
     {
-      "comment": "SQL in dbplyr::sql strings - permissive pattern for Air formatter",
+      "comment": "SQL in dbSendQuery strings",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(sql|dbplyr::sql)\\s*\\([\\s\\S]*?(\"|')",
-      "end": "\\2",
-      "beginCaptures": {
-        "0": {
-          "name": "meta.function-call.r"
-        }
-      },
+      "begin": "(?<=dbSendQuery\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
       "patterns": [
         {
           "include": "source.sql"
@@ -83,15 +58,87 @@
       ]
     },
     {
-      "comment": "SQL in glue_sql strings - permissive pattern for Air formatter",
+      "comment": "SQL in DBI::dbSendQuery strings",
       "contentName": "meta.embedded.block.sql",
-      "begin": "(glue_sql|glue::glue_sql)\\s*\\([\\s\\S]*?(\"|')",
-      "end": "\\2",
-      "beginCaptures": {
-        "0": {
-          "name": "meta.function-call.r"
+      "begin": "(?<=DBI::dbSendQuery\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
         }
-      },
+      ]
+    },
+    {
+      "comment": "SQL in dbSendStatement strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=dbSendStatement\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in DBI::dbSendStatement strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=DBI::dbSendStatement\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in dbplyr::sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=dbplyr::sql\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in glue_sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=glue_sql\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in glue::glue_sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=glue::glue_sql\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in glue_data_sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=glue_data_sql\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "comment": "SQL in glue::glue_data_sql strings",
+      "contentName": "meta.embedded.block.sql",
+      "begin": "(?<=glue::glue_data_sql\\s{0,50}\\()[\\s\\S]{0,500}?(\"|')",
+      "end": "\\1",
       "patterns": [
         {
           "include": "source.sql"
