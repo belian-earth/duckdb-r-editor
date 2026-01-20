@@ -66,11 +66,28 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
             // Cache the parsed regions
             this.documentCache.updateCache(document, sqlRegions);
 
+            // If no SQL regions or all are empty/trivial, return undefined to let R's default highlighting work
+            // This prevents interfering with R's native semantic tokens when there's no SQL to highlight
+            const hasSubstantialSQL = sqlRegions.some(region => {
+                const sqlText = region.sqlText.trim();
+                // Only provide tokens if there's meaningful SQL content (more than just whitespace)
+                return sqlText.length > 0;
+            });
+
+            if (!hasSubstantialSQL) {
+                return undefined;
+            }
+
             // CRITICAL: Only generate tokens for SQL content, nothing else
             // This preserves R syntax highlighting for everything outside SQL strings
             for (const region of sqlRegions) {
                 if (token.isCancellationRequested) {
                     return null;
+                }
+
+                // Skip empty SQL strings
+                if (region.sqlText.trim().length === 0) {
+                    continue;
                 }
 
                 // Only add tokens within the SQL string bounds
@@ -79,7 +96,6 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
 
             return tokensBuilder.build();
         } catch (error) {
-            console.error('Error providing semantic tokens:', error);
             return null;
         }
     }
@@ -108,7 +124,7 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
 
             const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             // Match function name followed by optional whitespace and opening paren
-            const funcPattern = new RegExp(`\\b${escapedName}\\s*\\(`, 'gi');
+            const funcPattern = new RegExp(`\\b${escapedName}\\s*\\(`, 'g');
 
             let match;
             let matchCount = 0;

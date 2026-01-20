@@ -1,18 +1,50 @@
 import * as vscode from 'vscode';
+import * as os from 'os';
+import * as path from 'path';
 import { SQLCompletionProvider } from './completionProvider';
 import { PositronSchemaProvider } from './positronSchemaProvider';
 import { DuckDBFunctionProvider } from './functionProvider';
 import { SQLDiagnosticsProvider } from './diagnosticsProvider';
 import { DocumentCache } from './documentCache';
 import { SQLSemanticTokenProvider } from './semanticTokenProvider';
+import { SQLBackgroundDecorator } from './sqlBackgroundDecorator';
 import { tryAcquirePositronApi } from '@posit-dev/positron';
 
+// Module-level state
 let schemaProvider: PositronSchemaProvider | undefined;
 let functionProvider: DuckDBFunctionProvider | undefined;
 let diagnosticsProvider: SQLDiagnosticsProvider;
 let outputChannel: vscode.OutputChannel;
 let documentCache: DocumentCache;
 let semanticTokenProvider: SQLSemanticTokenProvider;
+let sqlBackgroundDecorator: SQLBackgroundDecorator;
+let previousTableCount: number = 0;
+let previousFunctionCount: number = 0;
+let shownEmptyDbWarning: boolean = false;
+
+// Constants
+const DEBOUNCE_DELAY_MS = 1500;
+const SCHEMA_MODIFY_PATTERNS = [
+  /dbExecute\s*\(/i,                    // dbExecute(con, ...)
+  /dbWriteTable\s*\(/i,                 // dbWriteTable(con, ...)
+  /dbRemoveTable\s*\(/i,                // dbRemoveTable(con, ...)
+  /dbCreateTable\s*\(/i,                // dbCreateTable(con, ...)
+  /\bCREATE\s+(TABLE|VIEW|INDEX)/i,    // CREATE TABLE/VIEW/INDEX
+  /\bDROP\s+(TABLE|VIEW|INDEX)/i,      // DROP TABLE/VIEW/INDEX
+  /\bALTER\s+TABLE/i,                   // ALTER TABLE
+  /\bTRUNCATE\s+TABLE/i,                // TRUNCATE TABLE
+];
+
+const EXTENSION_LOAD_PATTERNS = [
+  /\bINSTALL\s+\w+/i,                   // INSTALL spatial
+  /\bLOAD\s+\w+/i,                      // LOAD spatial
+];
+
+interface RConnectionInfo {
+  name: string;
+  dbPath: string;
+  tableCount: number;
+}
 
 export async function activate(context: vscode.ExtensionContext) {
   // Create output channel for logging
@@ -69,14 +101,14 @@ export async function activate(context: vscode.ExtensionContext) {
   outputChannel.appendLine('Initializing document cache');
   documentCache = new DocumentCache();
 
-  // Check if semantic highlighting is enabled (default: true)
-  const useSemanticHighlighting = config.get<boolean>('useSemanticHighlighting', true);
+  // Check if SQL highlighting is enabled
+  const enableSQLHighlighting = config.get<boolean>('enableSQLHighlighting', true);
 
-  if (useSemanticHighlighting) {
-    // Register semantic token provider for Air formatter support
-    outputChannel.appendLine('Registering semantic token provider for SQL highlighting');
-    outputChannel.appendLine('  Supports Air formatter multi-line strings');
-    outputChannel.appendLine('  Only highlights SQL content - preserves R syntax highlighting');
+  if (enableSQLHighlighting) {
+    // Register semantic token provider for SQL keyword/function highlighting
+    outputChannel.appendLine('Registering SQL syntax highlighting');
+    outputChannel.appendLine('  Context-aware keyword and function highlighting');
+    outputChannel.appendLine('  Full support for Air formatter multi-line strings');
     semanticTokenProvider = new SQLSemanticTokenProvider(documentCache);
 
     const semanticTokenProviderDisposable = vscode.languages.registerDocumentSemanticTokensProvider(
@@ -85,10 +117,14 @@ export async function activate(context: vscode.ExtensionContext) {
       SQLSemanticTokenProvider.getLegend()
     );
     context.subscriptions.push(semanticTokenProviderDisposable);
+
+    // Initialize SQL background decorator for visual distinction
+    outputChannel.appendLine('Initializing SQL background decorator');
+    sqlBackgroundDecorator = new SQLBackgroundDecorator();
+    context.subscriptions.push(sqlBackgroundDecorator);
+    outputChannel.appendLine('  Theme-aware background colors for SQL strings');
   } else {
-    // Use TextMate grammar injection (fallback)
-    outputChannel.appendLine('SQL syntax highlighting using TextMate grammar injection');
-    outputChannel.appendLine('  Note: Limited support for Air formatter multi-line strings');
+    outputChannel.appendLine('SQL syntax highlighting disabled');
   }
 
   // Combined provider adapter for completion (schema + functions)
@@ -107,15 +143,10 @@ export async function activate(context: vscode.ExtensionContext) {
   const completionProvider = vscode.languages.registerCompletionItemProvider(
     { language: 'r', scheme: 'file' },
     new SQLCompletionProvider(combinedProvider as any),
-    '.', // Trigger on dot for table.column
-    '(', // Trigger on function call
-    ' ', // Trigger on space
-    '\n', // Trigger on newline
-    '"', // Trigger on quote
-    "'", // Trigger on single quote
-    'S', 'E', 'F', 'W', 'J', 'O', 'I', // Common SQL keywords
-    '*', ',', '=' // SQL operators
+    // Trigger on all letters + common SQL characters
+    ...('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,*="\'' as string).split('')
   );
+  context.subscriptions.push(completionProvider);
 
   // Register commands
   outputChannel.appendLine('Registering commands: connectDatabase, refreshSchema, executeQuery');
@@ -177,6 +208,11 @@ export async function activate(context: vscode.ExtensionContext) {
       schemaProvider.dispose();
       schemaProvider = undefined;
 
+      // Reset tracking state
+      previousTableCount = 0;
+      previousFunctionCount = 0;
+      shownEmptyDbWarning = false;
+
       outputChannel.appendLine('✓ Disconnected from database');
       vscode.window.showInformationMessage('Disconnected from database');
     }
@@ -196,7 +232,7 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       const extensionName = await vscode.window.showInputBox({
-        prompt: 'Enter DuckDB extension name (e.g., spatial, httpfs, json)',
+        prompt: 'Enter official DuckDB extension name (e.g., spatial, httpfs, json)',
         placeHolder: 'spatial',
         validateInput: (value) => {
           if (!value || value.trim().length === 0) {
@@ -206,20 +242,25 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       });
 
-      if (extensionName) {
-        try {
-          await functionProvider.loadExtension(extensionName.trim());
-          const funcCount = functionProvider.getAllFunctions().length;
-          vscode.window.showInformationMessage(
-            `✓ Extension '${extensionName}' loaded! ${funcCount} functions now available for autocomplete.`
-          );
-        } catch (err: any) {
-          vscode.window.showErrorMessage(`Failed to load extension: ${err.message}`);
-        }
+      if (!extensionName) {
+        return;
+      }
+
+      try {
+        await functionProvider.loadExtension(extensionName.trim());
+        const funcCount = functionProvider.getAllFunctions().length;
+        vscode.window.showInformationMessage(
+          `✓ Extension '${extensionName}' loaded! ${funcCount} functions now available for autocomplete.`
+        );
+      } catch (err: any) {
+        vscode.window.showErrorMessage(
+          `Failed to load extension '${extensionName}': ${err.message}\n\n` +
+          `Note: If this is a community extension, load it in your R session instead:\n` +
+          `dbExecute(con, "INSTALL ${extensionName} FROM community; LOAD ${extensionName};")`
+        );
       }
     }
   );
-
 
   // Register diagnostic provider
   context.subscriptions.push(
@@ -260,6 +301,14 @@ export async function activate(context: vscode.ExtensionContext) {
     loadExtensionCommand
   );
 
+  // Setup auto-refresh on code execution
+  if (config.get<boolean>('autoRefreshSchema', true)) {
+    setupAutoRefresh(positronApi, context);
+    outputChannel.appendLine('✓ Auto-refresh enabled (triggers when code references connection)');
+  } else {
+    outputChannel.appendLine('Auto-refresh disabled (use manual refresh command)');
+  }
+
   outputChannel.appendLine('Extension activation complete!');
   outputChannel.appendLine('Commands available: "R SQL: Connect to DuckDB Database", "R SQL: Refresh Database Schema"');
 }
@@ -276,80 +325,99 @@ async function discoverRConnections(): Promise<RConnectionInfo[]> {
     throw new Error('Positron API not available');
   }
 
+  // Create temp file for connections data
+  const tmpDir = os.tmpdir();
+  const timestamp = Date.now();
+  const tempFilePath = path.join(tmpDir, `duckdb-connections-${timestamp}.json`);
+  const tempFilePathR = tempFilePath.replace(/\\/g, '/');
+
   const rCode = `
 tryCatch({
-    all_objs <- ls(envir = .GlobalEnv)
-    connections <- list()
+    .dbre_all_objs <- ls(envir = .GlobalEnv)
+    .dbre_connections <- list()
 
-    for (obj_name in all_objs) {
-        obj <- get(obj_name, envir = .GlobalEnv)
-        if (inherits(obj, "duckdb_connection")) {
+    for (.dbre_obj_name in .dbre_all_objs) {
+        .dbre_tmp_obj <- get(.dbre_obj_name, envir = .GlobalEnv)
+        if (inherits(.dbre_tmp_obj, "duckdb_connection")) {
             # Get database path
-            db_path <- tryCatch({
-                obj@driver@dbdir
+            .dbre_db_path <- tryCatch({
+                .dbre_tmp_obj@driver@dbdir
             }, error = function(e) {
                 ":memory:"
             })
 
             # Count tables
-            table_count <- tryCatch({
-                length(DBI::dbListTables(obj))
+            .dbre_table_count <- tryCatch({
+                length(DBI::dbListTables(.dbre_tmp_obj))
             }, error = function(e) {
                 0
             })
 
-            connections[[length(connections) + 1]] <- list(
-                name = obj_name,
-                dbPath = db_path,
-                tableCount = table_count
+            .dbre_connections[[length(.dbre_connections) + 1]] <- list(
+                name = .dbre_obj_name,
+                dbPath = .dbre_db_path,
+                tableCount = .dbre_table_count
             )
         }
     }
 
-    if (length(connections) == 0) {
-        stop("No DuckDB connections found in R session")
-    }
+    # Write to file (no console output in silent mode)
+    .dbre_temp_file <- "${tempFilePathR}"
 
-    json_output <- if (requireNamespace("jsonlite", quietly = TRUE)) {
-        jsonlite::toJSON(connections, auto_unbox = TRUE)
+    if (requireNamespace("jsonlite", quietly = TRUE)) {
+        jsonlite::write_json(.dbre_connections, .dbre_temp_file, auto_unbox = TRUE)
     } else {
-        paste0("[", paste(sapply(connections, function(c) {
+        .dbre_json_output <- paste0("[", paste(sapply(.dbre_connections, function(c) {
             sprintf('{"name":"%s","dbPath":"%s","tableCount":%d}',
                 c$name, c$dbPath, c$tableCount)
         }), collapse = ","), "]")
+        writeLines(.dbre_json_output, .dbre_temp_file)
     }
 
-    cat("__JSON_START__\\n")
-    cat(json_output)
-    cat("\\n__JSON_END__\\n")
+    # Cleanup: Remove all temporary variables
+    rm(.dbre_all_objs, .dbre_connections, .dbre_obj_name, .dbre_tmp_obj, .dbre_db_path, .dbre_table_count, .dbre_temp_file)
+    if (exists(".dbre_json_output")) rm(.dbre_json_output)
+
+    invisible(NULL)
 }, error = function(e) {
-    stop(e$message)
+    # Silent error - write empty array to file
+    writeLines("[]", "${tempFilePathR}")
+    invisible(NULL)
 })
   `.trim();
 
-  let output = '';
-  let errorOutput = '';
+  await positronApi.runtime.executeCode('r', rCode, false, false, 'silent' as any, undefined, {});
 
-  await positronApi.runtime.executeCode('r', rCode, false, false, 'transient' as any, undefined, {
-    onOutput: (text: string) => { output += text; },
-    onError: (text: string) => { errorOutput += text; }
-  });
+  // Read from temp file
+  const fileUri = vscode.Uri.file(tempFilePath);
 
-  if (!output || output.trim().length === 0) {
-    throw new Error(errorOutput || 'No DuckDB connections found in R session');
+  try {
+    const fileContent = await vscode.workspace.fs.readFile(fileUri);
+    const jsonStr = new TextDecoder().decode(fileContent);
+    const connections = JSON.parse(jsonStr) as RConnectionInfo[];
+
+    // Cleanup temp file
+    await vscode.workspace.fs.delete(fileUri);
+
+    // Check if we got any connections
+    if (connections.length === 0) {
+      throw new Error('No DuckDB connections found in R session');
+    }
+
+    return connections;
+  } catch (error: any) {
+    // Try to cleanup temp file even on error
+    try {
+      await vscode.workspace.fs.delete(fileUri);
+    } catch {}
+
+    // Re-throw if it's our "no connections" error
+    if (error.message === 'No DuckDB connections found in R session') {
+      throw error;
+    }
+
+    throw new Error(`Failed to read connections from file: ${error.message}`);
   }
-
-  const jsonStartMarker = '__JSON_START__';
-  const jsonEndMarker = '__JSON_END__';
-  const startIndex = output.indexOf(jsonStartMarker);
-  const endIndex = output.indexOf(jsonEndMarker);
-
-  if (startIndex === -1 || endIndex === -1) {
-    throw new Error('Could not parse R connection information');
-  }
-
-  const jsonStr = output.substring(startIndex + jsonStartMarker.length, endIndex).trim();
-  return JSON.parse(jsonStr) as RConnectionInfo[];
 }
 
 /**
@@ -368,21 +436,30 @@ async function connectToDatabase(connectionName: string, dbPath: string): Promis
     schemaProvider = new PositronSchemaProvider(positronApi);
     await schemaProvider.connect(connectionName, dbPath);
 
+    // Merge R functions with Node.js base functions (R takes precedence)
+    if (functionProvider) {
+      const rFunctions = schemaProvider.getRFunctions();
+      functionProvider.mergeRFunctions(rFunctions);
+    }
+
     const tableCount = schemaProvider.getTableNames().length;
     const funcCount = functionProvider?.getAllFunctions().length || 0;
+
+    // Track initial state for auto-refresh notifications
+    previousTableCount = tableCount;
+    previousFunctionCount = funcCount;
+    shownEmptyDbWarning = (tableCount === 0);
 
     const dbInfo = dbPath === ':memory:' ? 'in-memory database' : dbPath;
 
     if (tableCount === 0) {
-      vscode.window.showWarningMessage(
-        `Connected to ${connectionName} (${dbInfo})\n\n` +
-        `⚠️  Database is empty - no tables found.\n\n` +
-        `Autocomplete will work for DuckDB functions (${funcCount} available) but not for tables/columns yet.\n\n` +
-        `Create tables in R, then use "Refresh DuckDB Schema" command to update.`,
-        'OK'
+      // Toast notification (visible but dismissible without clicking)
+      vscode.window.showInformationMessage(
+        `⚠️  Connected to '${connectionName}' - Empty database. ` +
+        `${funcCount} DuckDB functions available for autocomplete. Create tables in R to enable table/column autocomplete.`
       );
       outputChannel.appendLine(`⚠️  Connected to ${connectionName} (${dbInfo}) - Empty database (0 tables)`);
-      outputChannel.appendLine(`   💡 Tip: Create tables in R, then use "Refresh DuckDB Schema" to update autocomplete`);
+      outputChannel.appendLine(`   💡 Tip: Create tables in R, then schema will auto-refresh`);
     } else {
       vscode.window.showInformationMessage(
         `Connected to ${connectionName} (${dbInfo})\n${tableCount} tables, ${funcCount} functions available`
@@ -448,4 +525,149 @@ export function deactivate() {
   if (functionProvider) {
     functionProvider.dispose();
   }
+}
+
+/**
+ * Setup auto-refresh on R code execution
+ * Refreshes schema when code references the connection object
+ */
+function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): void {
+  let refreshTimer: NodeJS.Timeout | undefined;
+
+  // Debounced refresh function with change detection
+  const debouncedRefresh = () => {
+    if (refreshTimer) {
+      clearTimeout(refreshTimer);
+    }
+
+    refreshTimer = setTimeout(async () => {
+      if (!schemaProvider || !schemaProvider.isConnected()) {
+        return;
+      }
+
+      try {
+        // Refresh schema
+        await schemaProvider.refreshSchema();
+
+        // Refresh functions (from R connection)
+        await schemaProvider.refreshFunctions();
+
+        // Merge R functions with Node.js base functions
+        if (functionProvider) {
+          const rFunctions = schemaProvider.getRFunctions();
+          functionProvider.mergeRFunctions(rFunctions);
+        }
+
+        const newTableCount = schemaProvider.getTableNames().length;
+        const newFunctionCount = functionProvider?.getAllFunctions().length || 0;
+        const tableCountChanged = newTableCount !== previousTableCount;
+        const functionCountChanged = newFunctionCount !== previousFunctionCount;
+
+        // Log to output channel
+        outputChannel.appendLine(`[Auto-refresh] Schema updated: ${newTableCount} tables, ${newFunctionCount} functions`);
+
+        // Detect specific schema changes and notify user
+        if (tableCountChanged) {
+          const connectionName = schemaProvider.getConnectionName();
+
+          // Special case: Database was empty, now has tables (dismiss empty warning conceptually)
+          if (shownEmptyDbWarning && previousTableCount === 0 && newTableCount > 0) {
+            vscode.window.showInformationMessage(
+              `✓ Schema updated: ${newTableCount} table${newTableCount !== 1 ? 's' : ''} detected in '${connectionName}'!`
+            );
+            shownEmptyDbWarning = false;
+          }
+          // Tables added
+          else if (newTableCount > previousTableCount) {
+            const added = newTableCount - previousTableCount;
+            vscode.window.showInformationMessage(
+              `✓ ${added} new table${added !== 1 ? 's' : ''} added to '${connectionName}' (Total: ${newTableCount} table${newTableCount !== 1 ? 's' : ''})`
+            );
+          }
+          // Tables removed
+          else if (newTableCount < previousTableCount) {
+            const removed = previousTableCount - newTableCount;
+            vscode.window.showInformationMessage(
+              `⚠️  ${removed} table${removed !== 1 ? 's' : ''} removed from '${connectionName}' (Total: ${newTableCount} table${newTableCount !== 1 ? 's' : ''})`
+            );
+          }
+
+          // Update tracked count
+          previousTableCount = newTableCount;
+        }
+
+        // Detect function changes (typically from extension loading)
+        if (functionCountChanged) {
+          const connectionName = schemaProvider.getConnectionName();
+
+          // Functions added (most common case - extension loaded)
+          if (newFunctionCount > previousFunctionCount) {
+            const added = newFunctionCount - previousFunctionCount;
+            vscode.window.showInformationMessage(
+              `✓ ${added} new function${added !== 1 ? 's' : ''} loaded in '${connectionName}' (Total: ${newFunctionCount} function${newFunctionCount !== 1 ? 's' : ''})`
+            );
+          }
+          // Functions removed (less common - extension unloaded or connection changed)
+          else if (newFunctionCount < previousFunctionCount) {
+            const removed = previousFunctionCount - newFunctionCount;
+            vscode.window.showInformationMessage(
+              `⚠️  ${removed} function${removed !== 1 ? 's' : ''} removed from '${connectionName}' (Total: ${newFunctionCount} function${newFunctionCount !== 1 ? 's' : ''})`
+            );
+          }
+
+          // Update tracked count
+          previousFunctionCount = newFunctionCount;
+        }
+      } catch (error: any) {
+        outputChannel.appendLine(`[Auto-refresh] Failed: ${error.message}`);
+        // Don't show error to user - auto-refresh is background operation
+      }
+    }, DEBOUNCE_DELAY_MS);
+  };
+
+  // Listen to code execution events
+  const disposable = positronApi.runtime.onDidExecuteCode((event: any) => {
+    // Only process R code
+    if (event.languageId !== 'r') {
+      return;
+    }
+
+    // Only refresh if connected
+    if (!schemaProvider || !schemaProvider.isConnected()) {
+      return;
+    }
+
+    // Check if code references the connection
+    const connectionName = schemaProvider.getConnectionName();
+    if (!connectionName || !event.code) {
+      return;
+    }
+
+    const code: string = event.code;
+
+    // Must contain connection name
+    if (!code.includes(connectionName)) {
+      return;
+    }
+
+    // Check for schema-modifying operations
+    const hasSchemaModifyingOp = SCHEMA_MODIFY_PATTERNS.some(pattern => pattern.test(code));
+
+    if (hasSchemaModifyingOp) {
+      outputChannel.appendLine(`[Auto-refresh] Detected schema-modifying operation on '${connectionName}', refreshing...`);
+      debouncedRefresh();
+      return;
+    }
+
+    // Check for extension loading (INSTALL/LOAD)
+    const hasExtensionLoad = EXTENSION_LOAD_PATTERNS.some(pattern => pattern.test(code));
+
+    if (hasExtensionLoad) {
+      outputChannel.appendLine(`[Auto-refresh] Detected extension loading on '${connectionName}', refreshing functions...`);
+      // Refresh both schema and functions (extension might add new functions)
+      debouncedRefresh();
+    }
+  });
+
+  context.subscriptions.push(disposable);
 }

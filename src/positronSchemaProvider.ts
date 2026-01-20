@@ -1,15 +1,20 @@
 import * as vscode from 'vscode';
 import { ColumnInfo } from './types';
+import * as os from 'os';
+import * as path from 'path';
 
 /**
  * Provides DuckDB schema by querying active R session via Positron API
- * This is the PRIMARY and ONLY method for schema discovery
+ * Uses file-based storage with silent execution (no console pollution)
  */
 export class PositronSchemaProvider implements vscode.Disposable {
     private schema: Map<string, ColumnInfo[]> = new Map();
     private connectionName: string | null = null;
     private dbPath: string | null = null;
     private positronApi: any;
+    private schemaFilePath: string | null = null;
+    private functionsFilePath: string | null = null;
+    private rFunctions: any[] = [];
 
     constructor(positronApi: any) {
         if (!positronApi) {
@@ -24,20 +29,29 @@ export class PositronSchemaProvider implements vscode.Disposable {
     async connect(connectionName: string, dbPath: string): Promise<void> {
         this.connectionName = connectionName;
         this.dbPath = dbPath;
-        console.log(`Connected to R connection '${connectionName}' (${dbPath})`);
 
-        // Immediately fetch schema from R session
+        // Create temp files for schema and functions
+        const tmpDir = os.tmpdir();
+        const timestamp = Date.now();
+        this.schemaFilePath = path.join(tmpDir, `duckdb-schema-${connectionName}-${timestamp}.json`);
+        this.functionsFilePath = path.join(tmpDir, `duckdb-functions-${connectionName}-${timestamp}.json`);
+
+        // Immediately fetch schema and functions from R session
         await this.refreshSchema();
+        await this.refreshFunctions();
     }
 
     /**
-     * Query schema from active R DuckDB connection
+     * Query schema from active R DuckDB connection and write to file
      */
     async refreshSchema(): Promise<void> {
-        console.log(`Querying schema from R connection '${this.connectionName}'...`);
+        if (!this.schemaFilePath) {
+            throw new Error('No schema file path set. Call connect() first.');
+        }
 
-        // Inject connection name into R code
         const targetConnection = this.connectionName;
+        // Normalize file path for R (forward slashes, escape backslashes)
+        const schemaFilePath = this.schemaFilePath.replace(/\\/g, '/');
 
         const rCode = `
 tryCatch({
@@ -46,9 +60,9 @@ tryCatch({
         stop("Connection '${targetConnection}' not found in R session")
     }
 
-    con <- get("${targetConnection}", envir = .GlobalEnv)
+    .dbre_tmp_conn <- get("${targetConnection}", envir = .GlobalEnv)
 
-    if (!inherits(con, "duckdb_connection")) {
+    if (!inherits(.dbre_tmp_conn, "duckdb_connection")) {
         stop("Object '${targetConnection}' is not a DuckDB connection")
     }
 
@@ -57,12 +71,12 @@ tryCatch({
         stop("DBI package not available")
     }
 
-    tables <- DBI::dbListTables(con)
+    tables <- DBI::dbListTables(.dbre_tmp_conn)
     result <- list()
 
     for (table in tables) {
         tryCatch({
-            col_info <- DBI::dbGetQuery(con, sprintf(
+            col_info <- DBI::dbGetQuery(.dbre_tmp_conn, sprintf(
                 "SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = '%s' AND table_schema = 'main' ORDER BY ordinal_position",
                 table
             ))
@@ -80,11 +94,13 @@ tryCatch({
         })
     }
 
-    # Return as JSON (even if empty)
-    json_output <- if (requireNamespace("jsonlite", quietly = TRUE)) {
-        jsonlite::toJSON(result, auto_unbox = TRUE)
+    # Write to file (no console output in silent mode)
+    schema_file_path <- "${schemaFilePath}"
+
+    if (requireNamespace("jsonlite", quietly = TRUE)) {
+        jsonlite::write_json(result, schema_file_path, auto_unbox = TRUE, pretty = TRUE)
     } else {
-        if (length(result) == 0) {
+        json_output <- if (length(result) == 0) {
             "[]"
         } else {
             paste0("[", paste(sapply(result, function(r) {
@@ -92,67 +108,60 @@ tryCatch({
                     r$table_name, r$column_name, r$data_type, r$is_nullable)
             }), collapse = ","), "]")
         }
+        writeLines(json_output, schema_file_path)
     }
 
-    cat("__JSON_START__\\n")
-    cat(json_output)
-    cat("\\n__JSON_END__\\n")
-    if (length(result) == 0) {
-        cat("⚠️  DuckDB R Editor: No tables found in connection '${targetConnection}'\\n")
-    } else {
-        cat("✓ DuckDB R Editor: Schema retrieved from R connection '${targetConnection}'\\n")
-    }
+    # Cleanup: Remove temporary connection reference
+    rm(.dbre_tmp_conn)
+
+    invisible(NULL)
 }, error = function(e) {
     stop(e$message)
 })
         `.trim();
 
         try {
-            // Execute R code through Positron using observer pattern to capture output
-            let output = '';
             let errorOutput = '';
 
             await this.positronApi.runtime.executeCode(
-                'r',           // Language ID
-                rCode,         // Code to execute
-                false,         // Don't focus console
-                false,         // Allow incomplete code
-                'transient',   // Transient mode - allows output capture without history
-                undefined,     // Use default error behavior
+                'r',
+                rCode,
+                false,
+                false,
+                'silent' as any,
+                undefined,
                 {
-                    onOutput: (text: string) => {
-                        output += text;
-                    },
-                    onError: (text: string) => {
-                        errorOutput += text;
-                    }
+                    onError: (text: string) => { errorOutput += text; }
                 }
             );
 
-            console.log('R output received, length:', output.length);
-
-            if (!output || output.trim().length === 0) {
-                const errorMsg = errorOutput || 'No output from R execution';
-                throw new Error(errorMsg);
+            if (errorOutput) {
+                throw new Error(errorOutput);
             }
 
-            // Extract JSON between __JSON_START__ and __JSON_END__ markers
-            const jsonStartMarker = '__JSON_START__';
-            const jsonEndMarker = '__JSON_END__';
-            const startIndex = output.indexOf(jsonStartMarker);
-            const endIndex = output.indexOf(jsonEndMarker);
+            // Read schema from file
+            await this.readSchemaFromFile();
+        } catch (error: any) {
+            console.error('Failed to refresh schema:', error);
+            throw new Error(`Failed to refresh schema: ${error.message}`);
+        }
+    }
 
-            if (startIndex === -1 || endIndex === -1) {
-                throw new Error(`Could not find JSON markers in R output`);
-            }
+    /**
+     * Read schema from file and update schema map
+     */
+    private async readSchemaFromFile(): Promise<void> {
+        if (!this.schemaFilePath) {
+            throw new Error('No schema file path set');
+        }
 
-            const jsonStr = output.substring(startIndex + jsonStartMarker.length, endIndex).trim();
-            console.log('Extracted JSON, length:', jsonStr.length);
-
-            // Parse the JSON result
+        try {
+            const fileUri = vscode.Uri.file(this.schemaFilePath);
+            const fileContent = await vscode.workspace.fs.readFile(fileUri);
+            const jsonStr = new TextDecoder().decode(fileContent);
             const schemaData = JSON.parse(jsonStr);
-            console.log('Parsed schema data:', schemaData.length, 'columns');
 
+            // Update schema map
             this.schema.clear();
             for (const row of schemaData) {
                 const tableName = row.table_name;
@@ -166,11 +175,9 @@ tryCatch({
                     nullable: row.is_nullable === 'YES'
                 });
             }
-
-            console.log(`✓ Discovered ${this.schema.size} tables from R session`);
         } catch (error: any) {
-            console.error('Failed to query R session:', error);
-            throw new Error(`Failed to query R session: ${error.message}`);
+            console.error('Failed to read schema file:', error);
+            throw new Error(`Failed to read schema file: ${error.message}`);
         }
     }
 
@@ -222,9 +229,135 @@ tryCatch({
         return this.connectionName;
     }
 
+    /**
+     * Get functions from R connection
+     */
+    getRFunctions(): any[] {
+        return this.rFunctions;
+    }
+
+    /**
+     * Refresh functions from R DuckDB connection
+     */
+    async refreshFunctions(): Promise<void> {
+        if (!this.functionsFilePath) {
+            return;
+        }
+
+        const targetConnection = this.connectionName;
+        const functionsFilePath = this.functionsFilePath.replace(/\\/g, '/');
+
+        const rCode = `
+tryCatch({
+    if (!exists("${targetConnection}", envir = .GlobalEnv)) {
+        stop("Connection '${targetConnection}' not found in R session")
+    }
+
+    .dbre_tmp_conn <- get("${targetConnection}", envir = .GlobalEnv)
+
+    if (!inherits(.dbre_tmp_conn, "duckdb_connection")) {
+        stop("Object '${targetConnection}' is not a DuckDB connection")
+    }
+
+    # Query all functions from DuckDB
+    .dbre_functions <- DBI::dbGetQuery(.dbre_tmp_conn, "SELECT * FROM duckdb_functions()")
+
+    # Write to file
+    .dbre_func_file <- "${functionsFilePath}"
+
+    if (requireNamespace("jsonlite", quietly = TRUE)) {
+        jsonlite::write_json(.dbre_functions, .dbre_func_file, auto_unbox = TRUE, pretty = FALSE)
+    } else {
+        # Fallback: write simplified JSON
+        .dbre_json <- paste0("[", paste(apply(.dbre_functions, 1, function(row) {
+            sprintf('{"function_name":"%s","function_type":"%s","description":"%s","return_type":"%s"}',
+                row["function_name"], row["function_type"],
+                gsub('"', '\\\\"', row["description"]), row["return_type"])
+        }), collapse = ","), "]")
+        writeLines(.dbre_json, .dbre_func_file)
+    }
+
+    rm(.dbre_tmp_conn, .dbre_functions, .dbre_func_file)
+    if (exists(".dbre_json")) rm(.dbre_json)
+
+    invisible(NULL)
+}, error = function(e) {
+    stop(e$message)
+})
+        `.trim();
+
+        try {
+            let errorOutput = '';
+
+            await this.positronApi.runtime.executeCode(
+                'r',
+                rCode,
+                false,
+                false,
+                'silent' as any,
+                undefined,
+                {
+                    onError: (text: string) => { errorOutput += text; }
+                }
+            );
+
+            if (errorOutput) {
+                throw new Error(errorOutput);
+            }
+
+            // Read functions from file
+            await this.readFunctionsFromFile();
+        } catch (error: any) {
+            console.error('Failed to refresh functions:', error);
+            // Don't throw - functions are optional, schema is critical
+        }
+    }
+
+    /**
+     * Read functions from file
+     */
+    private async readFunctionsFromFile(): Promise<void> {
+        if (!this.functionsFilePath) {
+            throw new Error('No functions file path set');
+        }
+
+        try {
+            const fileUri = vscode.Uri.file(this.functionsFilePath);
+            const fileContent = await vscode.workspace.fs.readFile(fileUri);
+            const jsonStr = new TextDecoder().decode(fileContent);
+            this.rFunctions = JSON.parse(jsonStr);
+        } catch (error: any) {
+            console.error('Failed to read functions file:', error);
+            this.rFunctions = [];
+        }
+    }
+
     dispose() {
+        // Cleanup temp schema file
+        if (this.schemaFilePath) {
+            try {
+                const fileUri = vscode.Uri.file(this.schemaFilePath);
+                vscode.workspace.fs.delete(fileUri);
+            } catch (error) {
+                // Ignore cleanup errors
+            }
+            this.schemaFilePath = null;
+        }
+
+        // Cleanup temp functions file
+        if (this.functionsFilePath) {
+            try {
+                const fileUri = vscode.Uri.file(this.functionsFilePath);
+                vscode.workspace.fs.delete(fileUri);
+            } catch (error) {
+                // Ignore cleanup errors
+            }
+            this.functionsFilePath = null;
+        }
+
         this.connectionName = null;
         this.dbPath = null;
         this.schema.clear();
+        this.rFunctions = [];
     }
 }

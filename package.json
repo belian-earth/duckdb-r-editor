@@ -2,7 +2,7 @@
   "name": "duckdb-r-editor",
   "displayName": "DuckDB R Editor (Positron)",
   "description": "Positron-exclusive SQL editor for R. Queries your active R DuckDB connection for schema - no file locking! 900+ DuckDB functions with intelligent autocomplete.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publisher": "duckdb-r-editor",
   "license": "MIT",
   "repository": {
@@ -35,15 +35,6 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "grammars": [
-      {
-        "path": "./syntaxes/r-sql-injection.json",
-        "scopeName": "r-sql-injection",
-        "injectTo": [
-          "source.r"
-        ]
-      }
-    ],
     "configuration": {
       "title": "DuckDB R Editor",
       "properties": {
@@ -52,20 +43,11 @@
           "default": true,
           "description": "Enable DuckDB SQL autocomplete in R strings"
         },
-        "duckdb-r-editor.enableDiagnostics": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable DuckDB SQL syntax validation"
-        },
         "duckdb-r-editor.enableSQLHighlighting": {
           "type": "boolean",
           "default": true,
-          "description": "Enable lightweight DuckDB SQL syntax highlighting in R strings"
-        },
-        "duckdb-r-editor.useSemanticHighlighting": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable advanced SQL highlighting with context-aware colors and full Air formatter support. Recommended for best experience. Uses efficient O(n) algorithm with minimal overhead (~1-3ms). Disable to use lighter TextMate grammar (doesn't support multi-line Air-formatted strings)."
+          "markdownDescription": "Enable SQL syntax highlighting in R strings. Includes:\n- SQL keyword highlighting (SELECT, FROM, WHERE, etc.)\n- SQL function highlighting (COUNT, SUM, DATE_TRUNC, etc.)\n- Background color for SQL strings\n- Full support for Air-formatted multi-line strings\n\n**Note:** Requires window reload after changing. Use `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) and run **Developer: Reload Window**.",
+          "scope": "window"
         },
         "duckdb-r-editor.defaultExtensions": {
           "type": "array",
@@ -74,6 +56,11 @@
           },
           "default": [],
           "description": "DuckDB extensions to auto-load on startup (e.g., ['spatial', 'httpfs', 'json']). Extensions are loaded into in-memory database for function autocomplete."
+        },
+        "duckdb-r-editor.autoRefreshSchema": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically refresh schema when R code references the connection object. Keeps autocomplete in sync with database changes without manual refresh commands."
         }
       }
     },

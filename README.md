@@ -1,160 +1,132 @@
 # DuckDB R Editor (Positron)
 
-> [!WARNING]
-> This is a beta version. Please report issues on [GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues).
+[![CI](https://github.com/h-a-graham/duckdb-r-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/h-a-graham/duckdb-r-editor/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub issues](https://img.shields.io/github/issues/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor/issues) [![Version](https://img.shields.io/github/package-json/v/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor) [![GitHub stars](https://img.shields.io/github/stars/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor/stargazers) 
 
-> [!NOTE]
-> **Positron IDE Only** - This extension requires [Positron](https://github.com/posit-dev/positron) and will not work in VS Code.
+> \[!WARNING\] Beta version. Report issues on [GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues).
+
+> \[!NOTE\] **Positron IDE Only** - Requires [Positron](https://github.com/posit-dev/positron). Will not work in VS Code.
 
 **SQL syntax highlighting and intelligent autocomplete for DuckDB in R files.**
 
-Write DuckDB SQL with full IDE support - syntax highlighting, autocomplete, and schema introspection - right inside R strings. Queries your active R session directly via Positron API - **no file locking issues**.
+Write DuckDB SQL with full IDE support right inside R strings. Take full advantage of expressive SQL expressions within your R scripts!
 
----
-
-## Visual Showcase
-
-<table>
-<tr>
-<td width="50%">
-
-### Before: No SQL Support
-<img src="images/syntax-highlight-before.png" alt="Before - No SQL highlighting" width="100%">
-
-</td>
-<td width="50%">
-
-### After: Full SQL IDE Features
-<img src="images/syntax-highlight-after.png" alt="After - Full SQL highlighting" width="100%">
-
-</td>
-</tr>
-</table>
-
-### Autocomplete in Action
-
-> 🎬 **GIF PLACEHOLDER**: Coming soon - full autocomplete demo
-
----
+------------------------------------------------------------------------
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| 🎨 **Syntax Highlighting** | Context-aware SQL highlighting in R strings (keywords, functions, tables, columns) |
-| 🧠 **Smart Autocomplete** | 900+ DuckDB functions + live schema from your R session |
-| 🔌 **R Connection Selection** | QuickPick UI to select specific R DuckDB connection objects |
-| 💾 **In-Memory Support** | Full support for `:memory:` databases |
-| 🚫 **No File Locking** | Queries R session directly - no database file conflicts |
-| ⚙️ **Auto-Load Extensions** | Configure extensions in settings.json to load on startup |
-| ✈️ **Air Formatter Support** | Works with multi-line SQL strings |
-| 🔍 **DuckDB-Specific** | Support for `INSTALL`, `LOAD`, `DESCRIBE`, `SUMMARIZE`, etc. |
+-   🎨 **SQL Syntax Highlighting** - Context-aware highlighting in R strings
+-   🧠 **Smart Autocomplete** - 900+ DuckDB functions + live schema from R session
+-   🔌 **R Connection Picker** - Select specific connection objects (supports `:memory:`)
+-   🔄 **Auto-Refresh** - Detects schema changes automatically
+-   ⚡ **Hybrid Functions** - Combines Node.js base + R session functions
+-   🌈 **Visual Distinction** - Themed background colors for SQL strings
+-   ✈️ **Air Formatter Support** - Works with multi-line SQL
 
-[📖 **Detailed Features Guide** →](docs/FEATURES.md)
-
----
+------------------------------------------------------------------------
 
 ## Quick Start
 
 ### 1. Install
 
-**Prerequisites:**
-- [Positron IDE](https://github.com/posit-dev/positron)
-- R with `DBI` and `duckdb` packages
+**Download Release (Recommended)** 1. Download `.vsix` from [Releases](https://github.com/h-a-graham/duckdb-r-editor/releases/latest) 2. Positron: Extensions → ... → Install from VSIX
 
-**Option A: Download Release (Recommended)**
+**Or Build from Source**
 
-1. Download the latest `.vsix` from [Releases](https://github.com/h-a-graham/duckdb-r-editor/releases/latest)
-2. In Positron: Extensions → ... menu → Install from VSIX
-3. Select the downloaded `duckdb-r-editor-0.4.0.vsix`
-
-**Option B: Build from Source**
-
-Requires Node.js 16+
-
-```bash
+``` bash
 git clone https://github.com/h-a-graham/duckdb-r-editor.git
 cd duckdb-r-editor
-npm install
-npm run vsce:package
-# Then install the generated .vsix file in Positron
+npm install && npm run vsce:package
 ```
 
-### 2. Create R Connection
+### 2. Connect in R
 
-```r
+``` r
 library(DBI)
 library(duckdb)
 
 con <- dbConnect(duckdb(), "mydata.duckdb")
-# Or use in-memory: dbConnect(duckdb(), ":memory:")
+# Or in-memory: dbConnect(duckdb(), ":memory:")
 ```
 
 ### 3. Connect Extension
 
-1. Open Command Palette (`Cmd/Ctrl + Shift + P`)
-2. Run: **"DuckDB R Editor: Connect to DuckDB Database"**
-3. **Select your R connection object** (e.g., "con")
-4. Start writing SQL with autocomplete!
+1.  Command Palette (`Cmd/Ctrl + Shift + P`)
+2.  **"DuckDB R Editor: Connect to DuckDB Database"**
+3.  Select your R connection (e.g., "con")
+4.  Write SQL with autocomplete!
 
 ### 4. Write SQL
 
-SQL autocomplete works automatically in:
-```r
-dbGetQuery()
-dbExecute()
-dbSendQuery()
-sql()        # dbplyr
-glue_sql()   # glue package
+Autocomplete works in:
+
+``` r
+dbGetQuery(con, "SELECT * FROM ...")
+dbExecute(con, "CREATE TABLE ...")
+sql("SELECT ...")        # dbplyr
+glue_sql("...", .con = con)
 ```
 
----
+------------------------------------------------------------------------
 
 ## Configuration
 
-Optional: Add to `.vscode/settings.json`
+Optional settings (`.vscode/settings.json`):
 
-```json
+``` json
 {
-  "duckdb-r-editor.defaultExtensions": ["spatial", "httpfs", "json"],
-  "duckdb-r-editor.useSemanticHighlighting": true,
-  "duckdb-r-editor.enableAutoComplete": true
+  "duckdb-r-editor.defaultExtensions": ["spatial", "httpfs"],
+  "duckdb-r-editor.autoRefreshSchema": true,
+  "duckdb-r-editor.useSemanticHighlighting": true
 }
 ```
 
-[⚙️ **Full Configuration Guide** →](docs/CONFIGURATION.md)
+**Available Settings:** - `enableAutoComplete` - Enable autocomplete (default: true) - `enableSQLHighlighting` - Syntax highlighting (default: true) - `useSemanticHighlighting` - Advanced highlighting (default: true) - `defaultExtensions` - Extensions to auto-load (default: \[\]) - `autoRefreshSchema` - Auto-detect schema changes (default: true)
 
----
-
-## Documentation
-
-- 📖 [Detailed Features](docs/FEATURES.md) - Complete feature documentation
-- ⚙️ [Configuration Guide](docs/CONFIGURATION.md) - Settings and extension loading
-- 💡 [Workflow & Tips](docs/WORKFLOW.md) - Best practices and troubleshooting
-- 🏗️ [Architecture](docs/POSITRON_CHANGES.md) - How it works under the hood
-
----
+------------------------------------------------------------------------
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| **Connect to DuckDB Database** | Select R connection object to use for schema |
-| **Disconnect from Database** | Close connection |
-| **Refresh DuckDB Schema** | Re-query R session for updated schema |
-| **Load DuckDB Extension (One-Time)** | Load extension for autocomplete (until restart) |
+Access via Command Palette (`Cmd/Ctrl + Shift + P`):
 
-Access via Command Palette (`Cmd/Ctrl + Shift + P`)
+-   **Connect to DuckDB Database** - Select R connection for schema
+-   **Disconnect from Database** - Clear connection
+-   **Refresh DuckDB Schema** - Manually update schema
+-   **Load DuckDB Extension (One-Time)** - Load official extension until restart
 
----
+------------------------------------------------------------------------
+
+## Extension Loading
+
+**Official Extensions** (Node.js - available before connecting): - Use command: "Load DuckDB Extension" - Or settings: `"defaultExtensions": ["spatial", "httpfs"]` - Examples: spatial, httpfs, json, parquet
+
+**Community Extensions** (via R - auto-detected):
+
+``` r
+dbExecute(con, "INSTALL my_ext FROM community; LOAD my_ext;")
+# Functions automatically available via auto-refresh
+```
+
+\* *Note that official extensions will also be auto-detected via the R session when loaded*
+
+------------------------------------------------------------------------
+
+## Auto-Refresh
+
+Schema and functions refresh automatically when: - Creating/dropping tables: `CREATE TABLE`, `DROP TABLE` - Modifying data: `INSERT`, `UPDATE`, `DELETE` - Loading extensions: `INSTALL`, `LOAD`
+
+Notifications show what changed: - `✓ 2 new tables added to 'con' (Total: 5 tables)` - `✓ 45 new functions loaded in 'con' (Total: 945 functions)`
+
+Disable in settings: `"autoRefreshSchema": false`
+
+------------------------------------------------------------------------
 
 ## Why This Extension?
 
-DuckDB in R is incredibly powerful for data analysis - but writing SQL in plain strings is painful. Without IDE support, you're left guessing table names, column types, and function signatures. Typos go unnoticed until runtime, and exploring your database schema means constant trips to the R console.
+Writing SQL in R strings without IDE support means: - Guessing table/column names - No syntax validation until runtime - Constant context switching to check schema
 
-This extension brings full SQL IDE features into R strings: syntax highlighting, intelligent autocomplete, and schema introspection from your active connection. Write SQL with confidence, catch errors early, and explore your data without breaking flow.
+This extension provides: - ✅ Real-time autocomplete from your active R session - ✅ Syntax highlighting and validation - ✅ Zero file locking (queries R directly) - ✅ Seamless workflow - stay in your code
 
----
+------------------------------------------------------------------------
 
 ## License
 
@@ -162,17 +134,10 @@ MIT
 
 ## Acknowledgments
 
-Built for the DuckDB and R communities. Special thanks to:
-- **DuckDB** - Amazing analytical database
-- **Positron** - Excellent data science IDE
-- **Air formatter** - Clean R code formatting
-- **Claude Code** - For helping generate this extension
-- R packages: `DBI`, `duckdb`, `dbplyr`, `glue`
+Built for DuckDB and R communities. Thanks to: - **DuckDB** - Analytical database - **Positron** - Data science IDE - **Air formatter** - R code formatting - R packages: `DBI`, `duckdb`, `dbplyr`, `glue`
 
----
+------------------------------------------------------------------------
 
 ## Contributing
-
-Found a bug? Have a feature request?
 
 [Open an issue on GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues)

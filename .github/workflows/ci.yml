@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint code
+      run: npm run lint
+
+    - name: Check TypeScript types
+      run: npm run check-types
+
+    - name: Compile extension
+      run: npm run compile
+
+    - name: Package extension
+      run: npm run package
+
+    - name: Verify build output
+      run: |
+        if [ -f dist/extension.js ]; then
+          echo "✅ Extension compiled successfully"
+          ls -lh dist/extension.js
+        else
+          echo "❌ Extension compilation failed"
+          exit 1
+        fi
