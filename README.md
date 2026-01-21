@@ -147,7 +147,10 @@ MIT
 
 ## Acknowledgments
 
-Built for DuckDB and R communities. Thanks to: - **DuckDB** - Analytical database - **Positron** - Data science IDE - **Air formatter** - R code formatting - R packages: `DBI`, `duckdb`, `dbplyr`, `glue`
+- **DuckDB** - Analytical database
+- **Positron** - Data science IDE
+- **Air formatter** - R code formatting
+- R packages: `DBI`, `duckdb`, `dbplyr`, `glue`
 
 ------------------------------------------------------------------------
 
