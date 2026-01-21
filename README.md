@@ -2,9 +2,11 @@
 
 [![CI](https://github.com/h-a-graham/duckdb-r-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/h-a-graham/duckdb-r-editor/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub issues](https://img.shields.io/github/issues/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor/issues) [![Version](https://img.shields.io/github/package-json/v/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor) [![GitHub stars](https://img.shields.io/github/stars/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor/stargazers) 
 
-> \[!WARNING\] Beta version. Report issues on [GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues).
+> [!WARNING\]
+> Beta version. Report issues on [GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues).
 
-> \[!NOTE\] **Positron IDE Only** - Requires [Positron](https://github.com/posit-dev/positron). Will not work in VS Code.
+> [!NOTE\]
+> **Positron IDE Only** - Requires [Positron](https://github.com/posit-dev/positron). Will not work in VS Code.
 
 **SQL syntax highlighting and intelligent autocomplete for DuckDB in R files.**
 
