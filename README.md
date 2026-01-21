@@ -52,7 +52,7 @@ con <- dbConnect(duckdb(), "mydata.duckdb")
 # Or in-memory: dbConnect(duckdb(), ":memory:")
 ```
 
-### 3. Connect Extension
+### 3. Connect the extension to the database
 
 1.  Command Palette (`Cmd/Ctrl + Shift + P`)
 2.  **"DuckDB R Editor: Connect to DuckDB Database"**
@@ -84,7 +84,11 @@ Optional settings (`.vscode/settings.json`):
 }
 ```
 
-**Available Settings:** - `enableAutoComplete` - Enable autocomplete (default: true) - `enableSQLHighlighting` - Syntax highlighting (default: true) - `useSemanticHighlighting` - Advanced highlighting (default: true) - `defaultExtensions` - Extensions to auto-load (default: \[\]) - `autoRefreshSchema` - Auto-detect schema changes (default: true)
+**Available Settings:** 
+- `enableAutoComplete` - Enable autocomplete (default: true)
+-   `useSemanticHighlighting` - syntax highlighting (default: true)
+-  `defaultExtensions` - Extensions to auto-load (default: \[\])
+-  `autoRefreshSchema` - Auto-detect schema changes (default: true)
 
 ------------------------------------------------------------------------
 
@@ -101,7 +105,9 @@ Access via Command Palette (`Cmd/Ctrl + Shift + P`):
 
 ## Extension Loading
 
-**Official Extensions** (Node.js - available before connecting): - Use command: "Load DuckDB Extension" - Or settings: `"defaultExtensions": ["spatial", "httpfs"]` - Examples: spatial, httpfs, json, parquet
+**Official Extensions** (Node.js - available before connecting): 
+- Use command: "Load DuckDB Extension"
+- Or settings: `"defaultExtensions": ["spatial", "httpfs"]`
 
 **Community Extensions** (via R - auto-detected):
 
@@ -116,7 +122,10 @@ dbExecute(con, "INSTALL my_ext FROM community; LOAD my_ext;")
 
 ## Auto-Refresh
 
-Schema and functions refresh automatically when: - Creating/dropping tables: `CREATE TABLE`, `DROP TABLE` - Modifying data: `INSERT`, `UPDATE`, `DELETE` - Loading extensions: `INSTALL`, `LOAD`
+Schema and functions refresh automatically when: 
+- Creating/dropping tables: `CREATE TABLE`, `DROP TABLE`
+-  Modifying data: `INSERT`, `UPDATE`, `DELETE`
+-  Loading extensions: `INSTALL`, `LOAD`
 
 Notifications show what changed: - `✓ 2 new tables added to 'con' (Total: 5 tables)` - `✓ 45 new functions loaded in 'con' (Total: 945 functions)`
 
