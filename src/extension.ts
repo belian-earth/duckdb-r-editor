@@ -238,6 +238,10 @@ export async function activate(context: vscode.ExtensionContext) {
           if (!value || value.trim().length === 0) {
             return 'Extension name is required';
           }
+          // Validate format to prevent SQL injection
+          if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value.trim())) {
+            return 'Extension name must start with a letter and contain only letters, numbers, and underscores';
+          }
           return null;
         }
       });
@@ -399,12 +403,22 @@ tryCatch({
     // Cleanup temp file
     await vscode.workspace.fs.delete(fileUri);
 
-    // Check if we got any connections
-    if (connections.length === 0) {
+    // SECURITY: Filter out connections with invalid names to prevent code injection
+    // R identifiers must start with letter and contain only letters, numbers, dots, underscores
+    const validConnections = connections.filter(conn => {
+      const isValid = /^[a-zA-Z][a-zA-Z0-9._]*$/.test(conn.name);
+      if (!isValid) {
+        outputChannel.appendLine(`⚠️  Skipping connection with invalid name: "${conn.name}"`);
+      }
+      return isValid;
+    });
+
+    // Check if we got any valid connections
+    if (validConnections.length === 0) {
       throw new Error('No DuckDB connections found in R session');
     }
 
-    return connections;
+    return validConnections;
   } catch (error: any) {
     // Try to cleanup temp file even on error
     try {

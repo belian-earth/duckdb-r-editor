@@ -3,7 +3,7 @@
   "displayName": "DuckDB R Editor (Positron)",
   "description": "Positron-exclusive SQL editor for R. Queries your active R DuckDB connection for schema - no file locking! 900+ DuckDB functions with intelligent autocomplete.",
   "version": "0.6.0",
-  "publisher": "duckdb-r-editor",
+  "publisher": "belian-earth",
   "license": "MIT",
   "repository": {
     "type": "git",

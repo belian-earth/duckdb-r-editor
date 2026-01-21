@@ -27,14 +27,26 @@ export class PositronSchemaProvider implements vscode.Disposable {
      * Connect to a specific R DuckDB connection
      */
     async connect(connectionName: string, dbPath: string): Promise<void> {
+        // SECURITY: Validate connection name to prevent code injection
+        // R identifiers must start with letter or dot (not followed by number)
+        // and contain only letters, numbers, dots, and underscores
+        if (!/^[a-zA-Z][a-zA-Z0-9._]*$/.test(connectionName)) {
+            throw new Error(
+                `Invalid connection name: "${connectionName}". ` +
+                `R connection names must start with a letter and contain only letters, numbers, dots, and underscores.`
+            );
+        }
+
         this.connectionName = connectionName;
         this.dbPath = dbPath;
 
         // Create temp files for schema and functions
         const tmpDir = os.tmpdir();
         const timestamp = Date.now();
-        this.schemaFilePath = path.join(tmpDir, `duckdb-schema-${connectionName}-${timestamp}.json`);
-        this.functionsFilePath = path.join(tmpDir, `duckdb-functions-${connectionName}-${timestamp}.json`);
+        // Use safe, validated connection name in file path
+        const safeConnectionName = connectionName.replace(/[^a-zA-Z0-9._]/g, '_');
+        this.schemaFilePath = path.join(tmpDir, `duckdb-schema-${safeConnectionName}-${timestamp}.json`);
+        this.functionsFilePath = path.join(tmpDir, `duckdb-functions-${safeConnectionName}-${timestamp}.json`);
 
         // Immediately fetch schema and functions from R session
         await this.refreshSchema();

@@ -89,6 +89,15 @@ export class DuckDBFunctionProvider implements vscode.Disposable {
             throw new Error('No database connection');
         }
 
+        // SECURITY: Validate extension name to prevent SQL injection
+        // DuckDB extension names are alphanumeric with underscores only
+        if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(extensionName)) {
+            throw new Error(
+                `Invalid extension name: "${extensionName}". ` +
+                `Extension names must start with a letter and contain only letters, numbers, and underscores.`
+            );
+        }
+
         try {
             await this.query(`INSTALL ${extensionName}`);
             await this.query(`LOAD ${extensionName}`);
@@ -113,6 +122,15 @@ export class DuckDBFunctionProvider implements vscode.Disposable {
         const errors: string[] = [];
 
         for (const extensionName of extensionNames) {
+            // SECURITY: Validate extension name to prevent SQL injection
+            if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(extensionName)) {
+                errors.push(
+                    `Invalid extension name: "${extensionName}". ` +
+                    `Extension names must start with a letter and contain only letters, numbers, and underscores.`
+                );
+                continue;
+            }
+
             try {
                 await this.query(`INSTALL ${extensionName}`);
                 await this.query(`LOAD ${extensionName}`);

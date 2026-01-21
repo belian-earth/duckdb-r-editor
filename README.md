@@ -2,15 +2,22 @@
 
 [![CI](https://github.com/h-a-graham/duckdb-r-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/h-a-graham/duckdb-r-editor/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub issues](https://img.shields.io/github/issues/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor/issues) [![Version](https://img.shields.io/github/package-json/v/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor) [![GitHub stars](https://img.shields.io/github/stars/h-a-graham/duckdb-r-editor)](https://github.com/h-a-graham/duckdb-r-editor/stargazers) 
 
-> [!WARNING\]
+> [!WARNING]
 > Beta version. Report issues on [GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues).
 
-> [!NOTE\]
+> [!NOTE]
 > **Positron IDE Only** - Requires [Positron](https://github.com/posit-dev/positron). Will not work in VS Code.
 
 **SQL syntax highlighting and intelligent autocomplete for DuckDB in R files.**
 
 Write DuckDB SQL with full IDE support right inside R strings. Take full advantage of expressive SQL expressions within your R scripts!
+
+------------------------------------------------------------------------
+
+## Demo
+
+![Schema Detection Demo](images/demo.gif)
+
 
 ------------------------------------------------------------------------
 
@@ -113,7 +120,7 @@ Access via Command Palette (`Cmd/Ctrl + Shift + P`):
 
 ``` r
 dbExecute(con, "INSTALL my_ext FROM community; LOAD my_ext;")
-# Functions automatically available via auto-refresh
+# -> Functions automatically available via auto-refresh
 ```
 
 \* *Note that official extensions will also be auto-detected via the R session when loaded*
@@ -127,9 +134,14 @@ Schema and functions refresh automatically when:
 -  Modifying data: `INSERT`, `UPDATE`, `DELETE`
 -  Loading extensions: `INSTALL`, `LOAD`
 
-Notifications show what changed: - `✓ 2 new tables added to 'con' (Total: 5 tables)` - `✓ 45 new functions loaded in 'con' (Total: 945 functions)`
+Notifications show what changed:
 
-Disable in settings: `"autoRefreshSchema": false`
+```
+✓ 2 new tables added to 'con' (Total: 5 tables)
+✓ 45 new functions loaded in 'con' (Total: 945 functions)
+```
+
+\* *Disable in settings: `"autoRefreshSchema": false`*
 
 ------------------------------------------------------------------------
 
