@@ -170,12 +170,8 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
 
               // For multi-line strings, create per-line decorations to avoid highlighting leading whitespace
               if (context.range.start.line === context.range.end.line) {
-                // Single line - simple range including quotes
-                const rangeWithQuotes = new vscode.Range(
-                  new vscode.Position(context.range.start.line, context.range.start.character - 1),
-                  new vscode.Position(context.range.end.line, context.range.end.character + 1)
-                );
-                sqlRanges.push(rangeWithQuotes);
+                // Single line - exclude quotes, just the content
+                sqlRanges.push(context.range);
               } else {
                 // Multi-line - create one range per line, trimming leading whitespace
                 for (let line = context.range.start.line; line <= context.range.end.line; line++) {
@@ -184,14 +180,14 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
                   let endChar: number;
 
                   if (line === context.range.start.line) {
-                    // First line: start at opening quote
-                    startChar = context.range.start.character - 1;
+                    // First line: start after opening quote
+                    startChar = context.range.start.character;
                     endChar = lineText.length;
                   } else if (line === context.range.end.line) {
-                    // Last line: find first non-whitespace character, end at closing quote
+                    // Last line: find first non-whitespace character, end before closing quote
                     const trimmedStart = lineText.search(/\S/);
                     startChar = trimmedStart >= 0 ? trimmedStart : 0;
-                    endChar = context.range.end.character + 1;
+                    endChar = context.range.end.character;
                   } else {
                     // Middle line: trim leading whitespace, go to end of line
                     const trimmedStart = lineText.search(/\S/);
