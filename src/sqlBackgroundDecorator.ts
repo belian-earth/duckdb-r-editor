@@ -166,12 +166,46 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
             if (!processedRanges.has(rangeKey)) {
               processedRanges.add(rangeKey);
 
-              // Add range including quotes for better visual effect
-              const rangeWithQuotes = new vscode.Range(
-                new vscode.Position(context.range.start.line, context.range.start.character - 1),
-                new vscode.Position(context.range.end.line, context.range.end.character + 1)
-              );
-              sqlRanges.push(rangeWithQuotes);
+              // For multi-line strings, create per-line decorations to avoid highlighting leading whitespace
+              if (context.range.start.line === context.range.end.line) {
+                // Single line - simple range including quotes
+                const rangeWithQuotes = new vscode.Range(
+                  new vscode.Position(context.range.start.line, context.range.start.character - 1),
+                  new vscode.Position(context.range.end.line, context.range.end.character + 1)
+                );
+                sqlRanges.push(rangeWithQuotes);
+              } else {
+                // Multi-line - create one range per line, trimming leading whitespace
+                for (let line = context.range.start.line; line <= context.range.end.line; line++) {
+                  const lineText = document.lineAt(line).text;
+                  let startChar: number;
+                  let endChar: number;
+
+                  if (line === context.range.start.line) {
+                    // First line: start at opening quote
+                    startChar = context.range.start.character - 1;
+                    endChar = lineText.length;
+                  } else if (line === context.range.end.line) {
+                    // Last line: find first non-whitespace character, end at closing quote
+                    const trimmedStart = lineText.search(/\S/);
+                    startChar = trimmedStart >= 0 ? trimmedStart : 0;
+                    endChar = context.range.end.character + 1;
+                  } else {
+                    // Middle line: trim leading whitespace, go to end of line
+                    const trimmedStart = lineText.search(/\S/);
+                    startChar = trimmedStart >= 0 ? trimmedStart : 0;
+                    endChar = lineText.length;
+                  }
+
+                  // Only add range if there's actual content
+                  if (startChar < endChar) {
+                    sqlRanges.push(new vscode.Range(
+                      new vscode.Position(line, startChar),
+                      new vscode.Position(line, endChar)
+                    ));
+                  }
+                }
+              }
             }
 
             // Skip ahead to avoid re-processing this string
