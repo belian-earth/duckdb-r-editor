@@ -535,8 +535,32 @@ async function refreshSchema(): Promise<void> {
     }
   } catch (err: any) {
     outputChannel.appendLine(`✗ Refresh failed: ${err.message}`);
-    vscode.window.showErrorMessage(`Failed to refresh schema: ${err.message}`);
-    throw err;
+
+    // Check if the error is due to an invalid/closed connection
+    if (err.message && (err.message.includes('Invalid connection') || err.message.includes('not found in R session'))) {
+      // Connection is no longer valid - clean up
+      if (schemaProvider) {
+        schemaProvider.dispose();
+        schemaProvider = undefined;
+      }
+
+      // Reset tracking state
+      previousTableCount = 0;
+      previousFunctionCount = 0;
+      shownEmptyDbWarning = false;
+
+      vscode.window.showWarningMessage(
+        'Connection no longer available. The R connection may have been closed. Please reconnect to continue.',
+        'Connect to Database'
+      ).then(selection => {
+        if (selection === 'Connect to Database') {
+          vscode.commands.executeCommand('duckdb-r-editor.connectDatabase');
+        }
+      });
+    } else {
+      // Some other error - show the full error message
+      vscode.window.showErrorMessage(`Failed to refresh schema: ${err.message}`);
+    }
   }
 }
 

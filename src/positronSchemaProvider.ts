@@ -83,6 +83,11 @@ tryCatch({
         stop("DBI package not available")
     }
 
+    # Check if connection is still valid
+    if (!DBI::dbIsValid(.dbre_tmp_conn)) {
+        stop("Connection '${targetConnection}' is no longer valid. It may have been closed.")
+    }
+
     tables <- DBI::dbListTables(.dbre_tmp_conn)
     result <- list()
 
@@ -269,6 +274,11 @@ tryCatch({
 
     if (!inherits(.dbre_tmp_conn, "duckdb_connection")) {
         stop("Object '${targetConnection}' is not a DuckDB connection")
+    }
+
+    # Check if connection is still valid
+    if (!DBI::dbIsValid(.dbre_tmp_conn)) {
+        stop("Connection '${targetConnection}' is no longer valid. It may have been closed.")
     }
 
     # Query all functions from DuckDB

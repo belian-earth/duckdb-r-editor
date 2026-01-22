@@ -12,10 +12,16 @@ export const SQL_KEYWORDS = [
     'DISTINCT', 'ALL', 'ASC', 'DESC', 'UNION', 'INTERSECT', 'EXCEPT',
     'WITH', 'RECURSIVE', 'CTE', 'WINDOW', 'PARTITION BY', 'OVER',
     'NULLS FIRST', 'NULLS LAST',
+    // DuckDB-specific SELECT modifiers
+    'EXCLUDE', 'REPLACE', 'COLUMNS',
     // DuckDB-specific commands
     'INSTALL', 'LOAD', 'ATTACH', 'DETACH', 'USE', 'PRAGMA', 'COPY', 'EXPORT',
     // DuckDB metadata commands
-    'SHOW', 'TABLES', 'DESCRIBE', 'SUMMARIZE', 'EXPLAIN'
+    'SHOW', 'TABLES', 'DESCRIBE', 'SUMMARIZE', 'EXPLAIN',
+    // Additional common keywords
+    'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'CAST', 'USING', 'RETURNING',
+    'CROSS JOIN', 'FULL OUTER JOIN', 'NATURAL JOIN', 'SEMI JOIN', 'ANTI JOIN',
+    'QUALIFY', 'ASOF JOIN', 'POSITIONAL JOIN'
 ];
 
 /**
