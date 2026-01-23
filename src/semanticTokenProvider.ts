@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { DocumentCache, CachedSQLRegion } from './documentCache';
 import { SQL_FUNCTION_NAMES, PARSING_LIMITS } from './types';
+import { SQL_KEYWORD_TOKENS, SQL_FUNCTION_TOKENS } from './sqlKeywords';
 
 /**
  * Semantic token provider for SQL syntax highlighting in R strings
@@ -296,47 +297,9 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
     ): void {
         const sqlText = region.sqlText;
 
-        // DuckDB SQL keywords (comprehensive list including DuckDB-specific commands)
-        const keywords = new Set([
-            // Standard SQL keywords
-            'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'ORDER', 'HAVING', 'LIMIT', 'OFFSET',
-            'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'CREATE', 'TABLE',
-            'DROP', 'ALTER', 'INDEX', 'VIEW', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'FULL',
-            'OUTER', 'CROSS', 'ON', 'USING', 'AS', 'AND', 'OR', 'NOT', 'IN', 'EXISTS',
-            'BETWEEN', 'LIKE', 'IS', 'NULL', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN',
-            'ELSE', 'END', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'WITH',
-            'RECURSIVE', 'CAST', 'INTERVAL', 'ASC', 'DESC', 'NULLS', 'FIRST', 'LAST',
-            // DuckDB-specific commands
-            'INSTALL', 'LOAD', 'ATTACH', 'DETACH', 'COPY', 'EXPORT', 'IMPORT',
-            'PRAGMA', 'DESCRIBE', 'SHOW', 'SUMMARIZE', 'PIVOT', 'UNPIVOT',
-            'EXPLAIN', 'ANALYZE', 'VACUUM', 'CHECKPOINT', 'FORCE',
-            // Additional SQL keywords
-            'PRIMARY', 'KEY', 'FOREIGN', 'REFERENCES', 'CONSTRAINT', 'UNIQUE',
-            'CHECK', 'DEFAULT', 'AUTO_INCREMENT', 'SEQUENCE', 'GENERATED',
-            'TEMPORARY', 'TEMP', 'IF', 'NOT', 'EXISTS', 'REPLACE',
-            'RETURNING', 'CONFLICT', 'DO', 'NOTHING', 'UPSERT',
-            'WINDOW', 'OVER', 'PARTITION', 'RANGE', 'ROWS', 'PRECEDING', 'FOLLOWING',
-            'UNBOUNDED', 'CURRENT', 'ROW', 'FILTER',
-            // Data types
-            'INTEGER', 'INT', 'BIGINT', 'SMALLINT', 'TINYINT', 'HUGEINT',
-            'DOUBLE', 'REAL', 'FLOAT', 'DECIMAL', 'NUMERIC',
-            'VARCHAR', 'CHAR', 'TEXT', 'STRING',
-            'DATE', 'TIME', 'TIMESTAMP', 'TIMESTAMPTZ', 'INTERVAL',
-            'BOOLEAN', 'BOOL', 'BLOB', 'BYTEA',
-            'JSON', 'ARRAY', 'LIST', 'STRUCT', 'MAP', 'UNION',
-            'UUID', 'ENUM'
-        ]);
-
-        // SQL functions (subset - common DuckDB functions)
-        const functions = new Set([
-            'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'STRING_AGG', 'ARRAY_AGG',
-            'CONCAT', 'UPPER', 'LOWER', 'SUBSTRING', 'TRIM', 'LENGTH',
-            'DATE_TRUNC', 'EXTRACT', 'NOW', 'CURRENT_DATE', 'CURRENT_TIMESTAMP',
-            'STRFTIME', 'MAKE_DATE', 'MAKE_TIMESTAMP',
-            'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'LAG', 'LEAD', 'FIRST_VALUE', 'LAST_VALUE',
-            'COALESCE', 'NULLIF', 'GREATEST', 'LEAST',
-            'UNNEST', 'LIST_VALUE', 'STRUCT_PACK', 'REGEXP_MATCHES'
-        ]);
+        // Use shared keyword and function definitions from sqlKeywords.ts
+        const keywords = SQL_KEYWORD_TOKENS;
+        const functions = SQL_FUNCTION_TOKENS;
 
         // Operators
         const operators = new Set(['=', '!=', '<>', '<', '>', '<=', '>=', '+', '-', '*', '/', '%', '||']);
