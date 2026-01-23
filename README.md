@@ -46,8 +46,26 @@ Write DuckDB SQL with full IDE support right inside R strings. Take full advanta
 ``` bash
 git clone https://github.com/belian-earth/duckdb-r-editor.git
 cd duckdb-r-editor
-npm install && npm run vsce:package
+npm install
 ```
+
+**With Make** (Linux/Mac/WSL - recommended):
+``` bash
+make              # Build and package
+make quick        # Quick build (skip linting)
+make help         # See all commands
+```
+
+**Without Make** (universal):
+``` bash
+npm run compile            # Compile TypeScript
+npm run lint               # Run linter
+npm run vsce:package       # Create .vsix file
+```
+
+The `.vsix` file will be created in the project root. Install it via Positron: Extensions → ... → Install from VSIX
+
+*Note: Windows users can install Make via [Chocolatey](https://chocolatey.org/) (`choco install make`) or use [WSL](https://docs.microsoft.com/en-us/windows/wsl/)*
 
 ### 2. Connect in R
 
@@ -172,6 +190,61 @@ MIT
 
 ------------------------------------------------------------------------
 
+## Development
+
+### Building & Testing
+
+The project includes a Makefile for convenient development:
+
+```bash
+make              # Full build: compile → lint → package
+make build        # Compile and lint (no package)
+make quick        # Quick iteration (compile + package, skip lint)
+make compile      # Just compile TypeScript
+make lint         # Just run ESLint
+make test         # Run tests
+make clean        # Remove build artifacts
+make rebuild      # Clean rebuild from scratch
+make help         # Show all commands
+```
+
+Without Make, use npm scripts directly:
+```bash
+npm run compile       # Compile TypeScript
+npm run lint          # Run ESLint
+npm test              # Run tests
+npm run vsce:package  # Create .vsix package
+```
+
+### Project Structure
+
+```
+src/
+├── extension.ts              # Main entry point
+├── diagnosticsProvider.ts    # SQL validation
+├── completionProvider.ts     # Autocomplete
+├── semanticTokenProvider.ts  # Syntax highlighting
+├── sqlBackgroundDecorator.ts # Background colors
+├── positronSchemaProvider.ts # R session schema queries
+├── functionProvider.ts       # DuckDB function discovery
+├── constants.ts              # Extension constants
+├── types.ts                  # TypeScript interfaces
+└── utils/
+    ├── rCodeTemplates.ts     # R code generation
+    ├── validation.ts         # Input validation
+    ├── errorHandler.ts       # Error utilities
+    └── rCodeExecutor.ts      # R execution helpers
+```
+
 ## Contributing
 
-[Open an issue on GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues)
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and test thoroughly
+4. Run `make build` to ensure code passes linting
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+[Open an issue on GitHub](https://github.com/h-a-graham/duckdb-r-editor/issues) for bug reports or feature requests.
