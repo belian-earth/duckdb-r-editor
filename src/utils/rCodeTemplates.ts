@@ -5,15 +5,15 @@ import { R_TEMP_VAR_PREFIX } from '../constants';
  * Centralizes all R code patterns used by the extension
  */
 export class RCodeTemplates {
-    /**
-     * Generate R code to discover all DuckDB connections in the global environment
-     * Finds all objects that inherit from "duckdb_connection" and extracts metadata
-     *
-     * @param outputFilePath Path to write JSON results (R-compatible format)
-     * @returns R code string that discovers connections and writes to file
-     */
-    static discoverConnections(outputFilePath: string): string {
-        return `
+  /**
+   * Generate R code to discover all DuckDB connections in the global environment
+   * Finds all objects that inherit from "duckdb_connection" and extracts metadata
+   *
+   * @param outputFilePath Path to write JSON results (R-compatible format)
+   * @returns R code string that discovers connections and writes to file
+   */
+  static discoverConnections(outputFilePath: string): string {
+    return `
 tryCatch({
     ${R_TEMP_VAR_PREFIX}all_objs <- ls(envir = .GlobalEnv)
     ${R_TEMP_VAR_PREFIX}connections <- list()
@@ -66,18 +66,18 @@ tryCatch({
     writeLines("[]", "${outputFilePath}")
     invisible(NULL)
 })`.trim();
-    }
+  }
 
-    /**
-     * Generate R code to refresh schema information for a connection
-     * Queries information_schema to get table and column metadata
-     *
-     * @param connectionName Name of R connection variable in global environment
-     * @param outputFilePath Path to write JSON results (R-compatible format)
-     * @returns R code string that queries schema and writes to file
-     */
-    static refreshSchema(connectionName: string, outputFilePath: string): string {
-        return `
+  /**
+   * Generate R code to refresh schema information for a connection
+   * Queries information_schema to get table and column metadata
+   *
+   * @param connectionName Name of R connection variable in global environment
+   * @param outputFilePath Path to write JSON results (R-compatible format)
+   * @returns R code string that queries schema and writes to file
+   */
+  static refreshSchema(connectionName: string, outputFilePath: string): string {
+    return `
 tryCatch({
     # Get the specific connection object
     if (!exists("${connectionName}", envir = .GlobalEnv)) {
@@ -110,7 +110,7 @@ tryCatch({
                 table
             ))
 
-            for (i in 1:nrow(col_info)) {
+            for (i in seq_len(nrow(col_info))) {
                 result[[length(result) + 1]] <- list(
                     table_name = table,
                     column_name = col_info$column_name[i],
@@ -147,18 +147,18 @@ tryCatch({
 }, error = function(e) {
     stop(e$message)
 })`.trim();
-    }
+  }
 
-    /**
-     * Generate R code to refresh DuckDB function information for a connection
-     * Queries duckdb_functions() system table to get all available functions
-     *
-     * @param connectionName Name of R connection variable in global environment
-     * @param outputFilePath Path to write JSON results (R-compatible format)
-     * @returns R code string that queries functions and writes to file
-     */
-    static refreshFunctions(connectionName: string, outputFilePath: string): string {
-        return `
+  /**
+   * Generate R code to refresh DuckDB function information for a connection
+   * Queries duckdb_functions() system table to get all available functions
+   *
+   * @param connectionName Name of R connection variable in global environment
+   * @param outputFilePath Path to write JSON results (R-compatible format)
+   * @returns R code string that queries functions and writes to file
+   */
+  static refreshFunctions(connectionName: string, outputFilePath: string): string {
+    return `
 tryCatch({
     if (!exists("${connectionName}", envir = .GlobalEnv)) {
         stop("Connection '${connectionName}' not found in R session")
@@ -200,5 +200,5 @@ tryCatch({
 }, error = function(e) {
     stop(e$message)
 })`.trim();
-    }
+  }
 }
