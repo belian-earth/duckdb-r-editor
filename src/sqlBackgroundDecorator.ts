@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { SQLStringDetector } from './sqlStringDetector';
+import { EXTENSION_ID, CONFIG_KEYS } from './constants';
 
 /**
  * Provides background color decorations for SQL strings in R code
@@ -22,8 +23,8 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
     // Listen to configuration changes
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('duckdb-r-editor.enableSQLBackground') ||
-          e.affectsConfiguration('duckdb-r-editor.sqlBackgroundColor')) {
+        if (e.affectsConfiguration(`${EXTENSION_ID}.${CONFIG_KEYS.BACKGROUND_COLOR}`) ||
+          e.affectsConfiguration(`${EXTENSION_ID}.${CONFIG_KEYS.CUSTOM_BG_COLOR}`)) {
           this.updateDecorationType();
           this.decorateAllVisibleEditors();
         }
@@ -73,14 +74,14 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
       this.decorationType = null;
     }
 
-    const config = vscode.workspace.getConfiguration('duckdb-r-editor');
-    const enabled = config.get<boolean>('enableSQLBackground', true);
+    const config = vscode.workspace.getConfiguration(EXTENSION_ID);
+    const enabled = config.get<boolean>(CONFIG_KEYS.BACKGROUND_COLOR, true);
 
     if (!enabled) {
       return;
     }
 
-    const customColor = config.get<string>('sqlBackgroundColor', '');
+    const customColor = config.get<string>(CONFIG_KEYS.CUSTOM_BG_COLOR, '');
     const backgroundColor = customColor || this.getThemeBasedColor();
 
     this.decorationType = vscode.window.createTextEditorDecorationType({
