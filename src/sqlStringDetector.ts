@@ -131,19 +131,17 @@ export class SQLStringDetector {
             return null;
         }
 
-        // IMPORTANT: Validate that the original position is actually within this string range
-        // If the position is AFTER the closing quote, we found a closing quote from a previous string
-        // and mistook it for an opening quote
-        const closePos = new vscode.Position(closeQuoteLine, closeQuoteChar);
-        if (position.isAfter(closePos)) {
-            // Original position is after the "closing" quote, meaning we found the wrong string
-            // This happens when we backward-search and hit a closing quote from an earlier string
-            return null;
-        }
-
         // Create range from opening to closing quote (excluding the quotes themselves)
         const startPos = new vscode.Position(openQuoteLine, openQuoteChar + 1);
         const endPos = new vscode.Position(closeQuoteLine, closeQuoteChar);
+
+        // IMPORTANT: Validate that the original position is actually within this string range
+        // Position must be >= start and < end (content is between quotes, not including closing quote)
+        if (position.isBefore(startPos) || position.isAfterOrEqual(endPos)) {
+            // Position is outside the string content - probably found a closing quote and treated it as opening
+            // OR position is at/after the closing quote position
+            return null;
+        }
 
         return new vscode.Range(startPos, endPos);
     }
