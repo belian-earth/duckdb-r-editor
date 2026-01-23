@@ -3,6 +3,7 @@ import { ColumnInfo } from './types';
 import * as os from 'os';
 import * as path from 'path';
 import { validateConnectionName } from './utils/validation';
+import { RCodeExecutor } from './utils/rCodeExecutor';
 
 /**
  * Provides DuckDB schema by querying active R session via Positron API
@@ -56,8 +57,8 @@ export class PositronSchemaProvider implements vscode.Disposable {
         }
 
         const targetConnection = this.connectionName;
-        // Normalize file path for R (forward slashes, escape backslashes)
-        const schemaFilePath = this.schemaFilePath.replace(/\\/g, '/');
+        // Normalize file path for R (forward slashes)
+        const schemaFilePath = RCodeExecutor.toRPath(this.schemaFilePath);
 
         const rCode = `
 tryCatch({
@@ -256,7 +257,7 @@ tryCatch({
         }
 
         const targetConnection = this.connectionName;
-        const functionsFilePath = this.functionsFilePath.replace(/\\/g, '/');
+        const functionsFilePath = RCodeExecutor.toRPath(this.functionsFilePath);
 
         const rCode = `
 tryCatch({
