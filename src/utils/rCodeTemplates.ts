@@ -188,7 +188,7 @@ tryCatch({
         ${R_TEMP_VAR_PREFIX}json <- paste0("[", paste(apply(${R_TEMP_VAR_PREFIX}functions, 1, function(row) {
             sprintf('{"function_name":"%s","function_type":"%s","description":"%s","return_type":"%s"}',
                 row["function_name"], row["function_type"],
-                gsub('"', '\\\\\\\\"', row["description"]), row["return_type"])
+                gsub('"', '\\\\"', row["description"]), row["return_type"])
         }), collapse = ","), "]")
         writeLines(${R_TEMP_VAR_PREFIX}json, ${R_TEMP_VAR_PREFIX}func_file)
     }
