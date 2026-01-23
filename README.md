@@ -44,7 +44,7 @@ Write DuckDB SQL with full IDE support right inside R strings. Take full advanta
 **Or Build from Source**
 
 ``` bash
-git clone https://github.com/h-a-graham/duckdb-r-editor.git
+git clone https://github.com/belian-earth/duckdb-r-editor.git
 cd duckdb-r-editor
 npm install && npm run vsce:package
 ```
