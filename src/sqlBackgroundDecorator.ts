@@ -23,7 +23,7 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
     // Listen to configuration changes
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration(`${EXTENSION_ID}.${CONFIG_KEYS.BACKGROUND_COLOR}`) ||
+        if (e.affectsConfiguration(`${EXTENSION_ID}.${CONFIG_KEYS.ENABLE_BACKGROUND_COLOR}`) ||
           e.affectsConfiguration(`${EXTENSION_ID}.${CONFIG_KEYS.CUSTOM_BG_COLOR}`)) {
           this.updateDecorationType();
           this.decorateAllVisibleEditors();
@@ -75,7 +75,7 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
     }
 
     const config = vscode.workspace.getConfiguration(EXTENSION_ID);
-    const enabled = config.get<boolean>(CONFIG_KEYS.BACKGROUND_COLOR, true);
+    const enabled = config.get<boolean>(CONFIG_KEYS.ENABLE_BACKGROUND_COLOR, true);
 
     if (!enabled) {
       return;

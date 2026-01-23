@@ -13,9 +13,9 @@ export const EXTENSION_ID = 'duckdb-r-editor';
 export const CONFIG_KEYS = {
     /** Enable SQL syntax highlighting */
     SQL_HIGHLIGHTING: 'enableSQLHighlighting',
-    /** Enable background color for SQL strings */
-    BACKGROUND_COLOR: 'enableSQLBackgroundColor',
-    /** Custom background color for SQL strings */
+    /** Enable/disable background color for SQL strings (boolean toggle) */
+    ENABLE_BACKGROUND_COLOR: 'enableSQLBackgroundColor',
+    /** Custom background color value for SQL strings (color string) */
     CUSTOM_BG_COLOR: 'sqlBackgroundColor',
     /** Auto-refresh schema after modifications */
     AUTO_REFRESH: 'autoRefreshSchema',
