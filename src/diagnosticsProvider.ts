@@ -6,8 +6,6 @@ import { SQLStringDetector } from './sqlStringDetector';
  */
 export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
     private diagnosticCollection: vscode.DiagnosticCollection;
-    private static readonly SQL_FUNCTION_PATTERN = /\b(dbGetQuery|dbExecute|dbSendQuery|dbSendStatement|glue_sql|glue_data_sql|sql)\s*\(/;
-    private static readonly MAX_SQL_STRING_LOOKAHEAD_LINES = 5;
 
     constructor() {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('duckdb-r-editor');
@@ -36,100 +34,110 @@ export class SQLDiagnosticsProvider implements vscode.CodeActionProvider {
         const diagnostics: vscode.Diagnostic[] = [];
         const processedRanges = new Set<string>();
 
-        // Basic SQL validation
-        // Find SQL function calls and check positions in the next few lines for SQL strings
-        for (let i = 0; i < document.lineCount; i++) {
-            const line = document.lineAt(i);
-            const lineText = line.text;
+        // Search for SQL function patterns in the document
+        const sqlFunctionPattern = /\b(dbGetQuery|dbExecute|dbSendQuery|dbSendStatement|glue_sql|glue_data_sql|DBI::|glue::)\s*\(/g;
+        const fullText = document.getText();
 
-            // Skip lines without SQL function calls
-            if (!SQLDiagnosticsProvider.SQL_FUNCTION_PATTERN.test(lineText)) {
-                continue;
-            }
+        let match;
+        while ((match = sqlFunctionPattern.exec(fullText)) !== null) {
+            // Convert text offset to position
+            const matchPosition = document.positionAt(match.index);
 
-            // Check this line and the next few lines for SQL strings (handles multi-line formatting)
-            for (let offset = 0; offset <= SQLDiagnosticsProvider.MAX_SQL_STRING_LOOKAHEAD_LINES && i + offset < document.lineCount; offset++) {
-                const checkLine = document.lineAt(i + offset);
+            // Look for opening quote after the function call (within a few lines)
+            for (let offset = 0; offset <= 5 && matchPosition.line + offset < document.lineCount; offset++) {
+                const checkLine = document.lineAt(matchPosition.line + offset);
                 const checkText = checkLine.text;
 
-                // Find first quote on this line as a starting point
-                const quoteMatch = checkText.match(/["'`]/);
-                if (quoteMatch && quoteMatch.index !== undefined) {
-                    // Check position right after the quote (inside the string)
-                    const checkPos = quoteMatch.index + 1;
+                // Find first unescaped quote
+                for (let charIdx = 0; charIdx < checkText.length; charIdx++) {
+                    const char = checkText[charIdx];
+                    if ((char === '"' || char === "'" || char === '`') &&
+                        (charIdx === 0 || checkText[charIdx - 1] !== '\\')) {
 
-                    // Ensure the position is within the line text before using it
-                    if (checkPos >= checkText.length) {
-                        continue;
+                        // Found a potential opening quote - check the position INSIDE it
+                        const testPos = new vscode.Position(matchPosition.line + offset, charIdx + 1);
+                        this.checkAndValidateSQLString(document, testPos, processedRanges, diagnostics);
+
+                        // Only check the first quote we find after this function
+                        offset = 999; // Break outer loop
+                        break;
                     }
-
-                    const position = new vscode.Position(i + offset, checkPos);
-                    const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
-
-            if (sqlContext) {
-                // Skip if we've already processed this SQL string
-                const rangeKey = `${sqlContext.range.start.line}:${sqlContext.range.start.character}-${sqlContext.range.end.line}:${sqlContext.range.end.character}`;
-                if (processedRanges.has(rangeKey)) {
-                    continue;
-                }
-                processedRanges.add(rangeKey);
-
-                // If it's a glue string, strip interpolations for validation
-                let query = sqlContext.query;
-                if (sqlContext.isGlueString) {
-                    query = SQLStringDetector.stripGlueInterpolations(query);
-                }
-
-                const queryUpper = query.toUpperCase();
-
-                // Check for SELECT without FROM (unless it's a valid expression)
-                if (queryUpper.includes('SELECT') && !queryUpper.includes('FROM') && !this.isValidSelectExpression(queryUpper)) {
-                    const diagnostic = new vscode.Diagnostic(
-                        sqlContext.range,
-                        'SELECT statement is missing FROM clause',
-                        vscode.DiagnosticSeverity.Warning
-                    );
-                    diagnostic.code = 'sql-syntax';
-                    diagnostics.push(diagnostic);
-                }
-
-                // Check for unmatched parentheses
-                const openParens = (queryUpper.match(/\(/g) || []).length;
-                const closeParens = (queryUpper.match(/\)/g) || []).length;
-
-                if (openParens !== closeParens) {
-                    const diagnostic = new vscode.Diagnostic(
-                        sqlContext.range,
-                        `Unmatched parentheses: ${openParens} opening, ${closeParens} closing`,
-                        vscode.DiagnosticSeverity.Error
-                    );
-                    diagnostic.code = 'sql-syntax';
-                    diagnostics.push(diagnostic);
-                }
-
-                // Check for common typos
-                const typos = [
-                    { pattern: /\bSELECT\s+FROM\b/, message: 'Missing column list after SELECT' },
-                    { pattern: /\bWHERE\s+(GROUP BY|ORDER BY|LIMIT)\b/, message: 'WHERE clause appears to be incomplete' }
-                ];
-
-                for (const typo of typos) {
-                    if (typo.pattern.test(queryUpper)) {
-                        const diagnostic = new vscode.Diagnostic(
-                            sqlContext.range,
-                            typo.message,
-                            vscode.DiagnosticSeverity.Warning
-                        );
-                        diagnostic.code = 'sql-syntax';
-                        diagnostics.push(diagnostic);
-                    }
-                }
-                }
                 }
             }
         }
 
         this.diagnosticCollection.set(document.uri, diagnostics);
+    }
+
+    private checkAndValidateSQLString(
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        processedRanges: Set<string>,
+        diagnostics: vscode.Diagnostic[]
+    ): void {
+        const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
+
+        if (!sqlContext) {
+            return;
+        }
+
+        // Skip if we've already processed this SQL string
+        const rangeKey = `${sqlContext.range.start.line}:${sqlContext.range.start.character}-${sqlContext.range.end.line}:${sqlContext.range.end.character}`;
+        if (processedRanges.has(rangeKey)) {
+            return;
+        }
+        processedRanges.add(rangeKey);
+
+        // If it's a glue string, strip interpolations for validation
+        let query = sqlContext.query;
+        if (sqlContext.isGlueString) {
+            query = SQLStringDetector.stripGlueInterpolations(query);
+        }
+
+        const queryUpper = query.toUpperCase();
+
+        // Check for SELECT without FROM (unless it's a valid expression)
+        if (queryUpper.includes('SELECT') && !queryUpper.includes('FROM') && !this.isValidSelectExpression(queryUpper)) {
+            const diagnostic = new vscode.Diagnostic(
+                sqlContext.range,
+                'SELECT statement is missing FROM clause',
+                vscode.DiagnosticSeverity.Warning
+            );
+            diagnostic.code = 'sql-syntax';
+            diagnostics.push(diagnostic);
+        }
+
+        // Check for unmatched parentheses
+        const openParens = (queryUpper.match(/\(/g) || []).length;
+        const closeParens = (queryUpper.match(/\)/g) || []).length;
+
+        if (openParens !== closeParens) {
+            const diagnostic = new vscode.Diagnostic(
+                sqlContext.range,
+                `Unmatched parentheses: ${openParens} opening, ${closeParens} closing`,
+                vscode.DiagnosticSeverity.Error
+            );
+            diagnostic.code = 'sql-syntax';
+            diagnostics.push(diagnostic);
+        }
+
+        // Check for common typos
+        const typos = [
+            { pattern: /\bSELECT\s+FROM\b/, message: 'Missing column list after SELECT' },
+            { pattern: /\bWHERE\s+(GROUP BY|ORDER BY|LIMIT)\b/, message: 'WHERE clause appears to be incomplete' }
+        ];
+
+        for (const typo of typos) {
+            if (typo.pattern.test(queryUpper)) {
+                const diagnostic = new vscode.Diagnostic(
+                    sqlContext.range,
+                    typo.message,
+                    vscode.DiagnosticSeverity.Warning
+                );
+                diagnostic.code = 'sql-syntax';
+                diagnostics.push(diagnostic);
+            }
+        }
     }
 
     private isValidSelectExpression(query: string): boolean {

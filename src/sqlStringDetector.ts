@@ -135,6 +135,14 @@ export class SQLStringDetector {
         const startPos = new vscode.Position(openQuoteLine, openQuoteChar + 1);
         const endPos = new vscode.Position(closeQuoteLine, closeQuoteChar);
 
+        // Safety check: ensure opening quote is before closing quote
+        const openPos = new vscode.Position(openQuoteLine, openQuoteChar);
+        const closePos = new vscode.Position(closeQuoteLine, closeQuoteChar);
+        if (!openPos.isBefore(closePos)) {
+            // Found quotes in wrong order - backward search probably found a closing quote
+            return null;
+        }
+
         // IMPORTANT: Validate that the original position is actually within this string range
         // Position must be >= start and < end (content is between quotes, not including closing quote)
         if (position.isBefore(startPos) || position.isAfterOrEqual(endPos)) {
