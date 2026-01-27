@@ -193,10 +193,10 @@ export class SQLStringDetector {
         }
 
         // IMPORTANT: Validate that the original position is actually within this string range
-        // Position must be >= start and < end (content is between quotes, not including closing quote)
-        if (position.isBefore(startPos) || position.isAfterOrEqual(endPos)) {
-            // Position is outside the string content - probably found a closing quote and treated it as opening
-            // OR position is at/after the closing quote position
+        // Position must be >= start and <= end
+        // Allow position AT endPos because user might be typing right at the closing quote to expand the string
+        if (position.isBefore(startPos) || position.isAfter(endPos)) {
+            // Position is outside the string content
             return null;
         }
 
