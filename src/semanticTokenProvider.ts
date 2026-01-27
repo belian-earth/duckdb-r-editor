@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { DocumentCache, CachedSQLRegion } from './documentCache';
 import { SQL_FUNCTION_NAMES, PARSING_LIMITS } from './types';
 import { SQL_KEYWORD_TOKENS, SQL_FUNCTION_TOKENS } from './sqlKeywords';
+import { SQLStringDetector } from './sqlStringDetector';
 
 /**
  * Semantic token provider for SQL syntax highlighting in R strings
@@ -162,6 +163,13 @@ export class SQLSemanticTokenProvider implements vscode.DocumentSemanticTokensPr
 
                     if (processedRanges.has(rangeKey)) {
                         continue;
+                    }
+
+                    // IMPORTANT: Use SQLStringDetector to verify this is actually a SQL string
+                    // This filters out named arguments like col_name = "value" in glue_sql
+                    const sqlContext = SQLStringDetector.isInsideSQLString(document, stringRange.start);
+                    if (!sqlContext) {
+                        continue; // Not a SQL string (it's a named argument), skip it
                     }
 
                     processedRanges.add(rangeKey);

@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { SQLStringDetector } from './sqlStringDetector';
 import { EXTENSION_ID, CONFIG_KEYS } from './constants';
+import { SQL_FUNCTION_NAMES, PARSING_LIMITS } from './types';
+import { ParenMatcher } from './utils/parenMatcher';
 
 /**
  * Provides background color decorations for SQL strings in R code
@@ -134,6 +136,7 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
 
   /**
    * Find all SQL strings in document and apply decorations
+   * Uses the same approach as semantic token provider for consistency
    */
   private decorateEditor(editor: vscode.TextEditor): void {
     if (!this.decorationType) {
@@ -145,76 +148,94 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
     const sqlRanges: vscode.Range[] = [];
     const processedRanges = new Set<string>();
 
-    // Scan entire document for SQL strings
-    for (let lineNum = 0; lineNum < document.lineCount; lineNum++) {
-      const line = document.lineAt(lineNum);
-      const lineText = line.text;
+    const fullText = document.getText();
 
-      // Look for quote characters that might start SQL strings
-      for (let charPos = 0; charPos < lineText.length; charPos++) {
-        const char = lineText[charPos];
-        if (char === '"' || char === "'" || char === '`') {
-          // Check if escaped
-          if (charPos > 0 && lineText[charPos - 1] === '\\') {
+    // Limit text processing for very large documents
+    if (fullText.length > PARSING_LIMITS.MAX_DOCUMENT_SIZE) {
+      return;
+    }
+
+    // Find all SQL function calls in the document (same as semantic token provider)
+    for (const funcName of SQL_FUNCTION_NAMES) {
+      const escapedName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const funcPattern = new RegExp(`\\b${escapedName}\\s*\\(`, 'g');
+
+      let match;
+      let matchCount = 0;
+
+      while ((match = funcPattern.exec(fullText)) !== null && matchCount < PARSING_LIMITS.MAX_FUNCTION_MATCHES) {
+        matchCount++;
+
+        const funcStartOffset = match.index;
+        const funcPosition = document.positionAt(funcStartOffset);
+
+        // Skip if this function call is in an R comment
+        const lineText = document.lineAt(funcPosition.line).text;
+        const lineBeforeFunc = lineText.substring(0, funcPosition.character);
+        if (lineBeforeFunc.trim().startsWith('#')) {
+          continue;
+        }
+
+        // Find the matching closing paren to get the full function call
+        const callRange = this.findFunctionCallRange(document, funcPosition);
+        if (!callRange) {
+          continue;
+        }
+
+        // Find all string literals within this function call
+        const stringsInCall = this.findStringsInRange(document, callRange);
+
+        for (const stringRange of stringsInCall) {
+          // Create unique key for this range
+          const rangeKey = `${stringRange.start.line}:${stringRange.start.character}-${stringRange.end.line}:${stringRange.end.character}`;
+
+          if (processedRanges.has(rangeKey)) {
             continue;
           }
 
-          // Check position after the quote (inside string content)
-          const position = new vscode.Position(lineNum, charPos + 1);
-          const context = SQLStringDetector.isInsideSQLString(document, position);
+          // IMPORTANT: Use SQLStringDetector to verify this is actually a SQL string
+          // This filters out named arguments like col_name = "value"
+          const sqlContext = SQLStringDetector.isInsideSQLString(document, stringRange.start);
+          if (!sqlContext) {
+            continue; // Not a SQL string, skip it
+          }
 
-          if (context) {
-            // Create unique key for this range to avoid duplicates
-            const rangeKey = `${context.range.start.line}:${context.range.start.character}-${context.range.end.line}:${context.range.end.character}`;
+          processedRanges.add(rangeKey);
 
-            if (!processedRanges.has(rangeKey)) {
-              processedRanges.add(rangeKey);
+          // For multi-line strings, create per-line decorations to avoid highlighting leading whitespace
+          if (stringRange.start.line === stringRange.end.line) {
+            // Single line - exclude quotes, just the content
+            sqlRanges.push(stringRange);
+          } else {
+            // Multi-line - create one range per line, trimming leading whitespace
+            for (let line = stringRange.start.line; line <= stringRange.end.line; line++) {
+              const lineText = document.lineAt(line).text;
+              let startChar: number;
+              let endChar: number;
 
-              // For multi-line strings, create per-line decorations to avoid highlighting leading whitespace
-              if (context.range.start.line === context.range.end.line) {
-                // Single line - exclude quotes, just the content
-                sqlRanges.push(context.range);
+              if (line === stringRange.start.line) {
+                // First line: start after opening quote
+                startChar = stringRange.start.character;
+                endChar = lineText.length;
+              } else if (line === stringRange.end.line) {
+                // Last line: find first non-whitespace character, end before closing quote
+                const trimmedStart = lineText.search(/\S/);
+                startChar = trimmedStart >= 0 ? trimmedStart : 0;
+                endChar = stringRange.end.character;
               } else {
-                // Multi-line - create one range per line, trimming leading whitespace
-                for (let line = context.range.start.line; line <= context.range.end.line; line++) {
-                  const lineText = document.lineAt(line).text;
-                  let startChar: number;
-                  let endChar: number;
-
-                  if (line === context.range.start.line) {
-                    // First line: start after opening quote
-                    startChar = context.range.start.character;
-                    endChar = lineText.length;
-                  } else if (line === context.range.end.line) {
-                    // Last line: find first non-whitespace character, end before closing quote
-                    const trimmedStart = lineText.search(/\S/);
-                    startChar = trimmedStart >= 0 ? trimmedStart : 0;
-                    endChar = context.range.end.character;
-                  } else {
-                    // Middle line: trim leading whitespace, go to end of line
-                    const trimmedStart = lineText.search(/\S/);
-                    startChar = trimmedStart >= 0 ? trimmedStart : 0;
-                    endChar = lineText.length;
-                  }
-
-                  // Only add range if there's actual content
-                  if (startChar < endChar) {
-                    sqlRanges.push(new vscode.Range(
-                      new vscode.Position(line, startChar),
-                      new vscode.Position(line, endChar)
-                    ));
-                  }
-                }
+                // Middle line: trim leading whitespace, go to end of line
+                const trimmedStart = lineText.search(/\S/);
+                startChar = trimmedStart >= 0 ? trimmedStart : 0;
+                endChar = lineText.length;
               }
-            }
 
-            // Skip ahead to avoid re-processing this string
-            if (context.range.end.line === lineNum) {
-              charPos = context.range.end.character;
-            } else {
-              // Multi-line string, jump to end line
-              lineNum = context.range.end.line;
-              break;
+              // Only add range if there's actual content
+              if (startChar < endChar) {
+                sqlRanges.push(new vscode.Range(
+                  new vscode.Position(line, startChar),
+                  new vscode.Position(line, endChar)
+                ));
+              }
             }
           }
         }
@@ -223,6 +244,112 @@ export class SQLBackgroundDecorator implements vscode.Disposable {
 
     // Apply decorations
     editor.setDecorations(this.decorationType, sqlRanges);
+  }
+
+  /**
+   * Find the range of a function call (from function name to closing paren)
+   * Copied from semantic token provider for consistency
+   */
+  private findFunctionCallRange(document: vscode.TextDocument, startPos: vscode.Position): vscode.Range | null {
+    const startOffset = document.offsetAt(startPos);
+    const text = document.getText();
+
+    // Find opening paren
+    let i = startOffset;
+    let searchCount = 0;
+
+    while (i < text.length && text[i] !== '(' && searchCount < PARSING_LIMITS.MAX_PAREN_SEARCH_DISTANCE) {
+      i++;
+      searchCount++;
+    }
+
+    if (i >= text.length || searchCount >= PARSING_LIMITS.MAX_PAREN_SEARCH_DISTANCE) {
+      return null;
+    }
+
+    // Find matching closing paren (handling nested parens and strings)
+    let depth = 0;
+    let inString = false;
+    let stringChar = '';
+
+    i++; // Move past opening paren
+    const openParenOffset = i;
+
+    while (i < text.length && (i - openParenOffset) < PARSING_LIMITS.MAX_FUNCTION_CALL_LENGTH) {
+      const char = text[i];
+      const prevChar = i > 0 ? text[i - 1] : '';
+
+      // Handle string literals
+      if ((char === '"' || char === "'" || char === '`') && prevChar !== '\\') {
+        if (!inString) {
+          inString = true;
+          stringChar = char;
+        } else if (char === stringChar) {
+          inString = false;
+        }
+      }
+
+      // Only count parens if not in a string
+      if (!inString) {
+        if (char === '(') {
+          depth++;
+        } else if (char === ')') {
+          if (depth === 0) {
+            // Found the matching closing paren
+            return new vscode.Range(
+              startPos,
+              document.positionAt(i + 1)
+            );
+          }
+          depth--;
+        }
+      }
+
+      i++;
+    }
+
+    // No matching closing paren found within reasonable distance
+    return null;
+  }
+
+  /**
+   * Find all string literals within a given range
+   * Copied from semantic token provider for consistency
+   */
+  private findStringsInRange(document: vscode.TextDocument, range: vscode.Range): vscode.Range[] {
+    const strings: vscode.Range[] = [];
+    const text = document.getText(range);
+    const startOffset = document.offsetAt(range.start);
+
+    let i = 0;
+    while (i < text.length) {
+      const char = text[i];
+
+      // Check if this is a string start
+      if (char === '"' || char === "'" || char === '`') {
+        const quoteChar = char;
+        const stringStartOffset = startOffset + i;
+        const stringStart = document.positionAt(stringStartOffset + 1); // +1 to skip opening quote
+
+        // Find closing quote
+        let j = i + 1;
+        while (j < text.length) {
+          if (text[j] === quoteChar && text[j - 1] !== '\\') {
+            // Found closing quote
+            const stringEndOffset = startOffset + j;
+            const stringEnd = document.positionAt(stringEndOffset);
+            strings.push(new vscode.Range(stringStart, stringEnd));
+            i = j;
+            break;
+          }
+          j++;
+        }
+      }
+
+      i++;
+    }
+
+    return strings;
   }
 
   /**

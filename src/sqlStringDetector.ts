@@ -42,8 +42,49 @@ export class SQLStringDetector {
             return null;
         }
 
-        const query = document.getText(stringRange);
         const isGlueString = this.isGlueFunction(functionContext);
+
+        // Filter out named arguments: check if there's an = sign before the opening quote
+        // This prevents highlighting strings like col_name = "id" or .con = con
+        const openQuotePos = new vscode.Position(stringRange.start.line, stringRange.start.character - 1);
+
+        // Look back to check for named argument pattern (name =)
+        let lookbackStart: vscode.Position;
+        if (stringRange.start.character >= 50) {
+            // If we have enough characters on this line, just look back on same line
+            lookbackStart = new vscode.Position(stringRange.start.line, stringRange.start.character - 50);
+        } else if (stringRange.start.line > 0) {
+            // Look back to previous line
+            const prevLine = document.lineAt(stringRange.start.line - 1);
+            const remainingLookback = 50 - stringRange.start.character;
+            lookbackStart = new vscode.Position(
+                stringRange.start.line - 1,
+                Math.max(0, prevLine.text.length - remainingLookback)
+            );
+        } else {
+            // First line, just look back as far as we can
+            lookbackStart = new vscode.Position(0, 0);
+        }
+
+        const textBeforeQuote = document.getText(new vscode.Range(lookbackStart, openQuotePos)).trim();
+
+        // Check if this looks like a named argument
+        if (textBeforeQuote.endsWith('=')) {
+            // This is a named argument
+            if (isGlueString) {
+                // For glue functions, reject all named arguments
+                // This includes .con = conn, col_name = "id", etc.
+                return null;
+            } else {
+                // For DBI functions, only accept if it's specifically "statement ="
+                // Reject other named args like conn =, params =, etc.
+                if (!/statement\s*=$/i.test(textBeforeQuote)) {
+                    return null;
+                }
+            }
+        }
+
+        const query = document.getText(stringRange);
 
         return {
             query: this.cleanSQLString(query),
