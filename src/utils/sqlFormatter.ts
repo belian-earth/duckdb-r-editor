@@ -21,17 +21,6 @@ export class SQLFormatter {
         position: vscode.Position
     ): Promise<boolean> {
         try {
-            // Check if formatting is enabled
-            const config = vscode.workspace.getConfiguration(EXTENSION_ID);
-            const enabled = config.get<boolean>('enableSQLFormatting', true);
-
-            if (!enabled) {
-                vscode.window.showWarningMessage(
-                    'SQL formatting is disabled. Enable it in settings: duckdb-r-editor.enableSQLFormatting'
-                );
-                return false;
-            }
-
             // Find SQL string at cursor
             const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
             if (!sqlContext) {
@@ -42,6 +31,7 @@ export class SQLFormatter {
             }
 
             // Get formatting options from config
+            const config = vscode.workspace.getConfiguration(EXTENSION_ID);
             const options: FormatOptions = {
                 indentStyle: config.get<'standard' | 'tabularLeft' | 'tabularRight'>('sqlFormattingStyle', 'standard'),
                 keywordCase: config.get<'preserve' | 'upper' | 'lower'>('sqlKeywordCase', 'preserve')
@@ -197,13 +187,6 @@ export class SQLFormatter {
      * Check if formatting is available for the current position
      */
     static canFormat(document: vscode.TextDocument, position: vscode.Position): boolean {
-        const config = vscode.workspace.getConfiguration(EXTENSION_ID);
-        const enabled = config.get<boolean>('enableSQLFormatting', false);
-
-        if (!enabled) {
-            return false;
-        }
-
         const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
         return sqlContext !== null;
     }

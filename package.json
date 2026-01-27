@@ -2,7 +2,7 @@
   "name": "duckdb-r-editor",
   "displayName": "DuckDB R Editor (Positron)",
   "description": "Positron-exclusive SQL editor for R. Queries your active R DuckDB connection for schema - no file locking! 900+ DuckDB functions with intelligent autocomplete.",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "publisher": "belian-earth",
   "license": "MIT",
   "repository": {
@@ -67,11 +67,6 @@
           "type": "boolean",
           "default": true,
           "description": "Automatically refresh schema when R code references the connection object. Keeps autocomplete in sync with database changes without manual refresh commands."
-        },
-        "duckdb-r-editor.enableSQLFormatting": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable SQL formatting in R strings. Use the 'Format SQL in R String' command to format SQL code within R string literals."
         },
         "duckdb-r-editor.sqlFormattingStyle": {
           "type": "string",

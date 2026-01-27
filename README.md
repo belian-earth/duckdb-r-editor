@@ -28,6 +28,7 @@ Write DuckDB SQL with full IDE support right inside R strings. Take full advanta
 -   🔌 **R Connection Picker** - Select specific connection objects (supports `:memory:`)
 -   🔄 **Auto-Refresh** - Detects schema changes automatically
 -   🌈 **Visual Distinction** - Themed background colors for SQL strings
+-   ✨ **SQL Auto-Format** - Format SQL with glue interpolation support
 -   ✈️ **Air Formatter Support** - Works with multi-line SQL
 
 ------------------------------------------------------------------------
@@ -105,15 +106,19 @@ Optional settings (`.vscode/settings.json`):
 {
   "duckdb-r-editor.defaultExtensions": ["spatial", "httpfs"],
   "duckdb-r-editor.autoRefreshSchema": true,
-  "duckdb-r-editor.useSemanticHighlighting": true
+  "duckdb-r-editor.useSemanticHighlighting": true,
+  "duckdb-r-editor.sqlFormattingStyle": "standard",
+  "duckdb-r-editor.sqlKeywordCase": "upper"
 }
 ```
 
-**Available Settings:** 
+**Available Settings:**
 - `enableAutoComplete` - Enable autocomplete (default: true)
--   `useSemanticHighlighting` - syntax highlighting (default: true)
--  `defaultExtensions` - Extensions to auto-load (default: \[\])
--  `autoRefreshSchema` - Auto-detect schema changes (default: true)
+- `useSemanticHighlighting` - Syntax highlighting (default: true)
+- `defaultExtensions` - Extensions to auto-load (default: \[\])
+- `autoRefreshSchema` - Auto-detect schema changes (default: true)
+- `sqlFormattingStyle` - Format style: `standard`, `tabularLeft`, `tabularRight` (default: standard)
+- `sqlKeywordCase` - Keyword case: `preserve`, `upper`, `lower` (default: preserve)
 
 ------------------------------------------------------------------------
 
@@ -124,6 +129,7 @@ Access via Command Palette (`Cmd/Ctrl + Shift + P`):
 -   **Connect to DuckDB Database** - Select R connection for schema
 -   **Disconnect from Database** - Clear connection
 -   **Refresh DuckDB Schema** - Manually update schema
+-   **Format SQL String** - Format SQL at cursor (preserves glue interpolations)
 -   **Load DuckDB Extension (One-Time)** - Load official extension until restart
 
 ------------------------------------------------------------------------
