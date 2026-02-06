@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
-import { DBI_FUNCTIONS, GLUE_FUNCTIONS, PARSING_LIMITS } from './types';
+import { DBI_FUNCTIONS, GLUE_FUNCTIONS, DUCKPLYR_FUNCTIONS, PARSING_LIMITS } from './types';
 import { ParenMatcher } from './utils/parenMatcher';
 import { GlueInterpolationHandler } from './utils/glueInterpolationHandler';
+import { SQLRegionFinder } from './utils/sqlRegionFinder';
 
 export interface SQLStringContext {
     query: string;
@@ -17,9 +18,11 @@ export interface SQLStringContext {
 export class SQLStringDetector {
     private static readonly DBI_FUNCTIONS = DBI_FUNCTIONS;
     private static readonly GLUE_FUNCTIONS = GLUE_FUNCTIONS;
+    private static readonly DUCKPLYR_FUNCTIONS = DUCKPLYR_FUNCTIONS;
 
     /**
      * Check if position is inside a SQL string
+     * Uses the same logic as semantic highlighting for consistency
      */
     static isInsideSQLString(document: vscode.TextDocument, position: vscode.Position): SQLStringContext | null {
         const line = document.lineAt(position.line);
@@ -30,178 +33,72 @@ export class SQLStringDetector {
             return null;
         }
 
-        // Check if we're inside a string
-        const stringRange = this.getStringRangeAtPosition(document, position);
-        if (!stringRange) {
-            return null;
-        }
+        // Use the same SQL region finder as semantic highlighting
+        // This ensures we find the exact same ranges
+        const allSQLRanges = SQLRegionFinder.findSQLFunctionStrings(document);
 
-        // Check if this string is part of a DBI function call
-        const functionContext = this.findDBIFunctionContext(document, stringRange.start);
-        if (!functionContext) {
-            return null;
-        }
-
-        const isGlueString = this.isGlueFunction(functionContext);
-
-        // Filter out named arguments: check if there's an = sign before the opening quote
-        // This prevents highlighting strings like col_name = "id" or .con = con
-        const openQuotePos = new vscode.Position(stringRange.start.line, stringRange.start.character - 1);
-
-        // Look back to check for named argument pattern (name =)
-        let lookbackStart: vscode.Position;
-        if (stringRange.start.character >= 50) {
-            // If we have enough characters on this line, just look back on same line
-            lookbackStart = new vscode.Position(stringRange.start.line, stringRange.start.character - 50);
-        } else if (stringRange.start.line > 0) {
-            // Look back to previous line
-            const prevLine = document.lineAt(stringRange.start.line - 1);
-            const remainingLookback = 50 - stringRange.start.character;
-            lookbackStart = new vscode.Position(
-                stringRange.start.line - 1,
-                Math.max(0, prevLine.text.length - remainingLookback)
-            );
-        } else {
-            // First line, just look back as far as we can
-            lookbackStart = new vscode.Position(0, 0);
-        }
-
-        const textBeforeQuote = document.getText(new vscode.Range(lookbackStart, openQuotePos)).trim();
-
-        // Check if this looks like a named argument
-        if (textBeforeQuote.endsWith('=')) {
-            // This is a named argument
-            if (isGlueString) {
-                // For glue functions, reject all named arguments
-                // This includes .con = conn, col_name = "id", etc.
-                return null;
-            } else {
-                // For DBI functions, only accept if it's specifically "statement ="
-                // Reject other named args like conn =, params =, etc.
-                if (!/statement\s*=$/i.test(textBeforeQuote)) {
-                    return null;
+        // Find which range (if any) contains the cursor position
+        for (const stringRange of allSQLRanges) {
+            // Check if position is inside this range
+            // Allow at start (for semantic highlighting), but not at/after end (for autocomplete)
+            if (position.isAfterOrEqual(stringRange.start) && position.isBefore(stringRange.end)) {
+                // Found the range! Now validate it's actually SQL (not a named argument)
+                const functionContext = this.findDBIFunctionContext(document, stringRange.start);
+                if (!functionContext) {
+                    continue;
                 }
+
+                const isGlueString = this.isGlueFunction(functionContext);
+
+                // Filter out named arguments
+                const openQuotePos = new vscode.Position(stringRange.start.line, stringRange.start.character - 1);
+
+                // Look back to check for named argument pattern (name =)
+                let lookbackStart: vscode.Position;
+                if (stringRange.start.character >= 50) {
+                    lookbackStart = new vscode.Position(stringRange.start.line, stringRange.start.character - 50);
+                } else if (stringRange.start.line > 0) {
+                    const prevLine = document.lineAt(stringRange.start.line - 1);
+                    const remainingLookback = 50 - stringRange.start.character;
+                    lookbackStart = new vscode.Position(
+                        stringRange.start.line - 1,
+                        Math.max(0, prevLine.text.length - remainingLookback)
+                    );
+                } else {
+                    lookbackStart = new vscode.Position(0, 0);
+                }
+
+                const textBeforeQuote = document.getText(new vscode.Range(lookbackStart, openQuotePos)).trim();
+
+                // Check if this looks like a named argument
+                if (textBeforeQuote.endsWith('=')) {
+                    if (isGlueString) {
+                        // For glue functions, reject all named arguments
+                        return null;
+                    } else {
+                        // For DBI/duckplyr functions, only accept "statement =" or "sql ="
+                        if (!/(statement|sql)\s*=$/i.test(textBeforeQuote)) {
+                            return null;
+                        }
+                    }
+                }
+
+                const query = document.getText(stringRange);
+
+                return {
+                    query: this.cleanSQLString(query),
+                    range: stringRange,
+                    functionName: functionContext,
+                    isMultiline: stringRange.start.line !== stringRange.end.line,
+                    isGlueString: isGlueString
+                };
             }
         }
 
-        const query = document.getText(stringRange);
-
-        return {
-            query: this.cleanSQLString(query),
-            range: stringRange,
-            functionName: functionContext,
-            isMultiline: stringRange.start.line !== stringRange.end.line,
-            isGlueString: isGlueString
-        };
+        // Position is not inside any SQL string range
+        return null;
     }
 
-    /**
-     * Get the range of the string at the given position
-     */
-    private static getStringRangeAtPosition(document: vscode.TextDocument, position: vscode.Position): vscode.Range | null {
-        // Find opening quote - search backwards across multiple lines
-        let openQuoteLine = -1;
-        let openQuoteChar = -1;
-        let quoteChar = '';
-
-        // Start from current position and search backwards
-        // Start from position-1 to skip the character at cursor (could be closing quote)
-        for (let lineNum = position.line; lineNum >= Math.max(0, position.line - PARSING_LIMITS.CONTEXT_LINE_LOOKBACK); lineNum--) {
-            const lineText = document.lineAt(lineNum).text;
-            const startChar = lineNum === position.line ? Math.max(0, position.character - 1) : lineText.length - 1;
-
-            for (let i = startChar; i >= 0; i--) {
-                const char = lineText[i];
-                if (char === '"' || char === "'" || char === '`') {
-                    // Check if it's escaped
-                    if (i > 0 && lineText[i - 1] === '\\') {
-                        continue;
-                    }
-                    // Check if this quote is inside a comment
-                    if (this.isInsideComment(lineText, i)) {
-                        continue;
-                    }
-                    openQuoteLine = lineNum;
-                    openQuoteChar = i;
-                    quoteChar = char;
-                    break;
-                }
-            }
-
-            if (openQuoteLine !== -1) {
-                break;
-            }
-        }
-
-        if (openQuoteLine === -1) {
-            return null;
-        }
-
-        // Find closing quote (could be on another line) - search forward from opening quote
-        let closeQuoteLine = -1;
-        let closeQuoteChar = -1;
-
-        for (let lineNum = openQuoteLine; lineNum < document.lineCount; lineNum++) {
-            const lineText = document.lineAt(lineNum).text;
-            const startChar = lineNum === openQuoteLine ? openQuoteChar + 1 : 0;
-
-            for (let i = startChar; i < lineText.length; i++) {
-                const char = lineText[i];
-                const nextChar = i < lineText.length - 1 ? lineText[i + 1] : '';
-
-                if (char === quoteChar) {
-                    // Check if it's backslash-escaped
-                    if (i > 0 && lineText[i - 1] === '\\') {
-                        continue;
-                    }
-                    // Check if it's R-style doubled-quote escaped (e.g., "" or '')
-                    if (nextChar === quoteChar) {
-                        // This is an escaped quote, skip both characters
-                        i++; // Skip the next quote character
-                        continue;
-                    }
-                    // Check if this quote is inside a comment
-                    if (this.isInsideComment(lineText, i)) {
-                        continue;
-                    }
-                    closeQuoteLine = lineNum;
-                    closeQuoteChar = i;
-                    break;
-                }
-            }
-
-            if (closeQuoteLine !== -1) {
-                break;
-            }
-        }
-
-        // If no closing quote found, return null
-        if (closeQuoteLine === -1) {
-            return null;
-        }
-
-        // Create range from opening to closing quote (excluding the quotes themselves)
-        const startPos = new vscode.Position(openQuoteLine, openQuoteChar + 1);
-        const endPos = new vscode.Position(closeQuoteLine, closeQuoteChar);
-
-        // Safety check: ensure opening quote is before closing quote
-        const openPos = new vscode.Position(openQuoteLine, openQuoteChar);
-        const closePos = new vscode.Position(closeQuoteLine, closeQuoteChar);
-        if (!openPos.isBefore(closePos)) {
-            // Found quotes in wrong order - backward search probably found a closing quote
-            return null;
-        }
-
-        // IMPORTANT: Validate that the original position is actually within this string range
-        // Position must be >= start and <= end
-        // Allow position AT endPos because user might be typing right at the closing quote to expand the string
-        if (position.isBefore(startPos) || position.isAfter(endPos)) {
-            // Position is outside the string content
-            return null;
-        }
-
-        return new vscode.Range(startPos, endPos);
-    }
 
     /**
      * Find if the string is part of a DBI or glue function call
@@ -236,6 +133,14 @@ export class SQLStringDetector {
 
         // Check for glue functions
         for (const funcName of this.GLUE_FUNCTIONS) {
+            const match = this.findFunctionAndValidatePosition(searchText, funcName, stringPosInSearch);
+            if (match) {
+                return funcName;
+            }
+        }
+
+        // Check for duckplyr functions
+        for (const funcName of this.DUCKPLYR_FUNCTIONS) {
             const match = this.findFunctionAndValidatePosition(searchText, funcName, stringPosInSearch);
             if (match) {
                 return funcName;

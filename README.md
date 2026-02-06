@@ -92,8 +92,10 @@ Autocomplete works in:
 ``` r
 dbGetQuery(con, "SELECT * FROM ...")
 dbExecute(con, "CREATE TABLE ...")
-sql("SELECT ...")        # dbplyr
-glue_sql("...", .con = con)
+sql("SELECT ...")                   # dbplyr
+glue_sql("...", .con = con)         # glue
+read_sql_duckdb("SELECT ...")       # duckplyr
+db_exec("SET threads TO 2")         # duckplyr
 ```
 
 ------------------------------------------------------------------------
@@ -188,7 +190,7 @@ This extension provides:
 - **DuckDB** - Analytical database
 - **Positron** - Data science IDE
 - **Air formatter** - R code formatting
-- R packages: `DBI`, `duckdb`, `dbplyr`, `glue`
+- R packages: `DBI`, `duckdb`, `dbplyr`, `duckplyr`, `glue`
 
 ------------------------------------------------------------------------
 
