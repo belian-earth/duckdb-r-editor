@@ -12,7 +12,7 @@ export class SQLCompletionProvider implements vscode.CompletionItemProvider {
     _token: vscode.CancellationToken,
     _context: vscode.CompletionContext
   ): Promise<vscode.CompletionItem[] | vscode.CompletionList | null> {
-    // Check if we're inside a SQL string
+    // Use the same SQL detection logic as semantic highlighting
     const sqlContext = SQLStringDetector.isInsideSQLString(document, position);
 
     if (!sqlContext) {

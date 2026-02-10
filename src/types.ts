@@ -78,9 +78,19 @@ export const GLUE_FUNCTIONS = [
 ] as const;
 
 /**
+ * duckplyr package functions that contain SQL strings
+ */
+export const DUCKPLYR_FUNCTIONS = [
+    'read_sql_duckdb',
+    'duckplyr::read_sql_duckdb',
+    'db_exec',
+    'duckplyr::db_exec'
+] as const;
+
+/**
  * All R functions that may contain SQL strings
  */
-export const SQL_FUNCTION_NAMES = [...DBI_FUNCTIONS, ...GLUE_FUNCTIONS] as const;
+export const SQL_FUNCTION_NAMES = [...DBI_FUNCTIONS, ...GLUE_FUNCTIONS, ...DUCKPLYR_FUNCTIONS] as const;
 
 /**
  * Performance and safety limits for SQL parsing

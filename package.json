@@ -2,7 +2,7 @@
   "name": "duckdb-r-editor",
   "displayName": "DuckDB R Editor (Positron)",
   "description": "Positron-exclusive SQL editor for R. Queries your active R DuckDB connection for schema - no file locking! 900+ DuckDB functions with intelligent autocomplete.",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "belian-earth",
   "license": "MIT",
   "repository": {
@@ -55,14 +55,6 @@
           "markdownDescription": "Enable background color highlighting for SQL strings in R code. Adds a subtle background color to visually distinguish SQL strings from regular R code.\n\n**Note:** Requires window reload after changing. Use `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) and run **Developer: Reload Window**.",
           "scope": "window"
         },
-        "duckdb-r-editor.defaultExtensions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [],
-          "description": "DuckDB extensions to auto-load on startup (e.g., ['spatial', 'httpfs', 'json']). Extensions are loaded into in-memory database for function autocomplete."
-        },
         "duckdb-r-editor.autoRefreshSchema": {
           "type": "boolean",
           "default": true,
@@ -114,10 +106,6 @@
         "title": "DuckDB R Editor: Refresh DuckDB Schema"
       },
       {
-        "command": "duckdb-r-editor.loadExtension",
-        "title": "DuckDB R Editor: Load DuckDB Extension (One-Time)"
-      },
-      {
         "command": "duckdb-r-editor.formatSQL",
         "title": "DuckDB R Editor: Format SQL in R String"
       }
@@ -133,7 +121,8 @@
     "check-types": "tsc --noEmit",
     "pretest": "npm run compile",
     "lint": "eslint src --ext ts",
-    "vsce:package": "vsce package"
+    "vsce:package": "vsce package",
+    "generate-functions": "node scripts/generate-functions.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -144,11 +133,11 @@
     "esbuild": "^0.27.2",
     "eslint": "^8.0.0",
     "npm-run-all": "^4.1.5",
+    "duckdb": "^0.10.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@posit-dev/positron": "^0.2.2",
-    "duckdb": "^0.10.0",
     "sql-formatter": "^15.7.0"
   }
 }
