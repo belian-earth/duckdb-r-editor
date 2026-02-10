@@ -51,7 +51,8 @@ export class SQLStringDetector {
                 const isGlueString = this.isGlueFunction(functionContext);
 
                 // Filter out named arguments
-                const openQuotePos = new vscode.Position(stringRange.start.line, stringRange.start.character - 1);
+                const openQuoteChar = Math.max(0, stringRange.start.character - 1);
+                const openQuotePos = new vscode.Position(stringRange.start.line, openQuoteChar);
 
                 // Look back to check for named argument pattern (name =)
                 let lookbackStart: vscode.Position;
