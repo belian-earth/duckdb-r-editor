@@ -108,6 +108,10 @@
       {
         "command": "duckdb-r-editor.formatSQL",
         "title": "DuckDB R Editor: Format SQL in R String"
+      },
+      {
+        "command": "duckdb-r-editor.debugSQLDetection",
+        "title": "DuckDB R Editor: Debug SQL Detection at Cursor"
       }
     ]
   },

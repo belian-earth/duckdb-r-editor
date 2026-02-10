@@ -16,6 +16,8 @@ import { EXTENSION_ID, OUTPUT_CHANNEL_NAME, TIMING } from './constants';
 import { getErrorMessage, isErrorType } from './utils/errorHandler';
 import { RCodeTemplates } from './utils/rCodeTemplates';
 import { SQLFormatter } from './utils/sqlFormatter';
+import { SQLRegionFinder } from './utils/sqlRegionFinder';
+import { SQLStringDetector } from './sqlStringDetector';
 
 // Module-level state
 let schemaProvider: PositronSchemaProvider | undefined;
@@ -249,6 +251,40 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const debugDetectionCommand = vscode.commands.registerCommand(
+    'duckdb-r-editor.debugSQLDetection',
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor || editor.document.languageId !== 'r') {
+        vscode.window.showInformationMessage('Open an R file and place cursor inside a SQL string');
+        return;
+      }
+      const pos = editor.selection.active;
+      outputChannel.appendLine(`\n--- Debug SQL Detection at ${pos.line}:${pos.character} ---`);
+      outputChannel.appendLine(`Document scheme: ${editor.document.uri.scheme}, language: ${editor.document.languageId}`);
+
+      const allRanges = SQLRegionFinder.findSQLFunctionStrings(editor.document);
+      outputChannel.appendLine(`Total SQL string ranges found: ${allRanges.length}`);
+      for (const r of allRanges) {
+        const contains = pos.isAfterOrEqual(r.start) && pos.isBeforeOrEqual(r.end);
+        outputChannel.appendLine(`  Range ${r.start.line}:${r.start.character} - ${r.end.line}:${r.end.character} ${contains ? '← CURSOR IS HERE' : ''}`);
+      }
+
+      const ctx = SQLStringDetector.isInsideSQLString(editor.document, pos);
+      if (ctx) {
+        outputChannel.appendLine(`Detection result: INSIDE SQL string`);
+        outputChannel.appendLine(`  Function: ${ctx.functionName}`);
+        outputChannel.appendLine(`  Multiline: ${ctx.isMultiline}`);
+        outputChannel.appendLine(`  Glue: ${ctx.isGlueString}`);
+        outputChannel.appendLine(`  Query preview: ${ctx.query.substring(0, 100)}...`);
+      } else {
+        outputChannel.appendLine(`Detection result: NOT inside SQL string`);
+      }
+      outputChannel.appendLine('--- End Debug ---');
+      outputChannel.show();
+    }
+  );
+
   // Register diagnostic provider
   context.subscriptions.push(
     vscode.languages.registerCodeActionsProvider(
@@ -287,6 +323,7 @@ export async function activate(context: vscode.ExtensionContext) {
     disconnectCommand,
     refreshSchemaCommand,
     formatSQLCommand,
+    debugDetectionCommand,
     diagnosticsProvider
   );
 
