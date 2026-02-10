@@ -39,9 +39,10 @@ export class SQLStringDetector {
 
         // Find which range (if any) contains the cursor position
         for (const stringRange of allSQLRanges) {
-            // Check if position is inside this range
-            // Allow at start (for semantic highlighting), but not at/after end (for autocomplete)
-            if (position.isAfterOrEqual(stringRange.start) && position.isBefore(stringRange.end)) {
+            // Check if position is inside this range (inclusive of both boundaries).
+            // stringRange.end is the position of the closing quote, and the cursor
+            // sits at that same position when typing at the end of a single-line string.
+            if (position.isAfterOrEqual(stringRange.start) && position.isBeforeOrEqual(stringRange.end)) {
                 // Found the range! Now validate it's actually SQL (not a named argument)
                 const functionContext = this.findDBIFunctionContext(document, stringRange.start);
                 if (!functionContext) {
