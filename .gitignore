@@ -9,7 +9,7 @@ dist
 .claude/
 
 # Build instructions (development reference only)
-BUILD.md
+docs-internal/
 
 # R/duckdb scratch files
 R-test-files/*
