@@ -106,9 +106,10 @@ Optional settings (`.vscode/settings.json`):
 
 ``` json
 {
-  "duckdb-r-editor.defaultExtensions": ["spatial", "httpfs"],
+  "duckdb-r-editor.enableAutoComplete": true,
+  "duckdb-r-editor.enableSQLHighlighting": true,
+  "duckdb-r-editor.enableSQLBackgroundColor": true,
   "duckdb-r-editor.autoRefreshSchema": true,
-  "duckdb-r-editor.useSemanticHighlighting": true,
   "duckdb-r-editor.sqlFormattingStyle": "standard",
   "duckdb-r-editor.sqlKeywordCase": "upper"
 }
@@ -116,8 +117,8 @@ Optional settings (`.vscode/settings.json`):
 
 **Available Settings:**
 - `enableAutoComplete` - Enable autocomplete (default: true)
-- `useSemanticHighlighting` - Syntax highlighting (default: true)
-- `defaultExtensions` - Extensions to auto-load (default: \[\])
+- `enableSQLHighlighting` - SQL keyword/function highlighting in R strings (default: true)
+- `enableSQLBackgroundColor` - Background color for SQL strings (default: true)
 - `autoRefreshSchema` - Auto-detect schema changes (default: true)
 - `sqlFormattingStyle` - Format style: `standard`, `tabularLeft`, `tabularRight` (default: standard)
 - `sqlKeywordCase` - Keyword case: `preserve`, `upper`, `lower` (default: preserve)
@@ -131,25 +132,18 @@ Access via Command Palette (`Cmd/Ctrl + Shift + P`):
 -   **Connect to DuckDB Database** - Select R connection for schema
 -   **Disconnect from Database** - Clear connection
 -   **Refresh DuckDB Schema** - Manually update schema
--   **Format SQL String** - Format SQL at cursor (preserves glue interpolations)
--   **Load DuckDB Extension (One-Time)** - Load official extension until restart
+-   **Format SQL in R String** - Format SQL at cursor (preserves glue interpolations)
 
 ------------------------------------------------------------------------
 
 ## Extension Loading
 
-**Official Extensions** (Node.js - available before connecting): 
-- Use command: "Load DuckDB Extension"
-- Or settings: `"defaultExtensions": ["spatial", "httpfs"]`
-
-**Community Extensions** (via R - auto-detected):
+Load DuckDB extensions in your R session — the extension picks up new functions automatically via auto-refresh:
 
 ``` r
-dbExecute(con, "INSTALL my_ext FROM community; LOAD my_ext;")
-# -> Functions automatically available via auto-refresh
+dbExecute(con, "INSTALL spatial; LOAD spatial;")
+# -> Functions automatically available for autocomplete
 ```
-
-\* *Note that official extensions will also be auto-detected via the R session when loaded*
 
 ------------------------------------------------------------------------
 
