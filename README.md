@@ -98,6 +98,9 @@ read_sql_duckdb("SELECT ...")       # duckplyr
 db_exec("SET threads TO 2")         # duckplyr
 ```
 
+> [!TIP]
+> Completions appear as you type. Use `Ctrl+Space` (`Cmd+Space` on Mac) to manually trigger suggestions at any position inside a SQL string.
+
 ------------------------------------------------------------------------
 
 ## Configuration
@@ -133,6 +136,7 @@ Access via Command Palette (`Cmd/Ctrl + Shift + P`):
 -   **Disconnect from Database** - Clear connection
 -   **Refresh DuckDB Schema** - Manually update schema
 -   **Format SQL in R String** - Format SQL at cursor (preserves glue interpolations)
+-   **Debug SQL Detection at Cursor** - Diagnose autocomplete issues at cursor position (logs to Output panel)
 
 ------------------------------------------------------------------------
 
