@@ -18,9 +18,7 @@ export const CONFIG_KEYS = {
     /** Custom background color value for SQL strings (color string) */
     CUSTOM_BG_COLOR: 'sqlBackgroundColor',
     /** Auto-refresh schema after modifications */
-    AUTO_REFRESH: 'autoRefreshSchema',
-    /** Default DuckDB extensions to load */
-    DEFAULT_EXTENSIONS: 'defaultExtensions'
+    AUTO_REFRESH: 'autoRefreshSchema'
 } as const;
 
 /**

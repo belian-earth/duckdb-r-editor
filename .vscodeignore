@@ -4,6 +4,9 @@
 out/**
 src/**
 
+# Development-only scripts
+scripts/**
+
 # Development files
 .gitignore
 .gitattributes
@@ -37,18 +40,6 @@ node_modules/typescript/**
 node_modules/@vscode/vsce/**
 node_modules/esbuild/**
 node_modules/npm-run-all/**
-
-# Exclude unnecessary files from duckdb package
-node_modules/duckdb/src/**
-node_modules/duckdb/test/**
-node_modules/duckdb/scripts/**
-node_modules/duckdb/examples/**
-node_modules/duckdb/.github/**
-node_modules/duckdb/binding.gyp*
-node_modules/duckdb/vendor.py
-node_modules/duckdb/tsconfig.json
-node_modules/duckdb/Makefile
-node_modules/duckdb/.mocharc.json
 
 # Exclude test files from all dependencies
 node_modules/**/test/**

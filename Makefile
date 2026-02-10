@@ -1,6 +1,6 @@
 # Makefile for DuckDB R Editor VSCode Extension
 
-.PHONY: all build compile lint package clean install help
+.PHONY: all build compile lint package clean install functions help
 
 # Default target - build and package
 all: build package
@@ -39,6 +39,12 @@ install:
 # Rebuild from scratch
 rebuild: clean install build package
 
+# Regenerate data/duckdb-functions.json (dev only, requires duckdb npm module)
+functions:
+	@echo "Generating DuckDB function list..."
+	@npm run generate-functions
+	@echo "✓ Function list updated"
+
 # Quick build and package (for rapid iteration)
 quick: compile package
 
@@ -51,6 +57,7 @@ help:
 	@echo "  make compile      - Compile TypeScript"
 	@echo "  make lint         - Run ESLint"
 	@echo "  make package      - Create .vsix package"
+	@echo "  make functions     - Regenerate DuckDB function list (dev only)"
 	@echo "  make quick        - Quick compile + package (skip lint)"
 	@echo "  make clean        - Remove build artifacts"
 	@echo "  make install      - Install npm dependencies"

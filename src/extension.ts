@@ -10,7 +10,7 @@ import { SQLSemanticTokenProvider } from './semanticTokenProvider';
 import { SQLBackgroundDecorator } from './sqlBackgroundDecorator';
 import { tryAcquirePositronApi } from '@posit-dev/positron';
 import { RConnectionInfo } from './types';
-import { isValidExtensionName, isValidConnectionName } from './utils/validation';
+import { isValidConnectionName } from './utils/validation';
 import { RCodeExecutor } from './utils/rCodeExecutor';
 import { EXTENSION_ID, OUTPUT_CHANNEL_NAME, TIMING } from './constants';
 import { getErrorMessage, isErrorType } from './utils/errorHandler';
@@ -69,23 +69,21 @@ export async function activate(context: vscode.ExtensionContext) {
   // Get configuration settings
   const config = vscode.workspace.getConfiguration(EXTENSION_ID);
 
-  // Initialize function provider (Node.js DuckDB for function discovery)
-  outputChannel.appendLine('Initializing function provider...');
-  functionProvider = new DuckDBFunctionProvider();
-
-  // Load default extensions from settings
-  const defaultExtensions = config.get<string[]>('defaultExtensions', []);
-
-  if (defaultExtensions.length > 0) {
-    outputChannel.appendLine(`Loading default extensions: ${defaultExtensions.join(', ')}`);
-    await functionProvider.loadDefaultExtensions(defaultExtensions);
-  } else {
-    await functionProvider.refreshFunctions();
+  // Initialize function provider (static JSON list + R session merge)
+  try {
+    functionProvider = new DuckDBFunctionProvider();
+    context.subscriptions.push(functionProvider);
+    const funcCount = functionProvider.getAllFunctions().length;
+    outputChannel.appendLine(`✓ Loaded ${funcCount} DuckDB functions`);
+    if (funcCount === 0) {
+      outputChannel.appendLine('  ⚠️  No base functions loaded - autocomplete may be limited until connected to an R session');
+    }
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    outputChannel.appendLine(`✗ Function provider failed to initialize: ${msg}`);
+    outputChannel.appendLine('  Function autocomplete will be unavailable until connected to an R session.');
+    functionProvider = undefined;
   }
-
-  const funcCount = functionProvider.getAllFunctions().length;
-  outputChannel.appendLine(`✓ Discovered ${funcCount} DuckDB functions`);
-  context.subscriptions.push(functionProvider);
 
   // Schema provider will be initialized when user connects to a database
   outputChannel.appendLine('');
@@ -153,10 +151,8 @@ export async function activate(context: vscode.ExtensionContext) {
     // Trigger on all letters + common SQL characters
     ...('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,*="\'' as string).split('')
   );
-  context.subscriptions.push(completionProvider);
-
   // Register commands
-  outputChannel.appendLine('Registering commands: connectDatabase, refreshSchema, executeQuery');
+  outputChannel.appendLine('Registering commands: connectDatabase, refreshSchema, formatSQL');
   const connectCommand = vscode.commands.registerCommand(
     'duckdb-r-editor.connectDatabase',
     async () => {
@@ -235,50 +231,6 @@ export async function activate(context: vscode.ExtensionContext) {
     refreshSchema
   );
 
-  const loadExtensionCommand = vscode.commands.registerCommand(
-    'duckdb-r-editor.loadExtension',
-    async () => {
-      if (!functionProvider) {
-        vscode.window.showErrorMessage('Function provider not initialized');
-        return;
-      }
-
-      const extensionName = await vscode.window.showInputBox({
-        prompt: 'Enter official DuckDB extension name (e.g., spatial, httpfs, json)',
-        placeHolder: 'spatial',
-        validateInput: (value) => {
-          if (!value || value.trim().length === 0) {
-            return 'Extension name is required';
-          }
-          // Validate format to prevent SQL injection
-          if (!isValidExtensionName(value.trim())) {
-            return 'Extension name must start with a letter and contain only letters, numbers, and underscores';
-          }
-          return null;
-        }
-      });
-
-      if (!extensionName) {
-        return;
-      }
-
-      try {
-        await functionProvider.loadExtension(extensionName.trim());
-        const funcCount = functionProvider.getAllFunctions().length;
-        vscode.window.showInformationMessage(
-          `✓ Extension '${extensionName}' loaded! ${funcCount} functions now available for autocomplete.`
-        );
-      } catch (err) {
-        const errorMsg = getErrorMessage(err);
-        vscode.window.showErrorMessage(
-          `Failed to load extension '${extensionName}': ${errorMsg}\n\n` +
-          `Note: If this is a community extension, load it in your R session instead:\n` +
-          `dbExecute(con, "INSTALL ${extensionName} FROM community; LOAD ${extensionName};")`
-        );
-      }
-    }
-  );
-
   const formatSQLCommand = vscode.commands.registerCommand(
     'duckdb-r-editor.formatSQL',
     async () => {
@@ -334,8 +286,8 @@ export async function activate(context: vscode.ExtensionContext) {
     connectCommand,
     disconnectCommand,
     refreshSchemaCommand,
-    loadExtensionCommand,
-    formatSQLCommand
+    formatSQLCommand,
+    diagnosticsProvider
   );
 
   // Setup auto-refresh on code execution
@@ -426,7 +378,7 @@ async function connectToDatabase(connectionName: string, dbPath: string): Promis
     schemaProvider = new PositronSchemaProvider(positronApi);
     await schemaProvider.connect(connectionName, dbPath);
 
-    // Merge R functions with Node.js base functions (R takes precedence)
+    // Merge R functions with static base functions (R takes precedence)
     if (functionProvider) {
       const rFunctions = schemaProvider.getRFunctions();
       functionProvider.mergeRFunctions(rFunctions);
@@ -568,7 +520,7 @@ function setupAutoRefresh(positronApi: any, context: vscode.ExtensionContext): v
         // Refresh functions (from R connection)
         await schemaProvider.refreshFunctions();
 
-        // Merge R functions with Node.js base functions
+        // Merge R functions with static base functions
         if (functionProvider) {
           const rFunctions = schemaProvider.getRFunctions();
           functionProvider.mergeRFunctions(rFunctions);

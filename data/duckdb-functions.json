@@ -1,0 +1,8932 @@
+[
+  {
+    "function_name": "!__postfix",
+    "function_type": "scalar",
+    "description": "Factorial of x. Computes the product of the current integer and all integers below it",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "!~~",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "!~~*",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "%",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "INTEGER",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "&",
+    "function_type": "scalar",
+    "description": "Bitwise AND",
+    "return_type": "BIGINT",
+    "parameters": [
+      "left",
+      "right"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "&&",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "*",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UBIGINT",
+      "UBIGINT"
+    ]
+  },
+  {
+    "function_name": "**",
+    "function_type": "scalar",
+    "description": "Computes x to the power of y",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "+",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "DATE",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "DATE",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "-",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "TIME",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "TIME",
+      "INTERVAL"
+    ]
+  },
+  {
+    "function_name": "->>",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "JSON",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "/",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "INTERVAL",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "//",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UBIGINT",
+      "UBIGINT"
+    ]
+  },
+  {
+    "function_name": "<#>",
+    "function_type": "scalar",
+    "description": "Compute the inner product between two lists",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "DOUBLE[]",
+      "DOUBLE[]"
+    ]
+  },
+  {
+    "function_name": "<->",
+    "function_type": "scalar",
+    "description": "Compute the distance between two lists",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "DOUBLE[]",
+      "DOUBLE[]"
+    ]
+  },
+  {
+    "function_name": "<<",
+    "function_type": "scalar",
+    "description": "Bitwise shift left",
+    "return_type": "SMALLINT",
+    "parameters": [
+      "input",
+      "col1"
+    ],
+    "parameter_types": [
+      "SMALLINT",
+      "SMALLINT"
+    ]
+  },
+  {
+    "function_name": "<=>",
+    "function_type": "scalar",
+    "description": "Compute the cosine similarity between two lists",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "DOUBLE[]",
+      "DOUBLE[]"
+    ]
+  },
+  {
+    "function_name": "<@",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": ">>",
+    "function_type": "scalar",
+    "description": "Bitwise shift right",
+    "return_type": "USMALLINT",
+    "parameters": [
+      "input",
+      "col1"
+    ],
+    "parameter_types": [
+      "USMALLINT",
+      "USMALLINT"
+    ]
+  },
+  {
+    "function_name": "@",
+    "function_type": "scalar",
+    "description": "Absolute value",
+    "return_type": "TINYINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "TINYINT"
+    ]
+  },
+  {
+    "function_name": "@>",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "^",
+    "function_type": "scalar",
+    "description": "Computes x to the power of y",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "^@",
+    "function_type": "scalar",
+    "description": "Returns true if string begins with search_string",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "string",
+      "search_string"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_integral_ubigint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "HUGEINT",
+      "HUGEINT"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_integral_uinteger",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_integral_usmallint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "USMALLINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "HUGEINT",
+      "HUGEINT"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_integral_utinyint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UTINYINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "SMALLINT",
+      "SMALLINT"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_string_hugeint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_string_ubigint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_string_uinteger",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_string_usmallint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "USMALLINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "__internal_compress_string_utinyint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UTINYINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_bigint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "USMALLINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_hugeint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UTINYINT",
+      "HUGEINT"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_integer",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UTINYINT",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_smallint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "SMALLINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UTINYINT",
+      "SMALLINT"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_ubigint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UINTEGER",
+      "UBIGINT"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_uhugeint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UHUGEINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UBIGINT",
+      "UHUGEINT"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_uinteger",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "USMALLINT",
+      "UINTEGER"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_integral_usmallint",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "USMALLINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UTINYINT",
+      "USMALLINT"
+    ]
+  },
+  {
+    "function_name": "__internal_decompress_string",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "UTINYINT"
+    ]
+  },
+  {
+    "function_name": "abs",
+    "function_type": "scalar",
+    "description": "Absolute value",
+    "return_type": "UHUGEINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "UHUGEINT"
+    ]
+  },
+  {
+    "function_name": "acos",
+    "function_type": "scalar",
+    "description": "Computes the arccosine of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "add",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "TIME",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "INTERVAL",
+      "TIME"
+    ]
+  },
+  {
+    "function_name": "add_parquet_key",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "age",
+    "function_type": "scalar",
+    "description": "Subtract arguments, resulting in the time difference between the two timestamps",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "timestamp"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "aggregate",
+    "function_type": "scalar",
+    "description": "Executes the aggregate function name on the elements of list",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "name"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "alias",
+    "function_type": "scalar",
+    "description": "Returns the name of a given expression",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "expr"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "all_profiling_output",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "any_value",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "DECIMAL",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "DECIMAL"
+    ]
+  },
+  {
+    "function_name": "apply",
+    "function_type": "scalar",
+    "description": "Returns a list that is the result of applying the lambda function to each element of the input list. See the Lambda Functions section for more details",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "approx_count_distinct",
+    "function_type": "aggregate",
+    "description": "Computes the approximate count of distinct elements using HyperLogLog.",
+    "return_type": "BIGINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "approx_quantile",
+    "function_type": "aggregate",
+    "description": "Computes the approximate quantile using T-Digest.",
+    "return_type": "DECIMAL",
+    "parameters": [
+      "x",
+      "pos"
+    ],
+    "parameter_types": [
+      "DECIMAL",
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "arbitrary",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "DECIMAL",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "DECIMAL"
+    ]
+  },
+  {
+    "function_name": "arg_max",
+    "function_type": "aggregate",
+    "description": "Finds the row with the maximum val. Calculates the non-NULL arg expression at that row.",
+    "return_type": "DATE",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "DATE",
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "arg_max_null",
+    "function_type": "aggregate",
+    "description": "Finds the row with the maximum val. Calculates the arg expression at that row.",
+    "return_type": "ANY",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "ANY",
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "arg_min",
+    "function_type": "aggregate",
+    "description": "Finds the row with the minimum val. Calculates the non-NULL arg expression at that row.",
+    "return_type": "DECIMAL",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "DECIMAL",
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "arg_min_null",
+    "function_type": "aggregate",
+    "description": "Finds the row with the minimum val. Calculates the arg expression at that row.",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "argmax",
+    "function_type": "aggregate",
+    "description": "Finds the row with the maximum val. Calculates the non-NULL arg expression at that row.",
+    "return_type": "ANY",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "ANY",
+      "BLOB"
+    ]
+  },
+  {
+    "function_name": "argmin",
+    "function_type": "aggregate",
+    "description": "Finds the row with the minimum val. Calculates the non-NULL arg expression at that row.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "array_agg",
+    "function_type": "aggregate",
+    "description": "Returns a LIST containing all the values of a column.",
+    "return_type": "LIST",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "array_aggr",
+    "function_type": "scalar",
+    "description": "Executes the aggregate function name on the elements of list",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "name"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "array_aggregate",
+    "function_type": "scalar",
+    "description": "Executes the aggregate function name on the elements of list",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "name"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "array_append",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr",
+      "el"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_apply",
+    "function_type": "scalar",
+    "description": "Returns a list that is the result of applying the lambda function to each element of the input list. See the Lambda Functions section for more details",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "array_cat",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "array_concat",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "array_contains",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "array_cosine_similarity",
+    "function_type": "scalar",
+    "description": "Compute the cosine similarity between two arrays of the same size. The array elements can not be NULL. The arrays can have any size as long as the size is the same for both arguments.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "array1",
+      "array2"
+    ],
+    "parameter_types": [
+      "DOUBLE[ANY]",
+      "DOUBLE[ANY]"
+    ]
+  },
+  {
+    "function_name": "array_cross_product",
+    "function_type": "scalar",
+    "description": "Compute the cross product of two arrays of size 3. The array elements can not be NULL.",
+    "return_type": "FLOAT[3]",
+    "parameters": [
+      "array",
+      " array"
+    ],
+    "parameter_types": [
+      "FLOAT[3]",
+      "FLOAT[3]"
+    ]
+  },
+  {
+    "function_name": "array_distance",
+    "function_type": "scalar",
+    "description": "Compute the distance between two arrays of the same size. The array elements can not be NULL. The arrays can have any size as long as the size is the same for both arguments.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "array1",
+      "array2"
+    ],
+    "parameter_types": [
+      "DOUBLE[ANY]",
+      "DOUBLE[ANY]"
+    ]
+  },
+  {
+    "function_name": "array_distinct",
+    "function_type": "scalar",
+    "description": "Removes all duplicates and NULLs from a list. Does not preserve the original order",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list"
+    ],
+    "parameter_types": [
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "array_dot_product",
+    "function_type": "scalar",
+    "description": "Compute the inner product between two arrays of the same size. The array elements can not be NULL. The arrays can have any size as long as the size is the same for both arguments.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "array1",
+      "array2"
+    ],
+    "parameter_types": [
+      "DOUBLE[ANY]",
+      "DOUBLE[ANY]"
+    ]
+  },
+  {
+    "function_name": "array_extract",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "STRUCT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "array_filter",
+    "function_type": "scalar",
+    "description": "Constructs a list from those elements of the input list for which the lambda function returns true",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "array_grade_up",
+    "function_type": "scalar",
+    "description": "Returns the index of their sorted position.",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "array_has",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "array_has_all",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_has_any",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_indexof",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "array_inner_product",
+    "function_type": "scalar",
+    "description": "Compute the inner product between two arrays of the same size. The array elements can not be NULL. The arrays can have any size as long as the size is the same for both arguments.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "array1",
+      "array2"
+    ],
+    "parameter_types": [
+      "DOUBLE[ANY]",
+      "DOUBLE[ANY]"
+    ]
+  },
+  {
+    "function_name": "array_intersect",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_length",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "array_pop_back",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "array_pop_front",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "array_position",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "array_prepend",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "el",
+      "arr"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_push_back",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr",
+      "e"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_push_front",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr",
+      "e"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_reduce",
+    "function_type": "scalar",
+    "description": "Returns a single value that is the result of applying the lambda function to each element of the input list, starting with the first element and then repeatedly applying the lambda function to the result of the previous application and the next element of the list.",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "array_resize",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "array_reverse",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "array_reverse_sort",
+    "function_type": "scalar",
+    "description": "Sorts the elements of the list in reverse order",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "array_select",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "BIGINT[]"
+    ]
+  },
+  {
+    "function_name": "array_slice",
+    "function_type": "scalar",
+    "description": "Extract a sublist using slice conventions. Negative values are accepted",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "begin",
+      "end[",
+      "step]"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY",
+      "ANY",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "array_sort",
+    "function_type": "scalar",
+    "description": "Sorts the elements of the list",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list"
+    ],
+    "parameter_types": [
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "array_to_json",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "array_to_string",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr",
+      "sep"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "array_transform",
+    "function_type": "scalar",
+    "description": "Returns a list that is the result of applying the lambda function to each element of the input list. See the Lambda Functions section for more details",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "array_unique",
+    "function_type": "scalar",
+    "description": "Counts the unique elements of a list",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "list"
+    ],
+    "parameter_types": [
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "array_value",
+    "function_type": "scalar",
+    "description": "Create an ARRAY containing the argument values.",
+    "return_type": "ARRAY",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "array_where",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "BOOLEAN[]"
+    ]
+  },
+  {
+    "function_name": "array_zip",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "STRUCT[]",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "arrow_scan",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "POINTER",
+      "POINTER",
+      "POINTER"
+    ]
+  },
+  {
+    "function_name": "arrow_scan_dumb",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "POINTER",
+      "POINTER",
+      "POINTER"
+    ]
+  },
+  {
+    "function_name": "ascii",
+    "function_type": "scalar",
+    "description": "Returns an integer that represents the Unicode code point of the first character of the string",
+    "return_type": "INTEGER",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "asin",
+    "function_type": "scalar",
+    "description": "Computes the arcsine of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "atan",
+    "function_type": "scalar",
+    "description": "Computes the arctangent of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "atan2",
+    "function_type": "scalar",
+    "description": "Computes the arctangent (y, x)",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "avg",
+    "function_type": "aggregate",
+    "description": "Calculates the average value for all tuples in x.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "bar",
+    "function_type": "scalar",
+    "description": "Draws a band whose width is proportional to (x - min) and equal to width characters when x = max. width defaults to 80",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "x",
+      "min",
+      "max",
+      "width"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE",
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "base64",
+    "function_type": "scalar",
+    "description": "Convert a blob to a base64 encoded string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "blob"
+    ],
+    "parameter_types": [
+      "BLOB"
+    ]
+  },
+  {
+    "function_name": "bin",
+    "function_type": "scalar",
+    "description": "Converts the value to binary representation",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "bit_and",
+    "function_type": "aggregate",
+    "description": "Returns the bitwise AND of all bits in a given expression.",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "UINTEGER"
+    ]
+  },
+  {
+    "function_name": "bit_count",
+    "function_type": "scalar",
+    "description": "Returns the number of bits that are set",
+    "return_type": "BIGINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "BIT"
+    ]
+  },
+  {
+    "function_name": "bit_length",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "BIT"
+    ]
+  },
+  {
+    "function_name": "bit_or",
+    "function_type": "aggregate",
+    "description": "Returns the bitwise OR of all bits in a given expression.",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "HUGEINT"
+    ]
+  },
+  {
+    "function_name": "bit_position",
+    "function_type": "scalar",
+    "description": "Returns first starting index of the specified substring within bits, or zero if it is not present. The first (leftmost) bit is indexed 1",
+    "return_type": "INTEGER",
+    "parameters": [
+      "substring",
+      "bitstring"
+    ],
+    "parameter_types": [
+      "BIT",
+      "BIT"
+    ]
+  },
+  {
+    "function_name": "bit_xor",
+    "function_type": "aggregate",
+    "description": "Returns the bitwise XOR of all bits in a given expression.",
+    "return_type": "SMALLINT",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "SMALLINT"
+    ]
+  },
+  {
+    "function_name": "bitstring",
+    "function_type": "scalar",
+    "description": "Pads the bitstring until the specified length",
+    "return_type": "BIT",
+    "parameters": [
+      "bitstring",
+      "length"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "bitstring_agg",
+    "function_type": "aggregate",
+    "description": "Returns a bitstring with bits set for each distinct value.",
+    "return_type": "BIT",
+    "parameters": [
+      "arg",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "UBIGINT",
+      "UBIGINT",
+      "UBIGINT"
+    ]
+  },
+  {
+    "function_name": "bool_and",
+    "function_type": "aggregate",
+    "description": "Returns TRUE if every input value is TRUE, otherwise FALSE.",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "bool_or",
+    "function_type": "aggregate",
+    "description": "Returns TRUE if any input value is TRUE, otherwise FALSE.",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "cardinality",
+    "function_type": "scalar",
+    "description": "Returns the size of the map (or the number of entries in the map)",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "map"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "cbrt",
+    "function_type": "scalar",
+    "description": "Returns the cube root of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "ceil",
+    "function_type": "scalar",
+    "description": "Rounds the number up",
+    "return_type": "FLOAT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "ceiling",
+    "function_type": "scalar",
+    "description": "Rounds the number up",
+    "return_type": "FLOAT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "century",
+    "function_type": "scalar",
+    "description": "Extract the century component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "checkpoint",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "chr",
+    "function_type": "scalar",
+    "description": "Returns a character which is corresponding the ASCII code value or Unicode code point",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "code_point"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "col_description",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "table_oid",
+      "column_number"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "collations",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "combine",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "AGGREGATE_STATE<?>",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "AGGREGATE_STATE<?>",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "concat",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "concat_ws",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "constant_or_null",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "contains",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "copy_database",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "corr",
+    "function_type": "aggregate",
+    "description": "Returns the correlation coefficient for non-null pairs in a group.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "cos",
+    "function_type": "scalar",
+    "description": "Computes the cos of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "cot",
+    "function_type": "scalar",
+    "description": "Computes the cotangent of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "count",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "count_if",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "count_star",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "covar_pop",
+    "function_type": "aggregate",
+    "description": "Returns the population covariance of input values.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "covar_samp",
+    "function_type": "aggregate",
+    "description": "Returns the sample covariance for non-null pairs in a group.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "create_sort_key",
+    "function_type": "scalar",
+    "description": "Constructs a binary-comparable sort key based on a set of input parameters and sort qualifiers",
+    "return_type": "BLOB",
+    "parameters": [
+      "parameters..."
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "current_catalog",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_database",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_date",
+    "function_type": "scalar",
+    "description": "Returns the current date",
+    "return_type": "DATE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_localtime",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "TIME",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_localtimestamp",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "TIMESTAMP",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_query",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_role",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_schema",
+    "function_type": "scalar",
+    "description": "Returns the name of the currently active schema. Default is main",
+    "return_type": "VARCHAR",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "current_schemas",
+    "function_type": "scalar",
+    "description": "Returns list of schemas. Pass a parameter of True to include implicit schemas",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "include_implicit"
+    ],
+    "parameter_types": [
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "current_setting",
+    "function_type": "scalar",
+    "description": "Returns the current value of the configuration setting",
+    "return_type": "ANY",
+    "parameters": [
+      "setting_name"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "current_user",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "currval",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "damerau_levenshtein",
+    "function_type": "scalar",
+    "description": "Extension of Levenshtein distance to also include transposition of adjacent characters as an allowed edit operation. In other words, the minimum number of edit operations (insertions, deletions, substitutions or transpositions) required to change one string to another. Different case is considered different",
+    "return_type": "BIGINT",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "database_list",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "database_size",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "date_add",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "date",
+      "interval"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "date_diff",
+    "function_type": "scalar",
+    "description": "The number of partition boundaries between the timestamps",
+    "return_type": "BIGINT",
+    "parameters": [
+      "part",
+      "startdate",
+      "enddate"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "TIMESTAMP",
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "date_part",
+    "function_type": "scalar",
+    "description": "Get subfield (equivalent to extract)",
+    "return_type": "STRUCT()",
+    "parameters": [
+      "ts",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "date_sub",
+    "function_type": "scalar",
+    "description": "The number of complete partitions between the timestamps",
+    "return_type": "BIGINT",
+    "parameters": [
+      "part",
+      "startdate",
+      "enddate"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "TIMESTAMP",
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "date_trunc",
+    "function_type": "scalar",
+    "description": "Truncate to specified precision",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "part",
+      "timestamp"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "datediff",
+    "function_type": "scalar",
+    "description": "The number of partition boundaries between the timestamps",
+    "return_type": "BIGINT",
+    "parameters": [
+      "part",
+      "startdate",
+      "enddate"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "TIMESTAMP",
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "datepart",
+    "function_type": "scalar",
+    "description": "Get subfield (equivalent to extract)",
+    "return_type": "STRUCT()",
+    "parameters": [
+      "ts",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "TIME"
+    ]
+  },
+  {
+    "function_name": "datesub",
+    "function_type": "scalar",
+    "description": "The number of complete partitions between the timestamps",
+    "return_type": "BIGINT",
+    "parameters": [
+      "part",
+      "startdate",
+      "enddate"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "TIME",
+      "TIME"
+    ]
+  },
+  {
+    "function_name": "datetrunc",
+    "function_type": "scalar",
+    "description": "Truncate to specified precision",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "part",
+      "timestamp"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "day",
+    "function_type": "scalar",
+    "description": "Extract the day component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "INTERVAL"
+    ]
+  },
+  {
+    "function_name": "dayname",
+    "function_type": "scalar",
+    "description": "The (English) name of the weekday",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "dayofmonth",
+    "function_type": "scalar",
+    "description": "Extract the dayofmonth component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "dayofweek",
+    "function_type": "scalar",
+    "description": "Extract the dayofweek component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "dayofyear",
+    "function_type": "scalar",
+    "description": "Extract the dayofyear component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "decade",
+    "function_type": "scalar",
+    "description": "Extract the decade component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "decode",
+    "function_type": "scalar",
+    "description": "Convert blob to varchar. Fails if blob is not valid utf-8",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "blob"
+    ],
+    "parameter_types": [
+      "BLOB"
+    ]
+  },
+  {
+    "function_name": "degrees",
+    "function_type": "scalar",
+    "description": "Converts radians to degrees",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "disable_checkpoint_on_shutdown",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_object_cache",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_optimizer",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_print_progress_bar",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_profile",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_profiling",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_progress_bar",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_verification",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_verify_external",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_verify_fetch_row",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_verify_parallelism",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "disable_verify_serializer",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "divide",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UINTEGER",
+      "UINTEGER"
+    ]
+  },
+  {
+    "function_name": "duckdb_columns",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_constraints",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_databases",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_dependencies",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_extensions",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_functions",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_indexes",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_keywords",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_memory",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_optimizers",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_schemas",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_secrets",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "redact"
+    ],
+    "parameter_types": [
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "duckdb_sequences",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_settings",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_tables",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_temporary_files",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_types",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "duckdb_views",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "editdist3",
+    "function_type": "scalar",
+    "description": "The minimum number of single-character edits (insertions, deletions or substitutions) required to change one string to the other. Different case is considered different",
+    "return_type": "BIGINT",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "element_at",
+    "function_type": "scalar",
+    "description": "Returns a list containing the value for a given key or an empty list if the key is not contained in the map. The type of the key provided in the second parameter must match the type of the map’s keys else an error is returned",
+    "return_type": "ANY",
+    "parameters": [
+      "map",
+      "key"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "enable_checkpoint_on_shutdown",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_object_cache",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_optimizer",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_print_progress_bar",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_profile",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_profiling",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_progress_bar",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "enable_verification",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "encode",
+    "function_type": "scalar",
+    "description": "Convert varchar to blob. Converts utf-8 characters into literal encoding",
+    "return_type": "BLOB",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "ends_with",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "entropy",
+    "function_type": "aggregate",
+    "description": "Returns the log-2 entropy of count input-values.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "enum_code",
+    "function_type": "scalar",
+    "description": "Returns the numeric value backing the given enum value",
+    "return_type": "ANY",
+    "parameters": [
+      "enum"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "enum_first",
+    "function_type": "scalar",
+    "description": "Returns the first value of the input enum type",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "enum"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "enum_last",
+    "function_type": "scalar",
+    "description": "Returns the last value of the input enum type",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "enum"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "enum_range",
+    "function_type": "scalar",
+    "description": "Returns all values of the input enum type as an array",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "enum"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "enum_range_boundary",
+    "function_type": "scalar",
+    "description": "Returns the range between the two given enum values as an array. The values must be of the same enum type. When the first parameter is NULL, the result starts with the first value of the enum type. When the second parameter is NULL, the result ends with the last value of the enum type",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "start",
+      "end"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "epoch",
+    "function_type": "scalar",
+    "description": "Extract the epoch component from a temporal type",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "temporal"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "epoch_ms",
+    "function_type": "scalar",
+    "description": "Extract the epoch component in milliseconds from a temporal type",
+    "return_type": "BIGINT",
+    "parameters": [
+      "temporal"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "epoch_ns",
+    "function_type": "scalar",
+    "description": "Extract the epoch component in nanoseconds from a temporal type",
+    "return_type": "BIGINT",
+    "parameters": [
+      "temporal"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "epoch_us",
+    "function_type": "scalar",
+    "description": "Extract the epoch component in microseconds from a temporal type",
+    "return_type": "BIGINT",
+    "parameters": [
+      "temporal"
+    ],
+    "parameter_types": [
+      "TIME WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "era",
+    "function_type": "scalar",
+    "description": "Extract the era component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "error",
+    "function_type": "scalar",
+    "description": "Throws the given error message",
+    "return_type": "NULL",
+    "parameters": [
+      "message"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "even",
+    "function_type": "scalar",
+    "description": "Rounds x to next even number by rounding away from zero",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "exp",
+    "function_type": "scalar",
+    "description": "Computes e to the power of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "factorial",
+    "function_type": "scalar",
+    "description": "Factorial of x. Computes the product of the current integer and all integers below it",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "favg",
+    "function_type": "aggregate",
+    "description": "Calculates the average using a more accurate floating point summation (Kahan Sum)",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "fdiv",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "filter",
+    "function_type": "scalar",
+    "description": "Constructs a list from those elements of the input list for which the lambda function returns true",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "finalize",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INVALID",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "AGGREGATE_STATE<?>"
+    ]
+  },
+  {
+    "function_name": "first",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "flatten",
+    "function_type": "scalar",
+    "description": "Flatten a nested list by one level",
+    "return_type": "ANY[]",
+    "parameters": [
+      "nested_list"
+    ],
+    "parameter_types": [
+      "ANY[][]"
+    ]
+  },
+  {
+    "function_name": "floor",
+    "function_type": "scalar",
+    "description": "Rounds the number down",
+    "return_type": "FLOAT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "fmod",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "force_checkpoint",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "format",
+    "function_type": "scalar",
+    "description": "Formats a string using fmt syntax",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "format"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "formatReadableDecimalSize",
+    "function_type": "scalar",
+    "description": "Converts bytes to a human-readable presentation (e.g. 16000 -> 16.0 KB)",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "bytes"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "formatReadableSize",
+    "function_type": "scalar",
+    "description": "Converts bytes to a human-readable presentation (e.g. 16000 -> 15.6 KiB)",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "bytes"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "format_bytes",
+    "function_type": "scalar",
+    "description": "Converts bytes to a human-readable presentation (e.g. 16000 -> 15.6 KiB)",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "bytes"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "format_pg_type",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "logical_type",
+      "type_name"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "format_type",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "type_oid",
+      "typemod"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "from_base64",
+    "function_type": "scalar",
+    "description": "Convert a base64 encoded string to a character string",
+    "return_type": "BLOB",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "from_binary",
+    "function_type": "scalar",
+    "description": "Converts a value from binary representation to a blob",
+    "return_type": "BLOB",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "from_hex",
+    "function_type": "scalar",
+    "description": "Converts a value from hexadecimal representation to a blob",
+    "return_type": "BLOB",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "from_json",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "JSON",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "from_json_strict",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "fsum",
+    "function_type": "aggregate",
+    "description": "Calculates the sum using a more accurate floating point summation (Kahan Sum).",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "functions",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "gamma",
+    "function_type": "scalar",
+    "description": "Interpolation of (x-1) factorial (so decimal inputs are allowed)",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "gcd",
+    "function_type": "scalar",
+    "description": "Computes the greatest common divisor of x and y",
+    "return_type": "BIGINT",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "gen_random_uuid",
+    "function_type": "scalar",
+    "description": "Returns a random UUID similar to this: eeccb8c5-9943-b2bb-bb5e-222f4e14b687",
+    "return_type": "UUID",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "generate_series",
+    "function_type": "scalar",
+    "description": "Create a list of values between start and stop - the stop parameter is inclusive",
+    "return_type": "BIGINT[]",
+    "parameters": [
+      "start"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "generate_subscripts",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "arr",
+      "dim"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "geomean",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "geometric_mean",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "get_bit",
+    "function_type": "scalar",
+    "description": "Extracts the nth bit from bitstring; the first (leftmost) bit is indexed 0",
+    "return_type": "INTEGER",
+    "parameters": [
+      "bitstring",
+      "index"
+    ],
+    "parameter_types": [
+      "BIT",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "get_block_size",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "db_name"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "get_current_time",
+    "function_type": "scalar",
+    "description": "Returns the current time",
+    "return_type": "TIME",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "get_current_timestamp",
+    "function_type": "scalar",
+    "description": "Returns the current timestamp",
+    "return_type": "TIMESTAMP WITH TIME ZONE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "glob",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "grade_up",
+    "function_type": "scalar",
+    "description": "Returns the index of their sorted position.",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "greatest",
+    "function_type": "scalar",
+    "description": "Returns the highest value of the set of input parameters",
+    "return_type": "TIME",
+    "parameters": [
+      "arg1"
+    ],
+    "parameter_types": [
+      "TIME"
+    ]
+  },
+  {
+    "function_name": "greatest_common_divisor",
+    "function_type": "scalar",
+    "description": "Computes the greatest common divisor of x and y",
+    "return_type": "BIGINT",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "group_concat",
+    "function_type": "aggregate",
+    "description": "Concatenates the column string values with an optional separator.",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "str"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "hamming",
+    "function_type": "scalar",
+    "description": "The number of positions with different characters for 2 strings of equal length. Different case is considered different",
+    "return_type": "BIGINT",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "has_any_column_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "table",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_column_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "table",
+      "column",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_database_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "database",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_foreign_data_wrapper_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "fdw",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_function_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "function",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_language_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "language",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_schema_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "schema",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_sequence_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "sequence",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_server_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "server",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_table_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "table",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "has_tablespace_privilege",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "tablespace",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "hash",
+    "function_type": "scalar",
+    "description": "Returns an integer with the hash of the value. Note that this is not a cryptographic hash",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "param"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "hex",
+    "function_type": "scalar",
+    "description": "Converts the value to hexadecimal representation",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "BLOB"
+    ]
+  },
+  {
+    "function_name": "histogram",
+    "function_type": "aggregate",
+    "description": "Returns a LIST of STRUCTs with the fields bucket and count.",
+    "return_type": "MAP",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "TIMESTAMP_NS"
+    ]
+  },
+  {
+    "function_name": "hour",
+    "function_type": "scalar",
+    "description": "Extract the hour component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIME"
+    ]
+  },
+  {
+    "function_name": "icu_calendar_names",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "icu_sort_key",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "ilike_escape",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "import_database",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "in_search_path",
+    "function_type": "scalar",
+    "description": "Returns whether or not the database/schema are in the search path",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "database_name",
+      "schema_name"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "index_scan",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "inet_client_addr",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "inet_client_port",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "inet_server_addr",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "inet_server_port",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "instr",
+    "function_type": "scalar",
+    "description": "Returns location of first occurrence of needle in haystack, counting from 1. Returns 0 if no match found",
+    "return_type": "BIGINT",
+    "parameters": [
+      "haystack",
+      "needle"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "isfinite",
+    "function_type": "scalar",
+    "description": "Returns true if the floating point value is finite, false otherwise",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "isinf",
+    "function_type": "scalar",
+    "description": "Returns true if the floating point value is infinite, false otherwise",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "isnan",
+    "function_type": "scalar",
+    "description": "Returns true if the floating point value is not a number, false otherwise",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "isodow",
+    "function_type": "scalar",
+    "description": "Extract the isodow component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "isoyear",
+    "function_type": "scalar",
+    "description": "Extract the isoyear component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "jaccard",
+    "function_type": "scalar",
+    "description": "The Jaccard similarity between two strings. Different case is considered different. Returns a number between 0 and 1",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "jaro_similarity",
+    "function_type": "scalar",
+    "description": "The Jaro similarity between two strings. Different case is considered different. Returns a number between 0 and 1",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "jaro_winkler_similarity",
+    "function_type": "scalar",
+    "description": "The Jaro-Winkler similarity between two strings. Different case is considered different. Returns a number between 0 and 1",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "json_array",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "json_array_length",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "JSON",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_contains",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_deserialize_sql",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "JSON"
+    ]
+  },
+  {
+    "function_name": "json_execute_serialized_sql",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_extract",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "json_extract_path",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "JSON",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_extract_path_text",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "json_extract_string",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "JSON",
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "json_group_array",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "json_group_object",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "name",
+      "value"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "json_group_structure",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "json_keys",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR[][]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "json_merge_patch",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "json_object",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "json_quote",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "json_serialize_plan",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_serialize_sql",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "json_structure",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_transform",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_transform_strict",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_type",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "JSON",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "json_valid",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "JSON"
+    ]
+  },
+  {
+    "function_name": "julian",
+    "function_type": "scalar",
+    "description": "Extract the Julian Day number from a date or timestamp",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "kahan_sum",
+    "function_type": "aggregate",
+    "description": "Calculates the sum using a more accurate floating point summation (Kahan Sum).",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "kurtosis",
+    "function_type": "aggregate",
+    "description": "Returns the excess kurtosis (Fisher’s definition) of all input values, with a bias correction according to the sample size",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "kurtosis_pop",
+    "function_type": "aggregate",
+    "description": "Returns the excess kurtosis (Fisher’s definition) of all input values, without bias correction",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "last",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "last_day",
+    "function_type": "scalar",
+    "description": "Returns the last day of the month",
+    "return_type": "DATE",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "lcase",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "lcm",
+    "function_type": "scalar",
+    "description": "Computes the least common multiple of x and y",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "HUGEINT",
+      "HUGEINT"
+    ]
+  },
+  {
+    "function_name": "least",
+    "function_type": "scalar",
+    "description": "Returns the lowest value of the set of input parameters",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "arg1"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "least_common_multiple",
+    "function_type": "scalar",
+    "description": "Computes the least common multiple of x and y",
+    "return_type": "BIGINT",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "left",
+    "function_type": "scalar",
+    "description": "Extract the left-most count characters",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "count"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "left_grapheme",
+    "function_type": "scalar",
+    "description": "Extract the left-most count grapheme clusters",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "count"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "len",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "BIT"
+    ]
+  },
+  {
+    "function_name": "length",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "length_grapheme",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "levenshtein",
+    "function_type": "scalar",
+    "description": "The minimum number of single-character edits (insertions, deletions or substitutions) required to change one string to the other. Different case is considered different",
+    "return_type": "BIGINT",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "lgamma",
+    "function_type": "scalar",
+    "description": "Computes the log of the gamma function",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "like_escape",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "list",
+    "function_type": "aggregate",
+    "description": "Returns a LIST containing all the values of a column.",
+    "return_type": "LIST",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "list_aggr",
+    "function_type": "scalar",
+    "description": "Executes the aggregate function name on the elements of list",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "name"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "list_aggregate",
+    "function_type": "scalar",
+    "description": "Executes the aggregate function name on the elements of list",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "name"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "list_any_value",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_append",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l",
+      "e"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "list_apply",
+    "function_type": "scalar",
+    "description": "Returns a list that is the result of applying the lambda function to each element of the input list. See the Lambda Functions section for more details",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "list_approx_count_distinct",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_avg",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_bit_and",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_bit_or",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_bit_xor",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_bool_and",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_bool_or",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_cat",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "list_concat",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "list_contains",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "list_cosine_similarity",
+    "function_type": "scalar",
+    "description": "Compute the cosine similarity between two lists",
+    "return_type": "FLOAT",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "FLOAT[]",
+      "FLOAT[]"
+    ]
+  },
+  {
+    "function_name": "list_count",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_distance",
+    "function_type": "scalar",
+    "description": "Compute the distance between two lists",
+    "return_type": "FLOAT",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "FLOAT[]",
+      "FLOAT[]"
+    ]
+  },
+  {
+    "function_name": "list_distinct",
+    "function_type": "scalar",
+    "description": "Removes all duplicates and NULLs from a list. Does not preserve the original order",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list"
+    ],
+    "parameter_types": [
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "list_dot_product",
+    "function_type": "scalar",
+    "description": "Compute the inner product between two lists",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "DOUBLE[]",
+      "DOUBLE[]"
+    ]
+  },
+  {
+    "function_name": "list_element",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "list_entropy",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_extract",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "list_filter",
+    "function_type": "scalar",
+    "description": "Constructs a list from those elements of the input list for which the lambda function returns true",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "list_first",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_grade_up",
+    "function_type": "scalar",
+    "description": "Returns the index of their sorted position.",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "list_has",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "list_has_all",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "list_has_any",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "list_histogram",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_indexof",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "list_inner_product",
+    "function_type": "scalar",
+    "description": "Compute the inner product between two lists",
+    "return_type": "FLOAT",
+    "parameters": [
+      "list1",
+      "list2"
+    ],
+    "parameter_types": [
+      "FLOAT[]",
+      "FLOAT[]"
+    ]
+  },
+  {
+    "function_name": "list_intersect",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l1",
+      "l2"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "list_kurtosis",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_kurtosis_pop",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_last",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_mad",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_max",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_median",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_min",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_mode",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_pack",
+    "function_type": "scalar",
+    "description": "Create a LIST containing the argument values",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "list_position",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "INTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "list_prepend",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "e",
+      "l"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "list_product",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_reduce",
+    "function_type": "scalar",
+    "description": "Returns a single value that is the result of applying the lambda function to each element of the input list, starting with the first element and then repeatedly applying the lambda function to the result of the previous application and the next element of the list.",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "list_resize",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "list_reverse",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_reverse_sort",
+    "function_type": "scalar",
+    "description": "Sorts the elements of the list in reverse order",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "list_select",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "BIGINT[]"
+    ]
+  },
+  {
+    "function_name": "list_sem",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_skewness",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_slice",
+    "function_type": "scalar",
+    "description": "Extract a sublist using slice conventions. Negative values are accepted",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "begin",
+      "end[",
+      "step]"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY",
+      "ANY",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "list_sort",
+    "function_type": "scalar",
+    "description": "Sorts the elements of the list",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "list_stddev_pop",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_stddev_samp",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_string_agg",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_sum",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_transform",
+    "function_type": "scalar",
+    "description": "Returns a list that is the result of applying the lambda function to each element of the input list. See the Lambda Functions section for more details",
+    "return_type": "ANY[]",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "list_unique",
+    "function_type": "scalar",
+    "description": "Counts the unique elements of a list",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "list"
+    ],
+    "parameter_types": [
+      "ANY[]"
+    ]
+  },
+  {
+    "function_name": "list_value",
+    "function_type": "scalar",
+    "description": "Create a LIST containing the argument values",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "list_var_pop",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_var_samp",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "l"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "list_where",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY[]",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "BOOLEAN[]"
+    ]
+  },
+  {
+    "function_name": "list_zip",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "STRUCT[]",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "listagg",
+    "function_type": "aggregate",
+    "description": "Concatenates the column string values with an optional separator.",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "str"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "ln",
+    "function_type": "scalar",
+    "description": "Computes the natural logarithm of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "log",
+    "function_type": "scalar",
+    "description": "Computes the logarithm of x to base b. b may be omitted, in which case the default 10",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "b"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "log10",
+    "function_type": "scalar",
+    "description": "Computes the 10-log of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "log2",
+    "function_type": "scalar",
+    "description": "Computes the 2-log of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "lower",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "lpad",
+    "function_type": "scalar",
+    "description": "Pads the string with the character from the left until it has count characters",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "count",
+      "character"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "INTEGER",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "ltrim",
+    "function_type": "scalar",
+    "description": "Removes any occurrences of any of the characters from the left side of the string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "mad",
+    "function_type": "aggregate",
+    "description": "Returns the median absolute deviation for the values within x. NULL values are ignored. Temporal types return a positive INTERVAL.\t",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "TIME WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "make_date",
+    "function_type": "scalar",
+    "description": "The date for the given parts",
+    "return_type": "DATE",
+    "parameters": [
+      "year",
+      "month",
+      "day"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "make_time",
+    "function_type": "scalar",
+    "description": "The time for the given parts",
+    "return_type": "TIME",
+    "parameters": [
+      "hour",
+      "minute",
+      "seconds"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "make_timestamp",
+    "function_type": "scalar",
+    "description": "The timestamp for the given parts",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "year",
+      "month",
+      "day",
+      "hour",
+      "minute",
+      "seconds"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT",
+      "BIGINT",
+      "BIGINT",
+      "BIGINT",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "make_timestamptz",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "TIMESTAMP WITH TIME ZONE",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2",
+      "col3",
+      "col4",
+      "col5"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT",
+      "BIGINT",
+      "BIGINT",
+      "BIGINT",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "map",
+    "function_type": "scalar",
+    "description": "Creates a map from a set of keys and values",
+    "return_type": "MAP",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "map_concat",
+    "function_type": "scalar",
+    "description": "Returns a map created from merging the input maps, on key collision the value is taken from the last map with that key",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "map_entries",
+    "function_type": "scalar",
+    "description": "Returns the map entries as a list of keys/values",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "map_extract",
+    "function_type": "scalar",
+    "description": "Returns a list containing the value for a given key or an empty list if the key is not contained in the map. The type of the key provided in the second parameter must match the type of the map’s keys else an error is returned",
+    "return_type": "ANY",
+    "parameters": [
+      "map",
+      "key"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "map_from_entries",
+    "function_type": "scalar",
+    "description": "Returns a map created from the entries of the array",
+    "return_type": "MAP",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "map_keys",
+    "function_type": "scalar",
+    "description": "Returns the keys of a map as a list",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "map_values",
+    "function_type": "scalar",
+    "description": "Returns the values of a map as a list",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "max",
+    "function_type": "aggregate",
+    "description": "Returns the maximum value present in arg.",
+    "return_type": "ANY",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "max_by",
+    "function_type": "aggregate",
+    "description": "Finds the row with the maximum val. Calculates the non-NULL arg expression at that row.",
+    "return_type": "INTEGER",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "INTEGER",
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "md5",
+    "function_type": "scalar",
+    "description": "Returns the MD5 hash of the value as a string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "md5_number",
+    "function_type": "scalar",
+    "description": "Returns the MD5 hash of the value as an INT128",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "md5_number_lower",
+    "function_type": "scalar",
+    "description": "Returns the MD5 hash of the value as an INT128",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "md5_number_upper",
+    "function_type": "scalar",
+    "description": "Returns the MD5 hash of the value as an INT128",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "mean",
+    "function_type": "aggregate",
+    "description": "Calculates the average value for all tuples in x.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "SMALLINT"
+    ]
+  },
+  {
+    "function_name": "median",
+    "function_type": "aggregate",
+    "description": "Returns the middle value of the set. NULL values are ignored. For even value counts, quantitiative values are averaged and ordinal values return the lower value.",
+    "return_type": "TIME WITH TIME ZONE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "TIME WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "metadata_info",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "microsecond",
+    "function_type": "scalar",
+    "description": "Extract the microsecond component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "millennium",
+    "function_type": "scalar",
+    "description": "Extract the millennium component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "millisecond",
+    "function_type": "scalar",
+    "description": "Extract the millisecond component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "min",
+    "function_type": "aggregate",
+    "description": "Returns the minimum value present in arg.",
+    "return_type": "DECIMAL",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "DECIMAL"
+    ]
+  },
+  {
+    "function_name": "min_by",
+    "function_type": "aggregate",
+    "description": "Finds the row with the minimum val. Calculates the non-NULL arg expression at that row.",
+    "return_type": "DATE",
+    "parameters": [
+      "arg",
+      "val"
+    ],
+    "parameter_types": [
+      "DATE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "minute",
+    "function_type": "scalar",
+    "description": "Extract the minute component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "mismatches",
+    "function_type": "scalar",
+    "description": "The number of positions with different characters for 2 strings of equal length. Different case is considered different",
+    "return_type": "BIGINT",
+    "parameters": [
+      "str1",
+      "str2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "mod",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "TINYINT",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "TINYINT",
+      "TINYINT"
+    ]
+  },
+  {
+    "function_name": "mode",
+    "function_type": "aggregate",
+    "description": "Returns the most frequent value for the values within x. NULL values are ignored.",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "UBIGINT"
+    ]
+  },
+  {
+    "function_name": "month",
+    "function_type": "scalar",
+    "description": "Extract the month component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "monthname",
+    "function_type": "scalar",
+    "description": "The (English) name of the month",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "multiply",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "UINTEGER",
+      "UINTEGER"
+    ]
+  },
+  {
+    "function_name": "nextafter",
+    "function_type": "scalar",
+    "description": "Returns the next floating point value after x in the direction of y",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x",
+      " y"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "nextval",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "nfc_normalize",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "not_ilike_escape",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "not_like_escape",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "now",
+    "function_type": "scalar",
+    "description": "Returns the current timestamp",
+    "return_type": "TIMESTAMP WITH TIME ZONE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "nullif",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "a",
+      "b"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "obj_description",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "object_oid",
+      "catalog_name"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "octet_length",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "BIT"
+    ]
+  },
+  {
+    "function_name": "ord",
+    "function_type": "scalar",
+    "description": "Returns the unicode codepoint of the first character of the string",
+    "return_type": "INTEGER",
+    "parameters": [
+      "str"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "parquet_file_metadata",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "parquet_kv_metadata",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "parquet_metadata",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "parquet_scan",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "hive_types",
+      "hive_partitioning",
+      "hive_types_autocast",
+      "encryption_config",
+      "schema",
+      "union_by_name",
+      "filename",
+      "compression",
+      "file_row_number",
+      "binary_as_string"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "ANY",
+      "BOOLEAN",
+      "BOOLEAN",
+      "ANY",
+      "MAP(INTEGER, STRUCT(\"name\" VARCHAR, \"type\" VARCHAR, default_value VARCHAR))",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "parquet_schema",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "parse_dirname",
+    "function_type": "scalar",
+    "description": "Returns the top-level directory name. separator options: system, both_slash (default), forward_slash, backslash",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "parse_dirpath",
+    "function_type": "scalar",
+    "description": "Returns the head of the path similarly to Python's os.path.dirname. separator options: system, both_slash (default), forward_slash, backslash",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "parse_filename",
+    "function_type": "scalar",
+    "description": "Returns the last component of the path similarly to Python's os.path.basename. If trim_extension is true, the file extension will be removed (it defaults to false). separator options: system, both_slash (default), forward_slash, backslash",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "parse_path",
+    "function_type": "scalar",
+    "description": "Returns a list of the components (directories and filename) in the path similarly to Python's pathlib.PurePath::parts. separator options: system, both_slash (default), forward_slash, backslash",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "pg_collation_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "collation_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_conf_load_time",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pg_conversion_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "conversion_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_function_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "function_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_get_constraintdef",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "constraint_oid",
+      "pretty_bool"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "pg_get_expr",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "pg_node_tree",
+      "relation_oid"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "pg_get_viewdef",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_has_role",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "user",
+      "role",
+      "privilege"
+    ],
+    "parameter_types": [
+      null,
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "pg_is_other_temp_schema",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "schema_id"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_my_temp_schema",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pg_opclass_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "opclass_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_operator_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "operator_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_opfamily_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "opclass_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_postmaster_start_time",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pg_size_pretty",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "bytes"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_table_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "table_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_timezone_names",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pg_ts_config_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "config_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_ts_dict_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "dict_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_ts_parser_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "parser_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_ts_template_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "template_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_type_is_visible",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "type_oid"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pg_typeof",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "expression"
+    ],
+    "parameter_types": [
+      null
+    ]
+  },
+  {
+    "function_name": "pi",
+    "function_type": "scalar",
+    "description": "Returns the value of pi",
+    "return_type": "DOUBLE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "platform",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "position",
+    "function_type": "scalar",
+    "description": "Returns location of first occurrence of needle in haystack, counting from 1. Returns 0 if no match found",
+    "return_type": "BIGINT",
+    "parameters": [
+      "haystack",
+      "needle"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "pow",
+    "function_type": "scalar",
+    "description": "Computes x to the power of y",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "power",
+    "function_type": "scalar",
+    "description": "Computes x to the power of y",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x",
+      "y"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "pragma_collations",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pragma_database_size",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pragma_metadata_info",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "pragma_platform",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pragma_show",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "pragma_storage_info",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "pragma_table_info",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "pragma_user_agent",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "pragma_version",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "prefix",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "printf",
+    "function_type": "scalar",
+    "description": "Formats a string using printf syntax",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "format"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "product",
+    "function_type": "aggregate",
+    "description": "Calculates the product of all tuples in arg.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "quantile",
+    "function_type": "aggregate",
+    "description": "Returns the exact quantile number between 0 and 1 . If pos is a LIST of FLOATs, then the result is a LIST of the corresponding exact quantiles.",
+    "return_type": "SMALLINT",
+    "parameters": [
+      "x",
+      "pos"
+    ],
+    "parameter_types": [
+      "SMALLINT",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "quantile_cont",
+    "function_type": "aggregate",
+    "description": "Returns the intepolated quantile number between 0 and 1 . If pos is a LIST of FLOATs, then the result is a LIST of the corresponding intepolated quantiles.\t",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "x",
+      "pos"
+    ],
+    "parameter_types": [
+      "DATE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "quantile_disc",
+    "function_type": "aggregate",
+    "description": "Returns the exact quantile number between 0 and 1 . If pos is a LIST of FLOATs, then the result is a LIST of the corresponding exact quantiles.",
+    "return_type": "DECIMAL[]",
+    "parameters": [
+      "x",
+      "pos"
+    ],
+    "parameter_types": [
+      "DECIMAL",
+      "DOUBLE[]"
+    ]
+  },
+  {
+    "function_name": "quarter",
+    "function_type": "scalar",
+    "description": "Extract the quarter component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "radians",
+    "function_type": "scalar",
+    "description": "Converts degrees to radians",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "random",
+    "function_type": "scalar",
+    "description": "Returns a random number between 0 and 1",
+    "return_type": "DOUBLE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "range",
+    "function_type": "scalar",
+    "description": "Create a list of values between start and stop - the stop parameter is exclusive",
+    "return_type": "BIGINT[]",
+    "parameters": [
+      "start",
+      "stop"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "read_blob",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "read_csv",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "hive_types_autocast",
+      "hive_types",
+      "union_by_name",
+      "hive_partitioning",
+      "filename",
+      "dtypes",
+      "column_types",
+      "auto_detect",
+      "sample_size",
+      "dateformat",
+      "columns",
+      "all_varchar",
+      "new_line",
+      "header",
+      "types",
+      "skip",
+      "compression",
+      "quote",
+      "max_line_size",
+      "store_rejects",
+      "delim",
+      "sep",
+      "column_names",
+      "buffer_size",
+      "timestampformat",
+      "normalize_names",
+      "ignore_errors",
+      "names",
+      "allow_quoted_nulls",
+      "maximum_line_size",
+      "rejects_table",
+      "force_not_null",
+      "parallel",
+      "auto_type_candidates",
+      "rejects_scan",
+      "rejects_limit",
+      "nullstr",
+      "escape",
+      "decimal_separator",
+      "null_padding"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "ANY",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "ANY",
+      "ANY",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "ANY",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "ANY",
+      "BIGINT",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "UBIGINT",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR[]",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "BOOLEAN",
+      "ANY",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "read_csv_auto",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "hive_types_autocast",
+      "hive_types",
+      "union_by_name",
+      "hive_partitioning",
+      "filename",
+      "dtypes",
+      "column_types",
+      "auto_detect",
+      "sample_size",
+      "dateformat",
+      "columns",
+      "all_varchar",
+      "new_line",
+      "header",
+      "types",
+      "skip",
+      "compression",
+      "quote",
+      "max_line_size",
+      "store_rejects",
+      "delim",
+      "sep",
+      "column_names",
+      "buffer_size",
+      "timestampformat",
+      "normalize_names",
+      "ignore_errors",
+      "names",
+      "allow_quoted_nulls",
+      "maximum_line_size",
+      "rejects_table",
+      "force_not_null",
+      "parallel",
+      "auto_type_candidates",
+      "rejects_scan",
+      "rejects_limit",
+      "nullstr",
+      "escape",
+      "decimal_separator",
+      "null_padding"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "ANY",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "ANY",
+      "ANY",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "ANY",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "ANY",
+      "BIGINT",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "UBIGINT",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR[]",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "BOOLEAN",
+      "ANY",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "read_json",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "convert_strings_to_integers",
+      "maximum_sample_files",
+      "timestamp_format",
+      "field_appearance_threshold",
+      "timestampformat",
+      "date_format",
+      "filename",
+      "union_by_name",
+      "compression",
+      "maximum_depth",
+      "columns",
+      "sample_size",
+      "hive_types",
+      "hive_types_autocast",
+      "maximum_object_size",
+      "format",
+      "ignore_errors",
+      "hive_partitioning",
+      "auto_detect",
+      "records",
+      "dateformat"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "DOUBLE",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "BIGINT",
+      "ANY",
+      "BOOLEAN",
+      "UINTEGER",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "read_json_auto",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "convert_strings_to_integers",
+      "maximum_sample_files",
+      "timestamp_format",
+      "field_appearance_threshold",
+      "timestampformat",
+      "date_format",
+      "filename",
+      "union_by_name",
+      "compression",
+      "maximum_depth",
+      "columns",
+      "sample_size",
+      "hive_types",
+      "hive_types_autocast",
+      "maximum_object_size",
+      "format",
+      "ignore_errors",
+      "hive_partitioning",
+      "auto_detect",
+      "records",
+      "dateformat"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "DOUBLE",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "BIGINT",
+      "ANY",
+      "BOOLEAN",
+      "UINTEGER",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "read_json_objects",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "ignore_errors",
+      "format",
+      "maximum_object_size",
+      "hive_types_autocast",
+      "hive_types",
+      "hive_partitioning",
+      "compression",
+      "union_by_name",
+      "filename"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BOOLEAN",
+      "VARCHAR",
+      "UINTEGER",
+      "BOOLEAN",
+      "ANY",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "read_json_objects_auto",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "ignore_errors",
+      "format",
+      "maximum_object_size",
+      "hive_types_autocast",
+      "hive_types",
+      "hive_partitioning",
+      "compression",
+      "union_by_name",
+      "filename"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "VARCHAR",
+      "UINTEGER",
+      "BOOLEAN",
+      "ANY",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "read_ndjson",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "convert_strings_to_integers",
+      "maximum_sample_files",
+      "timestamp_format",
+      "field_appearance_threshold",
+      "timestampformat",
+      "date_format",
+      "filename",
+      "union_by_name",
+      "compression",
+      "maximum_depth",
+      "columns",
+      "sample_size",
+      "hive_types",
+      "hive_types_autocast",
+      "maximum_object_size",
+      "format",
+      "ignore_errors",
+      "hive_partitioning",
+      "auto_detect",
+      "records",
+      "dateformat"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "DOUBLE",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "BIGINT",
+      "ANY",
+      "BOOLEAN",
+      "UINTEGER",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "read_ndjson_auto",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "convert_strings_to_integers",
+      "maximum_sample_files",
+      "timestamp_format",
+      "field_appearance_threshold",
+      "timestampformat",
+      "date_format",
+      "filename",
+      "union_by_name",
+      "compression",
+      "maximum_depth",
+      "columns",
+      "sample_size",
+      "hive_types",
+      "hive_types_autocast",
+      "maximum_object_size",
+      "format",
+      "ignore_errors",
+      "hive_partitioning",
+      "auto_detect",
+      "records",
+      "dateformat"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "DOUBLE",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "BIGINT",
+      "ANY",
+      "BOOLEAN",
+      "UINTEGER",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "read_ndjson_objects",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "ignore_errors",
+      "format",
+      "maximum_object_size",
+      "hive_types_autocast",
+      "hive_types",
+      "hive_partitioning",
+      "compression",
+      "union_by_name",
+      "filename"
+    ],
+    "parameter_types": [
+      "VARCHAR[]",
+      "BOOLEAN",
+      "VARCHAR",
+      "UINTEGER",
+      "BOOLEAN",
+      "ANY",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "read_parquet",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "hive_types",
+      "hive_partitioning",
+      "hive_types_autocast",
+      "encryption_config",
+      "schema",
+      "union_by_name",
+      "filename",
+      "compression",
+      "file_row_number",
+      "binary_as_string"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "ANY",
+      "BOOLEAN",
+      "BOOLEAN",
+      "ANY",
+      "MAP(INTEGER, STRUCT(\"name\" VARCHAR, \"type\" VARCHAR, default_value VARCHAR))",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "read_text",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "reduce",
+    "function_type": "scalar",
+    "description": "Returns a single value that is the result of applying the lambda function to each element of the input list, starting with the first element and then repeatedly applying the lambda function to the result of the previous application and the next element of the list.",
+    "return_type": "ANY",
+    "parameters": [
+      "list",
+      "lambda"
+    ],
+    "parameter_types": [
+      "ANY[]",
+      "LAMBDA"
+    ]
+  },
+  {
+    "function_name": "regexp_escape",
+    "function_type": "scalar",
+    "description": "Escapes all potentially meaningful regexp characters in the input string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_extract",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2",
+      "col3"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_extract_all",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2",
+      "col3"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "INTEGER",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_full_match",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_matches",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_replace",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_split_to_array",
+    "function_type": "scalar",
+    "description": "Splits the string along the regex",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "regexp_split_to_table",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "text",
+      "pattern"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "regr_avgx",
+    "function_type": "aggregate",
+    "description": "Returns the average of the independent variable for non-null pairs in a group, where x is the independent variable and y is the dependent variable.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_avgy",
+    "function_type": "aggregate",
+    "description": "Returns the average of the dependent variable for non-null pairs in a group, where x is the independent variable and y is the dependent variable.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_count",
+    "function_type": "aggregate",
+    "description": "Returns the number of non-null number pairs in a group.",
+    "return_type": "UINTEGER",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_intercept",
+    "function_type": "aggregate",
+    "description": "Returns the intercept of the univariate linear regression line for non-null pairs in a group.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_r2",
+    "function_type": "aggregate",
+    "description": "Returns the coefficient of determination for non-null pairs in a group.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_slope",
+    "function_type": "aggregate",
+    "description": "Returns the slope of the linear regression line for non-null pairs in a group.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_sxx",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_sxy",
+    "function_type": "aggregate",
+    "description": "Returns the population covariance of input values",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "regr_syy",
+    "function_type": "aggregate",
+    "description": "",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "y",
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "repeat",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "repeat_row",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "num_rows"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "replace",
+    "function_type": "scalar",
+    "description": "Replaces any occurrences of the source with target in string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "source",
+      "target"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "reservoir_quantile",
+    "function_type": "aggregate",
+    "description": "Gives the approximate quantile using reservoir sampling, the sample size is optional and uses 8192 as a default size.",
+    "return_type": "SMALLINT",
+    "parameters": [
+      "x",
+      "quantile"
+    ],
+    "parameter_types": [
+      "SMALLINT",
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "reverse",
+    "function_type": "scalar",
+    "description": "Reverses the string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "right",
+    "function_type": "scalar",
+    "description": "Extract the right-most count characters",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "count"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "right_grapheme",
+    "function_type": "scalar",
+    "description": "Extract the right-most count grapheme clusters",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "count"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "round",
+    "function_type": "scalar",
+    "description": "Rounds x to s decimal places",
+    "return_type": "FLOAT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "round_even",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x",
+      "n"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "roundbankers",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "x",
+      "n"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "row",
+    "function_type": "scalar",
+    "description": "Creates an unnamed STRUCT containing the argument values.",
+    "return_type": "STRUCT",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "row_to_json",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "rpad",
+    "function_type": "scalar",
+    "description": "Pads the string with the character from the right until it has count characters",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "count",
+      "character"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "INTEGER",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "rtrim",
+    "function_type": "scalar",
+    "description": "Removes any occurrences of any of the characters from the right side of the string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "second",
+    "function_type": "scalar",
+    "description": "Extract the second component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "sem",
+    "function_type": "aggregate",
+    "description": "Returns the standard error of the mean",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "seq_scan",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "session_user",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "set_bit",
+    "function_type": "scalar",
+    "description": "Sets the nth bit in bitstring to newvalue; the first (leftmost) bit is indexed 0. Returns a new bitstring",
+    "return_type": "BIT",
+    "parameters": [
+      "bitstring",
+      "index",
+      "new_value"
+    ],
+    "parameter_types": [
+      "BIT",
+      "INTEGER",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "setseed",
+    "function_type": "scalar",
+    "description": "Sets the seed to be used for the random function",
+    "return_type": "NULL",
+    "parameters": [
+      ""
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "sha256",
+    "function_type": "scalar",
+    "description": "Returns the SHA256 hash of the value",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "shobj_description",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "object_oid",
+      "catalog_name"
+    ],
+    "parameter_types": [
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "show",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "show_databases",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "show_tables",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "show_tables_expanded",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "sign",
+    "function_type": "scalar",
+    "description": "Returns the sign of x as -1, 0 or 1",
+    "return_type": "TINYINT",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "TINYINT"
+    ]
+  },
+  {
+    "function_name": "signbit",
+    "function_type": "scalar",
+    "description": "Returns whether the signbit is set or not",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "FLOAT"
+    ]
+  },
+  {
+    "function_name": "sin",
+    "function_type": "scalar",
+    "description": "Computes the sin of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "skewness",
+    "function_type": "aggregate",
+    "description": "Returns the skewness of all input values.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "sniff_csv",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "hive_types_autocast",
+      "hive_types",
+      "union_by_name",
+      "hive_partitioning",
+      "filename",
+      "dtypes",
+      "column_types",
+      "auto_detect",
+      "sample_size",
+      "dateformat",
+      "columns",
+      "all_varchar",
+      "new_line",
+      "header",
+      "types",
+      "skip",
+      "compression",
+      "quote",
+      "max_line_size",
+      "store_rejects",
+      "delim",
+      "sep",
+      "column_names",
+      "buffer_size",
+      "timestampformat",
+      "normalize_names",
+      "ignore_errors",
+      "names",
+      "allow_quoted_nulls",
+      "maximum_line_size",
+      "rejects_table",
+      "force_not_null",
+      "parallel",
+      "auto_type_candidates",
+      "rejects_scan",
+      "rejects_limit",
+      "nullstr",
+      "escape",
+      "decimal_separator",
+      "null_padding"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BOOLEAN",
+      "ANY",
+      "BOOLEAN",
+      "BOOLEAN",
+      "BOOLEAN",
+      "ANY",
+      "ANY",
+      "BOOLEAN",
+      "BIGINT",
+      "VARCHAR",
+      "ANY",
+      "BOOLEAN",
+      "VARCHAR",
+      "BOOLEAN",
+      "ANY",
+      "BIGINT",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "UBIGINT",
+      "VARCHAR",
+      "BOOLEAN",
+      "BOOLEAN",
+      "VARCHAR[]",
+      "BOOLEAN",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR[]",
+      "BOOLEAN",
+      "ANY",
+      "VARCHAR",
+      "BIGINT",
+      "ANY",
+      "VARCHAR",
+      "VARCHAR",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "split",
+    "function_type": "scalar",
+    "description": "Splits the string along the separator",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "split_part",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "string",
+      "delimiter",
+      "position"
+    ],
+    "parameter_types": [
+      null,
+      null,
+      null
+    ]
+  },
+  {
+    "function_name": "sqrt",
+    "function_type": "scalar",
+    "description": "Returns the square root of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "starts_with",
+    "function_type": "scalar",
+    "description": "Returns true if string begins with search_string",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "string",
+      "search_string"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "stats",
+    "function_type": "scalar",
+    "description": "Returns a string with statistics about the expression. Expression can be a column, constant, or SQL expression",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "expression"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "stddev",
+    "function_type": "aggregate",
+    "description": "Returns the sample standard deviation",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "stddev_pop",
+    "function_type": "aggregate",
+    "description": "Returns the population standard deviation.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "stddev_samp",
+    "function_type": "aggregate",
+    "description": "Returns the sample standard deviation",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "storage_info",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "str_split",
+    "function_type": "scalar",
+    "description": "Splits the string along the separator",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "str_split_regex",
+    "function_type": "scalar",
+    "description": "Splits the string along the regex",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "strftime",
+    "function_type": "scalar",
+    "description": "Converts timestamp to string according to the format string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "text",
+      "format"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "string_agg",
+    "function_type": "aggregate",
+    "description": "Concatenates the column string values with an optional separator.",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "str"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "string_split",
+    "function_type": "scalar",
+    "description": "Splits the string along the separator",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "string_split_regex",
+    "function_type": "scalar",
+    "description": "Splits the string along the regex",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "string_to_array",
+    "function_type": "scalar",
+    "description": "Splits the string along the separator",
+    "return_type": "VARCHAR[]",
+    "parameters": [
+      "string",
+      "separator"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "strip_accents",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "strlen",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "strpos",
+    "function_type": "scalar",
+    "description": "Returns location of first occurrence of needle in haystack, counting from 1. Returns 0 if no match found",
+    "return_type": "BIGINT",
+    "parameters": [
+      "haystack",
+      "needle"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "strptime",
+    "function_type": "scalar",
+    "description": "Converts string to timestamp with time zone according to the format string if %Z is specified",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "text",
+      "format"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "struct_extract",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "ANY",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "STRUCT",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "struct_insert",
+    "function_type": "scalar",
+    "description": "Adds field(s)/value(s) to an existing STRUCT with the argument values. The entry name(s) will be the bound variable name(s)",
+    "return_type": "STRUCT",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "struct_pack",
+    "function_type": "scalar",
+    "description": "Creates a STRUCT containing the argument values. The entry name will be the bound variable name",
+    "return_type": "STRUCT",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "substr",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "substring",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "substring_grapheme",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1",
+      "col2"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "BIGINT",
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "subtract",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BIGINT",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "suffix",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "sum",
+    "function_type": "aggregate",
+    "description": "Calculates the sum value for all tuples in arg.",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "SMALLINT"
+    ]
+  },
+  {
+    "function_name": "sum_no_overflow",
+    "function_type": "aggregate",
+    "description": "Internal only. Calculates the sum value for all tuples in arg without overflow checks.",
+    "return_type": "HUGEINT",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "sumkahan",
+    "function_type": "aggregate",
+    "description": "Calculates the sum using a more accurate floating point summation (Kahan Sum).",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "arg"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "summary",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "TABLE"
+    ]
+  },
+  {
+    "function_name": "table_info",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "tan",
+    "function_type": "scalar",
+    "description": "Computes the tan of x",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "test_all_types",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "use_large_enum"
+    ],
+    "parameter_types": [
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "test_vector_types",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0",
+      "all_flat"
+    ],
+    "parameter_types": [
+      "ANY",
+      "BOOLEAN"
+    ]
+  },
+  {
+    "function_name": "time_bucket",
+    "function_type": "scalar",
+    "description": "Truncate TIMESTAMPTZ by the specified interval bucket_width. Buckets are aligned relative to origin TIMESTAMPTZ. The origin defaults to 2000-01-03 00:00:00+00 for buckets that do not include a month or year interval, and to 2000-01-01 00:00:00+00 for month and year buckets",
+    "return_type": "TIMESTAMP WITH TIME ZONE",
+    "parameters": [
+      "bucket_width",
+      "timestamp",
+      "origin"
+    ],
+    "parameter_types": [
+      "INTERVAL",
+      "TIMESTAMP WITH TIME ZONE",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "timezone",
+    "function_type": "scalar",
+    "description": "Extract the timezone component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "timezone_hour",
+    "function_type": "scalar",
+    "description": "Extract the timezone_hour component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "timezone_minute",
+    "function_type": "scalar",
+    "description": "Extract the timezone_minute component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "to_base",
+    "function_type": "scalar",
+    "description": "Converts a value to a string in the given base radix, optionally padding with leading zeros to the minimum length",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "number",
+      "radix"
+    ],
+    "parameter_types": [
+      "BIGINT",
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_base64",
+    "function_type": "scalar",
+    "description": "Convert a blob to a base64 encoded string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "blob"
+    ],
+    "parameter_types": [
+      "BLOB"
+    ]
+  },
+  {
+    "function_name": "to_binary",
+    "function_type": "scalar",
+    "description": "Converts the value to binary representation",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "to_centuries",
+    "function_type": "scalar",
+    "description": "Construct a century interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_days",
+    "function_type": "scalar",
+    "description": "Construct a day interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_decades",
+    "function_type": "scalar",
+    "description": "Construct a decade interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_hex",
+    "function_type": "scalar",
+    "description": "Converts the value to hexadecimal representation",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "HUGEINT"
+    ]
+  },
+  {
+    "function_name": "to_hours",
+    "function_type": "scalar",
+    "description": "Construct a hour interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "to_json",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "JSON",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "to_microseconds",
+    "function_type": "scalar",
+    "description": "Construct a microsecond interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "to_millennia",
+    "function_type": "scalar",
+    "description": "Construct a millenium interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_milliseconds",
+    "function_type": "scalar",
+    "description": "Construct a millisecond interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "double"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "to_minutes",
+    "function_type": "scalar",
+    "description": "Construct a minute interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "function_name": "to_months",
+    "function_type": "scalar",
+    "description": "Construct a month interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_seconds",
+    "function_type": "scalar",
+    "description": "Construct a second interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "double"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "to_timestamp",
+    "function_type": "scalar",
+    "description": "Converts secs since epoch to a timestamp with time zone",
+    "return_type": "TIMESTAMP WITH TIME ZONE",
+    "parameters": [
+      "sec"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "to_weeks",
+    "function_type": "scalar",
+    "description": "Construct a week interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "to_years",
+    "function_type": "scalar",
+    "description": "Construct a year interval",
+    "return_type": "INTERVAL",
+    "parameters": [
+      "integer"
+    ],
+    "parameter_types": [
+      "INTEGER"
+    ]
+  },
+  {
+    "function_name": "today",
+    "function_type": "scalar",
+    "description": "Returns the current date",
+    "return_type": "DATE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "transaction_timestamp",
+    "function_type": "scalar",
+    "description": "Returns the current timestamp",
+    "return_type": "TIMESTAMP WITH TIME ZONE",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "translate",
+    "function_type": "scalar",
+    "description": "Replaces each character in string that matches a character in the from set with the corresponding character in the to set. If from is longer than to, occurrences of the extra characters in from are deleted",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "from",
+      "to"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "trim",
+    "function_type": "scalar",
+    "description": "Removes any occurrences of any of the characters from either side of the string",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "string",
+      "characters"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "trunc",
+    "function_type": "scalar",
+    "description": "Truncates the number",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "try_strptime",
+    "function_type": "scalar",
+    "description": "Converts string to timestamp using the format string (timestamp with time zone if %Z is specified). Returns NULL on failure",
+    "return_type": "TIMESTAMP",
+    "parameters": [
+      "text",
+      "format"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR[]"
+    ]
+  },
+  {
+    "function_name": "txid_current",
+    "function_type": "scalar",
+    "description": "Returns the current transaction’s ID (a BIGINT). It will assign a new one if the current transaction does not have one already",
+    "return_type": "BIGINT",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "typeof",
+    "function_type": "scalar",
+    "description": "Returns the name of the data type of the result of the expression",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "expression"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "ucase",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "unbin",
+    "function_type": "scalar",
+    "description": "Converts a value from binary representation to a blob",
+    "return_type": "BLOB",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "unhex",
+    "function_type": "scalar",
+    "description": "Converts a value from hexadecimal representation to a blob",
+    "return_type": "BLOB",
+    "parameters": [
+      "value"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "unicode",
+    "function_type": "scalar",
+    "description": "Returns the unicode codepoint of the first character of the string",
+    "return_type": "INTEGER",
+    "parameters": [
+      "str"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "union_extract",
+    "function_type": "scalar",
+    "description": "Extract the value with the named tags from the union. NULL if the tag is not currently selected",
+    "return_type": "ANY",
+    "parameters": [
+      "union",
+      "tag"
+    ],
+    "parameter_types": [
+      "UNION",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "union_tag",
+    "function_type": "scalar",
+    "description": "Retrieve the currently selected tag of the union as an ENUM",
+    "return_type": "ANY",
+    "parameters": [
+      "union"
+    ],
+    "parameter_types": [
+      "UNION"
+    ]
+  },
+  {
+    "function_name": "union_value",
+    "function_type": "scalar",
+    "description": "Create a single member UNION containing the argument value. The tag of the value will be the bound variable name",
+    "return_type": "UNION",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "unnest",
+    "function_type": "table",
+    "description": "",
+    "return_type": "",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "TABLE"
+    ]
+  },
+  {
+    "function_name": "unpivot_list",
+    "function_type": "scalar",
+    "description": "Identical to list_value, but generated as part of unpivot for better error messages",
+    "return_type": "LIST",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "upper",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0"
+    ],
+    "parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "user",
+    "function_type": "macro",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "user_agent",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "uuid",
+    "function_type": "scalar",
+    "description": "Returns a random UUID similar to this: eeccb8c5-9943-b2bb-bb5e-222f4e14b687",
+    "return_type": "UUID",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "var_pop",
+    "function_type": "aggregate",
+    "description": "Returns the population variance.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "var_samp",
+    "function_type": "aggregate",
+    "description": "Returns the sample variance of all input values.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "variance",
+    "function_type": "aggregate",
+    "description": "Returns the sample variance of all input values.",
+    "return_type": "DOUBLE",
+    "parameters": [
+      "x"
+    ],
+    "parameter_types": [
+      "DOUBLE"
+    ]
+  },
+  {
+    "function_name": "vector_type",
+    "function_type": "scalar",
+    "description": "Returns the VectorType of a given column",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col"
+    ],
+    "parameter_types": [
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "verify_external",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "verify_fetch_row",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "verify_parallelism",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "verify_serializer",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "version",
+    "function_type": "pragma",
+    "description": "",
+    "return_type": "",
+    "parameters": [],
+    "parameter_types": []
+  },
+  {
+    "function_name": "week",
+    "function_type": "scalar",
+    "description": "Extract the week component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP WITH TIME ZONE"
+    ]
+  },
+  {
+    "function_name": "weekday",
+    "function_type": "scalar",
+    "description": "Extract the weekday component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "DATE"
+    ]
+  },
+  {
+    "function_name": "weekofyear",
+    "function_type": "scalar",
+    "description": "Extract the weekofyear component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "INTERVAL"
+    ]
+  },
+  {
+    "function_name": "which_secret",
+    "function_type": "scalar",
+    "description": "Print out the name of the secret that will be used for reading a path",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "path",
+      "type"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "xor",
+    "function_type": "scalar",
+    "description": "Bitwise XOR",
+    "return_type": "UHUGEINT",
+    "parameters": [
+      "left",
+      "right"
+    ],
+    "parameter_types": [
+      "UHUGEINT",
+      "UHUGEINT"
+    ]
+  },
+  {
+    "function_name": "year",
+    "function_type": "scalar",
+    "description": "Extract the year component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "yearweek",
+    "function_type": "scalar",
+    "description": "Extract the yearweek component from a date or timestamp",
+    "return_type": "BIGINT",
+    "parameters": [
+      "ts"
+    ],
+    "parameter_types": [
+      "TIMESTAMP"
+    ]
+  },
+  {
+    "function_name": "|",
+    "function_type": "scalar",
+    "description": "Bitwise OR",
+    "return_type": "UBIGINT",
+    "parameters": [
+      "left",
+      "right"
+    ],
+    "parameter_types": [
+      "UBIGINT",
+      "UBIGINT"
+    ]
+  },
+  {
+    "function_name": "||",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "VARCHAR",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "ANY",
+      "ANY"
+    ]
+  },
+  {
+    "function_name": "~",
+    "function_type": "scalar",
+    "description": "Bitwise NOT",
+    "return_type": "USMALLINT",
+    "parameters": [
+      "input"
+    ],
+    "parameter_types": [
+      "USMALLINT"
+    ]
+  },
+  {
+    "function_name": "~~",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "~~*",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "function_name": "~~~",
+    "function_type": "scalar",
+    "description": "",
+    "return_type": "BOOLEAN",
+    "parameters": [
+      "col0",
+      "col1"
+    ],
+    "parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  }
+]
